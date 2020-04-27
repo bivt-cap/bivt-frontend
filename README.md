@@ -1,6 +1,6 @@
 # bivt-frontend
 ## Specify the type of commit:
-feat: The new feature you're adding to a particular application <br />
+feat: [#1] The new feature you're adding to a particular application <br />
 fix: A bug fix <br />
 style: Feature and updates related to styling <br />
 refactor: Refactoring a specific section of the codebase <br />
