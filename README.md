@@ -13,21 +13,21 @@ chore: Regular code maintenance. <br />
 2. Search for prettier code formatter
 3. Click Install
 
-##Make VSCode to auto format every time file is saved.
-1. Use Ctrl+, shortcut or go to File ->Preferences ->Settings.
-2. Scroll down to Edit in settings.json . It will open your ide setting in json format :
-Tell eslint to always show its status
-Disable formatting in js file (we will format through EsLint)
+##Make VSCode to auto format every time file is saved.<br />
+1. Use Ctrl+, shortcut or go to File ->Preferences ->Settings.<br />
+2. Scroll down to Edit in settings.json . It will open your ide setting in json format :<br />
+Tell eslint to always show its status<br />
+Disable formatting in js file (we will format through EsLint)<br />
 
-Make Prettier run on all file formats except for JavaScript
-"eslint.alwaysShowStatus": true,
-"editor.formatOnSave": true,
-"[javascript]": {
-   "editor.formatOnSave": false
- },
-"eslint.autoFixOnSave": true,
-"prettier.disableLanguages": [
-    "js"
-]
-https://scottsauber.com/2017/06/10/prettier-format-on-save-never-worry-about-formatting-javascript-again/
+Make Prettier run on all file formats except for JavaScript<br />
+"eslint.alwaysShowStatus": true,<br />
+"editor.formatOnSave": true,<br />
+"[javascript]": {<br />
+   "editor.formatOnSave": false<br />
+ },<br />
+"eslint.autoFixOnSave": true,<br />
+"prettier.disableLanguages": [<br />
+    "js"<br />
+]<br />
+https://scottsauber.com/2017/06/10/prettier-format-on-save-never-worry-about-formatting-javascript-again/<br />
 <hr><br />
