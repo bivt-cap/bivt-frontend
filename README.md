@@ -8,10 +8,10 @@ test: Everything related to testing <br />
 docs: Everything related to documentation <br />
 chore: Regular code maintenance. <br />
 <hr><br />
-##Install Prettier💅
-1. In Visual Studio Code go to View ->Extensions.
-2. Search for prettier code formatter
-3. Click Install
+##Install Prettier💅<br />
+1. In Visual Studio Code go to View ->Extensions.<br />
+2. Search for prettier code formatter<br />
+3. Click Install<br />
 
 ##Make VSCode to auto format every time file is saved.<br />
 1. Use Ctrl+, shortcut or go to File ->Preferences ->Settings.<br />
