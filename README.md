@@ -7,8 +7,8 @@ refactor: Refactoring a specific section of the codebase <br />
 test: Everything related to testing <br />
 docs: Everything related to documentation <br />
 chore: Regular code maintenance. <br />
-<hr>
-## Install Prettier💅<br />
+
+## Install Prettier: <br />
 1. In Visual Studio Code go to View ->Extensions.<br />
 2. Search for prettier code formatter<br />
 3. Click Install<br />
