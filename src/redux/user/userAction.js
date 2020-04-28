@@ -4,6 +4,7 @@ import {
   FETCH_USER_FAILURE,
 } from './userTypes';
 
+import jsonPlaceholder from '../../apis/jsonPlaceHolder';
 import axios from 'axios';
 
 export const fetchUserRequest = () => {
@@ -40,5 +41,19 @@ export const fetchUsers = () => {
         const errorMsg = error.message;
         dispatch(fetchUserFailure(errorMsg));
       });
+  };
+};
+//Alternative Technique
+export const fetchUsersAsync = () => {
+  return async (dispatch) => {
+    dispatch(fetchUserRequest);
+    try {
+      const response = await jsonPlaceholder.get('/users');
+      // console.log(response);
+      dispatch(fetchUserSuccess(response.data));
+    } catch (error) {
+      const errorMsg = error.message;
+      dispatch(fetchUserFailure(errorMsg));
+    }
   };
 };

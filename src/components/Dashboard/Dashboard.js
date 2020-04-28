@@ -2,14 +2,14 @@ import React, {useEffect} from 'react';
 import {Text} from 'react-native';
 import {Container, Header, Content, Card, CardItem, Body} from 'native-base';
 import {useSelector, useDispatch} from 'react-redux';
-import {fetchUsers} from '../../redux';
+import {fetchUsers, fetchUsersAsync} from '../../redux';
 
 const Dashboard = () => {
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchUsersAsync());
   });
 
   return (
