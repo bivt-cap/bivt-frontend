@@ -7,7 +7,7 @@ refactor: Refactoring a specific section of the codebase <br />
 test: Everything related to testing <br />
 docs: Everything related to documentation <br />
 chore: Regular code maintenance. <br />
-........................................................................................................
+<hr><br />
 ##Install Prettier💅
 1. In Visual Studio Code go to View ->Extensions.
 2. Search for prettier code formatter
@@ -29,4 +29,5 @@ Make Prettier run on all file formats except for JavaScript
 "prettier.disableLanguages": [
     "js"
 ]
-........................................................................................................
+https://scottsauber.com/2017/06/10/prettier-format-on-save-never-worry-about-formatting-javascript-again/
+<hr><br />
