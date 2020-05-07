@@ -1,12 +1,12 @@
 import React from 'react';
-import Dashboard from './src/components/Dashboard/Dashboard';
+import Signup from './src/components/authentication/signup/Signup';
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <Dashboard />
+      <Signup />
     </Provider>
   );
 };
