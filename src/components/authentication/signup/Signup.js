@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {signupUser} from '../../../redux';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import {
   Container,
   Header,
@@ -15,10 +17,13 @@ import {
 import signupStyles from './signupStyles';
 import {signupFormValidation} from './signupFormValidation';
 
-const Signup = () => {
+const Signup = ({route, navigation}) => {
   const dispatch = useDispatch();
   const signupStatus = useSelector((state) => state.signup);
-
+  //It gets login Information from Login component.
+  console.log(route.params);
+  const {email} = route.params;
+  console.log(email);
   const [userSignupDetails, setUserSignupDetails] = useState({
     firstName: '',
     lastName: '',
@@ -76,6 +81,7 @@ const Signup = () => {
     <Container style={signupStyles.signupContainer}>
       <Header />
       <Content>
+        <Text>Welcome {email}</Text>
         <Form style={signupStyles.signupForm}>
           <Item stackedLabel>
             <Label>First Name*</Label>
