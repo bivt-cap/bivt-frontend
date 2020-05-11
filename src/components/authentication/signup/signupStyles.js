@@ -7,6 +7,10 @@ const signupStyles = StyleSheet.create({
   signupButton: {
     marginTop: '10%',
   },
+  textFieldError: {
+    color: 'red',
+    fontSize: 14,
+  },
 });
 
 export default signupStyles;
