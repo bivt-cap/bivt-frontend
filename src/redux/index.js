@@ -1,1 +1,1 @@
-export * from './user/userAction';
+export * from './authentication/signup/signupAction';
