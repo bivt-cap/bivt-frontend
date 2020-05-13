@@ -6,22 +6,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   Container,
-  Header,
-  Title,
-  Spinner,
   Content,
   Button,
   Item,
   Label,
   Input,
   H1,
-  Body,
-  Left,
-  Right,
-  Icon,
   Form,
   Text,
 } from 'native-base';
+import {loginFormValidation} from './loginFormValidation';
 
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
@@ -49,13 +43,36 @@ const Login = ({navigation}) => {
     });
   };
 
+  const [loginError, setloginError] = useState({
+    email: {
+      error: false,
+    },
+    password: {
+      error: false,
+    },
+    firstRender: true,
+  });
+
   const handleLoginButtonClick = () => {
-    dispatch(loginUser(loginData));
+    setloginError(loginFormValidation(loginData));
+    // dispatch(loginUser(loginData));
     if (userData.loginDetails === 'Login Sucess') {
       //Simple navigation to signup page
-      navigation.navigate('SignUp', loginData);
+      navigation.navigate('Login', loginData);
     }
   };
+  //When there is no error at validation , run dispatch function and login
+  // firstRender prob helps to stop sending fetch request when the app first render.
+  useEffect(() => {
+    console.log(loginData);
+    if (
+      !loginError.email.error &&
+      !loginError.password.error &&
+      !loginError.firstRender
+    ) {
+      dispatch(loginUser(loginData));
+    }
+  }, [loginError, loginData, dispatch]);
 
   return (
     <Container style={styles.container}>
@@ -63,13 +80,24 @@ const Login = ({navigation}) => {
         <Form style={styles.form}>
           <H1 style={styles.textCentered}>Login</H1>
           <Item stackedLabel>
-            <Label>Email</Label>
+            <Label>Email*</Label>
+            {loginError.email.error && (
+              <Label style={styles.textFieldError}>
+                {loginError.email.message}
+              </Label>
+            )}
             <Input
+              autoCapitalize="none"
               onChangeText={(val) => handleLoginInputChanges('email', val)}
             />
           </Item>
           <Item stackedLabel last>
-            <Label>Password</Label>
+            <Label>Password*</Label>
+            {loginError.password.error && (
+              <Label style={styles.textFieldError}>
+                {loginError.password.message}
+              </Label>
+            )}
             <Input
               secureTextEntry
               onChangeText={(value) =>
@@ -108,6 +136,10 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: '50%',
+  },
+  textFieldError: {
+    color: 'red',
+    fontSize: 14,
   },
   textContent: {
     fontSize: 20,

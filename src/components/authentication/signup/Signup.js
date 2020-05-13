@@ -20,10 +20,10 @@ import {signupFormValidation} from './signupFormValidation';
 const Signup = ({route, navigation}) => {
   const dispatch = useDispatch();
   const signupStatus = useSelector((state) => state.signup);
-  //It gets login Information from Login component.
-  console.log(route.params);
-  const {email} = route.params;
-  console.log(email);
+  // //It gets login Information from Login component.
+  // console.log(route.params);
+  // const {email} = route.params;
+  // console.log(email);
   const [userSignupDetails, setUserSignupDetails] = useState({
     firstName: '',
     lastName: '',
@@ -81,7 +81,7 @@ const Signup = ({route, navigation}) => {
     <Container style={signupStyles.signupContainer}>
       <Header />
       <Content>
-        <Text>Welcome {email}</Text>
+        {/* <Text>Welcome {email}</Text> */}
         <Form style={signupStyles.signupForm}>
           <Item stackedLabel>
             <Label>First Name*</Label>
