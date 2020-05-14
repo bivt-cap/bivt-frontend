@@ -24,12 +24,18 @@ import {
 
 const DashBoard = ({route, navigation}) => {
   console.log(route.params);
-  const {email} = route.params;
-  console.log(email);
+  const {loginInfo} = route.params;
+  // let userFullName = userParams.userData.loginDetails.user.name;
+  console.log(loginInfo);
   return (
     <Container style={styles.container}>
       <Content>
-        <Text>Welcome {email}</Text>
+        {Object.keys(loginInfo).length === 0 ? (
+          <Text>Welcome Google </Text>
+        ) : (
+          <Text>Welcome {loginInfo.email} </Text>
+        )}
+
         <Button title="Go back" onPress={() => navigation.navigate('Login')} />
       </Content>
     </Container>

@@ -1,7 +1,13 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {loginUser} from '../../../redux';
+import {loginUser, googleSignIn} from '../../../redux';
+import {GOOGLE_IOS_CLIENT_ID} from 'react-native-dotenv';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-community/google-signin';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
@@ -16,33 +22,17 @@ import {
   Text,
 } from 'native-base';
 import {loginFormValidation} from './loginFormValidation';
-
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  // console.log('yalcin', userData);
+  console.log('yalcin', userData);
   const dispatch = useDispatch();
-
+  // ******************************************************//
+  // ************ BEGININ OF STATES DECLARATIONS *********//
+  // ***************************************************//
   const [loginData, setloginData] = useState({
     email: '',
     password: '',
   });
-
-  const checkisLoggedIn = () => {
-    if (userData.isLoggedin === 'True') {
-      navigation.navigate('DashBoard', loginData);
-    } else {
-      console.log('NOT LOGIN');
-    }
-  };
-  const handleLoginInputChanges = (key, value) => {
-    setloginData((prevState) => {
-      return {
-        ...prevState,
-        [key]: value,
-      };
-    });
-  };
-
   const [loginError, setloginError] = useState({
     email: {
       error: false,
@@ -52,19 +42,18 @@ const Login = ({navigation}) => {
     },
     firstRender: true,
   });
+  // ******************************************************//
+  // ************ END OF STATES DECLERATIONS *********//
+  // ***************************************************//
 
-  const handleLoginButtonClick = () => {
-    setloginError(loginFormValidation(loginData));
-    // dispatch(loginUser(loginData));
-    if (userData.loginDetails === 'Login Sucess') {
-      //Simple navigation to signup page
-      navigation.navigate('Login', loginData);
-    }
-  };
   //When there is no error at validation , run dispatch function and login
   // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
-    console.log(loginData);
+    GoogleSignin.configure({
+      iosClientId: GOOGLE_IOS_CLIENT_ID,
+    });
+    // isSignedIn();
+    // getCurrentUser();
     if (
       !loginError.email.error &&
       !loginError.password.error &&
@@ -74,9 +63,61 @@ const Login = ({navigation}) => {
     }
   }, [loginError, loginData, dispatch]);
 
+  // **********************************************************//
+  // ************ BEGININ OF FUNCTIONS DECLARATIONS ***********//
+  // **********************************************************//
+
+  // normal login and google login check seperately and pass different params to the dash
+  const checkisLoggedIn = () => {
+    if (userData.isLoggedin === 'True') {
+      navigation.navigate('DashBoard', {loginInfo: loginData});
+    } else if (userData.googleisLoggedin === 'True') {
+      navigation.navigate('DashBoard', {loginInfo: userData.loginDetails.user});
+    } else {
+      console.log('NOT LOGIN');
+    }
+  };
+
+  // ************************************************//
+  // ************ BEGININ OF EVENT HANDLERS *********//
+  // ************************************************//
+  const handleLoginInputChanges = (key, value) => {
+    setloginData((prevState) => {
+      return {
+        ...prevState,
+        [key]: value,
+      };
+    });
+  };
+  const handleLoginButtonClick = () => {
+    setloginError(loginFormValidation(loginData));
+    // dispatch(loginUser(loginData));
+    if (userData.loginDetails === 'Login Sucess') {
+      //Simple navigation to signup page
+      navigation.navigate('Login', loginData);
+    }
+  };
+  const handleGoogleButtonClick = () => {
+    dispatch(googleSignIn);
+    console.log(userData);
+  };
+  // ************************************************//
+  // ************ END OF EVENT HANDLERS *********//
+  // ************************************************//
+
   return (
     <Container style={styles.container}>
       <Content>
+        <GoogleSigninButton
+          style={{width: 192, height: 48}}
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={handleGoogleButtonClick}
+          // disabled={this.state.isSigninInProgress}
+        />
+        {/* <Button block style={{margin: 15, marginTop: 50}} onPress={signOut}>
+          <Text>Sign In</Text>
+        </Button> */}
         <Form style={styles.form}>
           <H1 style={styles.textCentered}>Login</H1>
           <Item stackedLabel>
@@ -115,7 +156,8 @@ const Login = ({navigation}) => {
           onPress={handleLoginButtonClick}>
           <Text>Sign In</Text>
         </Button>
-        {userData.isLoggedin === 'True' ? (
+        {userData.isLoggedin === 'True' ||
+        userData.googleisLoggedin === 'True' ? (
           checkisLoggedIn()
         ) : (
           <Text>{userData.error}</Text>

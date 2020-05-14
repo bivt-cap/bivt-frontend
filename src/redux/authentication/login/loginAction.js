@@ -1,12 +1,13 @@
 import axios from 'axios';
 import {loginBaseURL} from '../../apis/apis';
+import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 
+//Purpose of Action: Describe some changes that we want to make to the data inside of our application.
 export const loginReguest = () => {
   return {
     type: 'LOGIN_REQUEST',
   };
 };
-
 export const loginSuccess = (loginDetails) => {
   return {
     type: 'LOGIN_SUCCESS',
@@ -20,6 +21,12 @@ export const loginFail = (error) => {
     payload: error,
   };
 };
+export const googleLoginSuccess = (googleLoginDetails) => {
+  return {
+    type: 'GOOGLE_LOGIN_SUCCESS',
+    payload: googleLoginDetails,
+  };
+};
 
 //Check sign-in
 export const loginUser = (loginDetails) => {
@@ -30,8 +37,8 @@ export const loginUser = (loginDetails) => {
   const config = {
     headers: userInfo,
   };
-  console.log(loginDetails);
   return async (dispatch) => {
+    //Dispatch: is going to take an action, copy of the object and pass to reducer.
     dispatch(loginReguest);
     try {
       const response = await loginBaseURL.post('/user/auth', userInfo, config);
@@ -44,4 +51,25 @@ export const loginUser = (loginDetails) => {
       dispatch(loginFail(errorMsg));
     }
   };
+};
+
+// Google Auth Sign In Action
+export const googleSignIn = async (dispatch) => {
+  try {
+    await GoogleSignin.hasPlayServices();
+    const gooleuserInfo = await GoogleSignin.signIn();
+    console.log('User informations: ', gooleuserInfo);
+    //Code: Here post google token to endpoint
+    dispatch(googleLoginSuccess(gooleuserInfo));
+  } catch (error) {
+    if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      // user cancelled the login flow
+    } else if (error.code === statusCodes.IN_PROGRESS) {
+      // operation (e.g. sign in) is in progress already
+    } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      // play services not available or outdated
+    } else {
+      // some other error happened
+    }
+  }
 };

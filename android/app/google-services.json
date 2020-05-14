@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "606724632843",
+    "firebase_url": "https://kraken-1589361314792.firebaseio.com",
+    "project_id": "kraken-1589361314792",
+    "storage_bucket": "kraken-1589361314792.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606724632843:android:5fcd46908dfd758873b20e",
+        "android_client_info": {
+          "package_name": "com.bivtfrontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606724632843-93srccsknnmsl5frqgjhbm5u2roocu93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bivtfrontend",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "606724632843-n4jfggbm51q6th2j45lrieiaetd7fndu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB_wMdfmDN7HmpiA5U4M1H3dBrEujhyE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606724632843-n4jfggbm51q6th2j45lrieiaetd7fndu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "606724632843-hsu9fj935f7oc86djo5e24ptidiv0lf0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.BivtFrontEnd"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
