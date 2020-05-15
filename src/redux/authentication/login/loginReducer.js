@@ -26,7 +26,8 @@ let loginReducer = (state = loginInitial, action) => {
     case 'GOOGLE_LOGIN_SUCCESS':
       return {
         loading: false,
-        loginDetails: action.payload,
+        // loginDetails: action.payload,
+        googleLoginDetails: action.payload,
         googleisLoggedin: 'True',
         error: '',
       };

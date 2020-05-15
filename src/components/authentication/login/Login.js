@@ -1,8 +1,13 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {loginUser, googleSignIn} from '../../../redux';
-import {GOOGLE_IOS_CLIENT_ID} from 'react-native-dotenv';
+import {
+  loginUser,
+  googleSignIn,
+  ReadJWTtoAsyncFromStorage,
+  deleteJWTfromAsyncStorage,
+} from '../../../redux';
+import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from 'react-native-dotenv';
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -24,7 +29,7 @@ import {
 import {loginFormValidation} from './loginFormValidation';
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  console.log('yalcin', userData);
+  // console.log('yalcin', userData);
   const dispatch = useDispatch();
   // ******************************************************//
   // ************ BEGININ OF STATES DECLARATIONS *********//
@@ -45,13 +50,19 @@ const Login = ({navigation}) => {
   // ******************************************************//
   // ************ END OF STATES DECLERATIONS *********//
   // ***************************************************//
-
+  const checkTheTokenisValid = () => {
+    //CODE:I need to send existing token information to the backend for session . If it is token is match , redirect to page.
+    //If the token's are different redirect to login page.
+    ReadJWTtoAsyncFromStorage();
+  };
   //When there is no error at validation , run dispatch function and login
   // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
     GoogleSignin.configure({
       iosClientId: GOOGLE_IOS_CLIENT_ID,
+      webClientId: GOOGLE_WEB_CLIENT_ID,
     });
+    checkTheTokenisValid();
     // isSignedIn();
     // getCurrentUser();
     if (
@@ -66,13 +77,23 @@ const Login = ({navigation}) => {
   // **********************************************************//
   // ************ BEGININ OF FUNCTIONS DECLARATIONS ***********//
   // **********************************************************//
-
+  const checkLogout = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      // this.setState({user: null}); // Remember to remove the user from your app's state as well
+    } catch (error) {
+      console.error(error);
+    }
+  };
   // normal login and google login check seperately and pass different params to the dash
   const checkisLoggedIn = () => {
     if (userData.isLoggedin === 'True') {
-      navigation.navigate('DashBoard', {loginInfo: loginData});
+      navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
     } else if (userData.googleisLoggedin === 'True') {
-      navigation.navigate('DashBoard', {loginInfo: userData.loginDetails.user});
+      navigation.navigate('DashBoard', {
+        loginInfo: userData.googleLoginDetails.user,
+      });
     } else {
       console.log('NOT LOGIN');
     }
@@ -147,8 +168,8 @@ const Login = ({navigation}) => {
             />
           </Item>
         </Form>
-        <Button transparent>
-          <Text>Forgot Password</Text>
+        <Button transparent onPress={checkLogout}>
+          <Text>Logout</Text>
         </Button>
         <Button
           block
