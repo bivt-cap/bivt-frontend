@@ -1,5 +1,4 @@
-import axios from 'axios';
-import {loginBaseURL} from '../../apis/apis';
+import {bivtURL} from '../../apis/bivtApi';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 
 //Purpose of Action: Describe some changes that we want to make to the data inside of our application.
@@ -41,7 +40,7 @@ export const loginUser = (loginDetails) => {
     //Dispatch: is going to take an action, copy of the object and pass to reducer.
     dispatch(loginReguest);
     try {
-      const response = await loginBaseURL.post('/user/auth', userInfo, config);
+      const response = await bivtURL.post('/user/auth', userInfo, config);
       console.log(response);
       if (response.status === 200) {
         dispatch(loginSuccess('Login Sucess'));

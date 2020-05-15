@@ -1,3 +1,12 @@
+/**
+ * Signup form validation
+ *
+ * @version 0.0.1
+ * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ */
+
+import {EMAIL_REGEX, PASSWORD_REGEX} from '../../../utils/regexUtil';
+
 export function signupFormValidation(userSignupDetails) {
   const validationInfo = {
     firstName: {
@@ -36,7 +45,7 @@ export function signupFormValidation(userSignupDetails) {
       message: 'Please enter an email address',
     };
   } else {
-    const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailReg = EMAIL_REGEX;
     if (!emailReg.test(String(userSignupDetails.eMail).toLowerCase())) {
       validationInfo.eMail = {
         error: true,
@@ -50,7 +59,7 @@ export function signupFormValidation(userSignupDetails) {
       message: 'Please enter a password',
     };
   } else {
-    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    const passwordRegex = PASSWORD_REGEX;
     if (!passwordRegex.test(String(userSignupDetails.password))) {
       validationInfo.password = {
         error: true,
@@ -76,9 +85,3 @@ export function signupFormValidation(userSignupDetails) {
     return validationInfo;
   }
 }
-
-// Email regex reference
-// https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-
-// Password regex reference
-// https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a

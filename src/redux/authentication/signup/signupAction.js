@@ -1,5 +1,11 @@
-import axios from 'axios';
-import {signUpUrl} from '../../apis/apis';
+/**
+ * Signup actions
+ *
+ * @version 0.0.1
+ * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ */
+
+import {bivtURL} from '../../apis/bivtApi';
 import {
   SIGNUP_USER_FAILURE,
   SIGNUP_USER_SUCCESS,
@@ -26,6 +32,9 @@ export const signupUserFailure = (error) => {
   };
 };
 
+/**
+ * This function calls the REST api to register users
+ */
 export const signupUser = (userSignupDetails) => {
   const userInfo = {
     firstName: userSignupDetails.firstName,
@@ -33,21 +42,16 @@ export const signupUser = (userSignupDetails) => {
     email: userSignupDetails.eMail,
     password: userSignupDetails.password,
   };
-  const config = {
-    headers: userInfo,
-  };
-  return (dispatch) => {
+
+  return async (dispatch) => {
     dispatch(signupUserRequest);
-    axios.post(signUpUrl, userInfo, config).then(
-      (response) => {
-        const registrationDetails = response.data; //email token
-        dispatch(signupUserSuccess('account successfully created'));
-      },
-      (error) => {
-        console.log(error.response.data);
-        const errorMsg = error.response.data.status.errors;
-        dispatch(signupUserFailure(errorMsg));
-      },
-    );
+    try {
+      const response = await bivtURL.post('/user/create', userInfo);
+      const registrationDetails = response.data; //email token
+      dispatch(signupUserSuccess('account successfully created'));
+    } catch (error) {
+      const errorMsg = error.response.data.status.errors;
+      dispatch(signupUserFailure(errorMsg));
+    }
   };
 };

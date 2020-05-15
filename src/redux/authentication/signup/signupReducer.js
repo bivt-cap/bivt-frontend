@@ -1,3 +1,10 @@
+/**
+ * Signup reducer
+ *
+ * @version 0.0.1
+ * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ */
+
 import {
   SIGNUP_USER_FAILURE,
   SIGNUP_USER_SUCCESS,
