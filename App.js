@@ -7,7 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
 import Login from './src/components/authentication/login/Login';
-
+import CreateCircle from './src/components/circles/createCircle/CreateCircle';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -17,6 +17,7 @@ const App = () => {
         <Stack.Navigator>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="SignUp" component={Signup} />
+          <Stack.Screen name="CreateCircle" component={CreateCircle} />
           <Stack.Screen name="DashBoard" component={DashBoard} />
         </Stack.Navigator>
       </Provider>

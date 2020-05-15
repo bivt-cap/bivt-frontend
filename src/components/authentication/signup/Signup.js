@@ -1,8 +1,13 @@
+/**
+ * This component handles the signup for new users.
+ *
+ * @version 0.0.1
+ * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ */
+
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {signupUser} from '../../../redux';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 import {
   Container,
   Header,
@@ -17,13 +22,9 @@ import {
 import signupStyles from './signupStyles';
 import {signupFormValidation} from './signupFormValidation';
 
-const Signup = ({route, navigation}) => {
+const Signup = ({navigation}) => {
   const dispatch = useDispatch();
   const signupStatus = useSelector((state) => state.signup);
-  // //It gets login Information from Login component.
-  // console.log(route.params);
-  // const {email} = route.params;
-  // console.log(email);
   const [userSignupDetails, setUserSignupDetails] = useState({
     firstName: '',
     lastName: '',
@@ -41,6 +42,10 @@ const Signup = ({route, navigation}) => {
     });
   };
 
+  /**
+   * Form validation:
+   * 'firstRender: true', so that useffect does not get triggered on page load
+   */
   const [signupError, setSignupError] = useState({
     firstName: {
       error: false,
@@ -60,10 +65,18 @@ const Signup = ({route, navigation}) => {
     firstRender: true,
   });
 
+  /**
+   * Form validation:
+   * On submission, this function sends the data to get validated
+   */
   const submitSignupForm = () => {
     setSignupError(signupFormValidation(userSignupDetails));
   };
 
+  /**
+   * Once all the errors are cleared, this function calls redux to trigger user
+   * registration function.
+   */
   useEffect(() => {
     if (
       !signupError.firstName.error &&
@@ -76,6 +89,15 @@ const Signup = ({route, navigation}) => {
       dispatch(signupUser(userSignupDetails));
     }
   }, [signupError, userSignupDetails, dispatch]);
+
+  /**
+   * Work in progress, ignore the function:
+   */
+  useEffect(() => {
+    if (signupStatus.registrationDetails === 'account successfully created') {
+      navigation.navigate('CreateCircle');
+    }
+  }, [signupStatus, navigation]);
 
   return (
     <Container style={signupStyles.signupContainer}>
@@ -113,6 +135,7 @@ const Signup = ({route, navigation}) => {
               </Label>
             )}
             <Input
+              autoCompleteType={'email'}
               onChangeText={(val) => handleSignupInputChange('eMail', val)}
             />
           </Item>
@@ -125,6 +148,7 @@ const Signup = ({route, navigation}) => {
             )}
             <Input
               secureTextEntry={true}
+              autoCompleteType={'password'}
               onChangeText={(val) => handleSignupInputChange('password', val)}
             />
           </Item>
@@ -137,6 +161,7 @@ const Signup = ({route, navigation}) => {
             )}
             <Input
               secureTextEntry={true}
+              autoCompleteType={'password'}
               onChangeText={(val) => handleSignupInputChange('coPassword', val)}
             />
           </Item>

@@ -1,4 +1,4 @@
-import {loginBaseURL} from '../../apis/apis';
+import {bivtURL} from '../../apis/bivtApi';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Keychain from 'react-native-keychain';
@@ -94,7 +94,7 @@ export const loginUser = (loginDetails) => {
     //Dispatch: is going to take an action, copy of the object and pass to reducer.
     dispatch(loginReguest);
     try {
-      const response = await loginBaseURL.post('/auth/local', userInfo);
+      const response = await bivtURL.post('/auth/local', userInfo);
       if (response.status === 200 && response.data.data.token !== '') {
         encryptJWTToken(response.data.data.token);
         // storeJWTtoAsyncStorage(response.data.data.token);
