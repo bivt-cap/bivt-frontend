@@ -1,5 +1,5 @@
 /**
- * Signup styles
+ * Create circle styles
  *
  * @version 0.0.1
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
@@ -7,14 +7,11 @@
 
 import {StyleSheet} from 'react-native';
 
-const signupStyles = StyleSheet.create({
-  signupForm: {
+const createCircleStyles = StyleSheet.create({
+  createCircleForm: {
     marginTop: '10%',
   },
-  signupButton: {
-    marginTop: '10%',
-  },
-  loginButton: {
+  createCircleButton: {
     marginTop: '10%',
   },
   textFieldError: {
@@ -23,4 +20,4 @@ const signupStyles = StyleSheet.create({
   },
 });
 
-export default signupStyles;
+export default createCircleStyles;

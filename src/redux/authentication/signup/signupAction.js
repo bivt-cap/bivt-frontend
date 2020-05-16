@@ -42,12 +42,12 @@ export const signupUser = (userSignupDetails) => {
     email: userSignupDetails.eMail,
     password: userSignupDetails.password,
   };
-
   return async (dispatch) => {
     dispatch(signupUserRequest);
     try {
       const response = await bivtURL.post('/user/create', userInfo);
       const registrationDetails = response.data; //email token
+      console.log(registrationDetails);
       dispatch(signupUserSuccess('account successfully created'));
     } catch (error) {
       const errorMsg = error.response.data.status.errors;

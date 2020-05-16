@@ -4,7 +4,6 @@
  * @version 0.0.1
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
  */
-
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {signupUser} from '../../../redux';
@@ -42,10 +41,6 @@ const Signup = ({navigation}) => {
     });
   };
 
-  /**
-   * Form validation:
-   * 'firstRender: true', so that useffect does not get triggered on page load
-   */
   const [signupError, setSignupError] = useState({
     firstName: {
       error: false,
@@ -68,30 +63,30 @@ const Signup = ({navigation}) => {
   /**
    * Form validation:
    * On submission, this function sends the data to get validated
+   * If validated, the rest call to register is made (in redux)
    */
   const submitSignupForm = () => {
-    setSignupError(signupFormValidation(userSignupDetails));
+    let signupFormValidationErrors = signupFormValidation(userSignupDetails);
+    signupFormValidationErrors.then((errors) => {
+      setSignupError(errors);
+      if (
+        !errors.firstName.error &&
+        !errors.lastName.error &&
+        !errors.eMail.error &&
+        !errors.password.error &&
+        !errors.coPassword.error &&
+        !errors.firstRender
+      ) {
+        dispatch(signupUser(userSignupDetails));
+      }
+    });
   };
 
   /**
-   * Once all the errors are cleared, this function calls redux to trigger user
-   * registration function.
-   */
-  useEffect(() => {
-    if (
-      !signupError.firstName.error &&
-      !signupError.lastName.error &&
-      !signupError.eMail.error &&
-      !signupError.password.error &&
-      !signupError.coPassword.error &&
-      !signupError.firstRender
-    ) {
-      dispatch(signupUser(userSignupDetails));
-    }
-  }, [signupError, userSignupDetails, dispatch]);
-
-  /**
-   * Work in progress, ignore the function:
+   * The following function redirect users to create circle page once the
+   * account has been succesfully created.
+   * Note: this is just for a testing purpose, in this project user will validate the email
+   * and then login again to go to create circle page.
    */
   useEffect(() => {
     if (signupStatus.registrationDetails === 'account successfully created') {
@@ -103,7 +98,6 @@ const Signup = ({navigation}) => {
     <Container style={signupStyles.signupContainer}>
       <Header />
       <Content>
-        {/* <Text>Welcome {email}</Text> */}
         <Form style={signupStyles.signupForm}>
           <Item stackedLabel>
             <Label>First Name*</Label>
@@ -171,6 +165,14 @@ const Signup = ({navigation}) => {
           style={signupStyles.signupButton}
           onPress={submitSignupForm}>
           <Text>Signup</Text>
+        </Button>
+        <Button
+          full
+          style={signupStyles.loginButton}
+          onPress={() => {
+            navigation.navigate('Login');
+          }}>
+          <Text>Log in</Text>
         </Button>
         {signupStatus.loading ? (
           <Text>...loading</Text>
