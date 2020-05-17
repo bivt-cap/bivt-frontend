@@ -17,7 +17,7 @@ import {
 const DashBoard = ({route, navigation}) => {
   const userData = useSelector((state) => state.login);
   const dispatch = useDispatch();
-
+  console.log(userData);
   const {loginInfo} = route.params;
 
   const handleLogoutButtonClick = async () => {

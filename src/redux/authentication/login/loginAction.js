@@ -81,6 +81,7 @@ export const deleteJWTfromAsyncStorage = async () => {
     console.log(e);
   }
 };
+
 //Check sign-in
 export const loginUser = (loginDetails) => {
   const userInfo = {
@@ -127,6 +128,22 @@ export const googleSignIn = async (dispatch) => {
       // play services not available or outdated
     } else {
       // some other error happened
+    }
+  }
+};
+
+export const checkGoogleSession = async (dispatch) => {
+  try {
+    const isSignedIn = await GoogleSignin.isSignedIn();
+    const currentUser = await GoogleSignin.signInSilently();
+    if (isSignedIn) {
+      dispatch(googleLoginSuccess(currentUser));
+    }
+  } catch (error) {
+    if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+      console.log(statusCodes.SIGN_IN_REQUIRED);
+    } else {
+      // some other error
     }
   }
 };

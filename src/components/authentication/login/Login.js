@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {
   loginUser,
   googleSignIn,
+  checkGoogleSession,
   ReadJWTtoAsyncFromStorage,
   deleteJWTfromAsyncStorage,
 } from '../../../redux';
@@ -27,10 +28,14 @@ import {
   Text,
 } from 'native-base';
 import {loginFormValidation} from './loginFormValidation';
+
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  // console.log('yalcin', userData);
+  // console.log(GoogleSignin.getCurrentUser());
+  // console.log(GoogleSignin.isSignedIn());
+  console.log('loginpage', userData);
   const dispatch = useDispatch();
+
   // ******************************************************//
   // ************ BEGININ OF STATES DECLARATIONS *********//
   // ***************************************************//
@@ -51,12 +56,6 @@ const Login = ({navigation}) => {
   // ************ END OF STATES DECLERATIONS *********//
   // ***************************************************//
 
-  const checkTheTokenisValid = () => {
-    //CODE:I need to send existing token information to the backend for session . If it is token is match , redirect to page.
-    //If the token's are different redirect to login page.
-    ReadJWTtoAsyncFromStorage();
-  };
-
   //When there is no error at validation , run dispatch function and login
   // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
@@ -64,7 +63,8 @@ const Login = ({navigation}) => {
       iosClientId: GOOGLE_IOS_CLIENT_ID,
       webClientId: GOOGLE_WEB_CLIENT_ID,
     });
-    checkTheTokenisValid();
+    dispatch(checkGoogleSession);
+
     if (
       !loginError.email.error &&
       !loginError.password.error &&
@@ -78,6 +78,29 @@ const Login = ({navigation}) => {
   // ************ BEGININ OF FUNCTIONS DECLARATIONS ***********//
   // **********************************************************//
 
+  const checkTheTokenisValid = () => {
+    //CODE:I need to send existing token information to the backend for session . If it is token is match , redirect to page.
+    //If the token's are different redirect to login page.
+    ReadJWTtoAsyncFromStorage();
+  };
+  // Check the Google Token is valid. If it's valid navigate to dashboard.
+  // const checkGoogleSession = async () => {
+  //   try {
+  //     const isSignedIn = await GoogleSignin.isSignedIn();
+  //     const currentUser = await GoogleSignin.signInSilently();
+  //     if (isSignedIn) {
+  //       userData.googleisLoggedin === 'True';
+  //       console.log(userData);
+  //       navigation.navigate('DashBoard', {loginInfo: currentUser.user});
+  //     }
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+  //       console.log(statusCodes.SIGN_IN_REQUIRED);
+  //     } else {
+  //       // some other error
+  //     }
+  //   }
+  // };
   // normal login and google login check seperately and pass different params to the dash.
   // Naviget to Dasboard Feature.
   const checkisLoggedIn = () => {
