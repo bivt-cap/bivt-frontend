@@ -15,7 +15,6 @@ export const loginSuccess = (loginDetails) => {
     payload: loginDetails,
   };
 };
-
 export const loginFail = (error) => {
   return {
     type: 'LOGIN_FAIL',
@@ -53,7 +52,6 @@ export const encryptJWTToken = async (token) => {
 };
 export const storeJWTtoAsyncStorage = async (token) => {
   try {
-    // encryptJWTToken(token);
     console.log('Stored Token', token);
     await AsyncStorage.setItem('@JWT_Key', token);
   } catch (e) {
@@ -113,12 +111,13 @@ export const loginUser = (loginDetails) => {
 export const googleSignIn = async (dispatch) => {
   try {
     await GoogleSignin.hasPlayServices();
-    const gooleuserInfo = await GoogleSignin.signIn();
-    const getToken = await GoogleSignin.getTokens();
-    console.log(getToken);
-    console.log('User informations: ', gooleuserInfo);
+    const googleuserInfo = await GoogleSignin.signIn();
+    console.log('User informations: ', googleuserInfo);
+    // const googleToken = googleuserInfo.idToken;
+    // const response = await bivtURL.post('/auth/google', googleToken);
+    // console.log('Google Data', response);
     //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
-    dispatch(googleLoginSuccess(gooleuserInfo));
+    dispatch(googleLoginSuccess(googleuserInfo));
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow

@@ -1,24 +1,48 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
-import {deleteJWTfromAsyncStorage} from '../../redux';
 import {useSelector, useDispatch} from 'react-redux';
 import {Container, Content, Text, Card, Button} from 'native-base';
-
-const handleLogoutButtonClick = () => {
-  deleteJWTfromAsyncStorage();
-  if (deleteJWTfromAsyncStorage()) {
-    console.log('logout');
-    // nav.navigate('DashBoard');
-  }
-};
+import {
+  loginUser,
+  googleSignIn,
+  ReadJWTtoAsyncFromStorage,
+  deleteJWTfromAsyncStorage,
+} from '../../redux';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-community/google-signin';
 
 const DashBoard = ({route, navigation}) => {
   const userData = useSelector((state) => state.login);
-  console.log('Dash', userData);
-  // console.log(route.params);
+  const dispatch = useDispatch();
+
   const {loginInfo} = route.params;
-  // let userFullName = userParams.userData.loginDetails.user.name;
-  // console.log(loginInfo);
+
+  const handleLogoutButtonClick = async () => {
+    try {
+      //If user authenticate with google oAuth
+      if (userData.googleisLoggedin === 'True') {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        userData.googleisLoggedin = 'False';
+        navigation.navigate('Login');
+        console.log(userData);
+        //If user authenticate with local sign in.
+      } else if (userData.isLoggedin === 'True') {
+        deleteJWTfromAsyncStorage();
+        if (deleteJWTfromAsyncStorage()) {
+          userData.isLoggedin = 'False';
+          console.log(userData);
+          navigation.navigate('Login');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container style={styles.container}>
       <Content>
@@ -35,7 +59,7 @@ const DashBoard = ({route, navigation}) => {
         )}
 
         <Button light onPress={handleLogoutButtonClick}>
-          <Text> Light </Text>
+          <Text> Logout </Text>
         </Button>
       </Content>
     </Container>

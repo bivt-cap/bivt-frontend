@@ -50,11 +50,13 @@ const Login = ({navigation}) => {
   // ******************************************************//
   // ************ END OF STATES DECLERATIONS *********//
   // ***************************************************//
+
   const checkTheTokenisValid = () => {
     //CODE:I need to send existing token information to the backend for session . If it is token is match , redirect to page.
     //If the token's are different redirect to login page.
     ReadJWTtoAsyncFromStorage();
   };
+
   //When there is no error at validation , run dispatch function and login
   // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
@@ -63,8 +65,6 @@ const Login = ({navigation}) => {
       webClientId: GOOGLE_WEB_CLIENT_ID,
     });
     checkTheTokenisValid();
-    // isSignedIn();
-    // getCurrentUser();
     if (
       !loginError.email.error &&
       !loginError.password.error &&
@@ -77,16 +77,9 @@ const Login = ({navigation}) => {
   // **********************************************************//
   // ************ BEGININ OF FUNCTIONS DECLARATIONS ***********//
   // **********************************************************//
-  const checkLogout = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      // this.setState({user: null}); // Remember to remove the user from your app's state as well
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  // normal login and google login check seperately and pass different params to the dash
+
+  // normal login and google login check seperately and pass different params to the dash.
+  // Naviget to Dasboard Feature.
   const checkisLoggedIn = () => {
     if (userData.isLoggedin === 'True') {
       navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
@@ -112,11 +105,6 @@ const Login = ({navigation}) => {
   };
   const handleLoginButtonClick = () => {
     setloginError(loginFormValidation(loginData));
-    // dispatch(loginUser(loginData));
-    if (userData.loginDetails === 'Login Sucess') {
-      //Simple navigation to signup page
-      navigation.navigate('Login', loginData);
-    }
   };
   const handleGoogleButtonClick = () => {
     dispatch(googleSignIn);
@@ -168,8 +156,8 @@ const Login = ({navigation}) => {
             />
           </Item>
         </Form>
-        <Button transparent onPress={checkLogout}>
-          <Text>Logout</Text>
+        <Button transparent>
+          <Text>Forgot Password</Text>
         </Button>
         <Button
           block
