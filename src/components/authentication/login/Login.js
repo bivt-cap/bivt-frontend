@@ -6,8 +6,6 @@ import {
   googleSignIn,
   checkGoogleSession,
   checkLocalSession,
-  ReadJWTtoAsyncFromStorage,
-  deleteJWTfromAsyncStorage,
 } from '../../../redux';
 import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from 'react-native-dotenv';
 import {
@@ -64,7 +62,10 @@ const Login = ({navigation}) => {
     });
     dispatch(checkGoogleSession);
     dispatch(checkLocalSession);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  useEffect(() => {
     if (
       !loginError.email.error &&
       !loginError.password.error &&
@@ -77,12 +78,6 @@ const Login = ({navigation}) => {
   // **********************************************************//
   // ************ BEGININ OF FUNCTIONS DECLARATIONS ***********//
   // **********************************************************//
-
-  const checkTheTokenisValid = () => {
-    //CODE:I need to send existing token information to the backend for session . If it is token is match , redirect to page.
-    //If the token's are different redirect to login page.
-    ReadJWTtoAsyncFromStorage();
-  };
 
   // normal login and google login check seperately and pass different params to the dash.
   // Naviget to Dasboard Feature.

@@ -6,7 +6,7 @@ import {
   loginUser,
   googleSignIn,
   ReadJWTtoAsyncFromStorage,
-  deleteJWTfromAsyncStorage,
+  deleteJTWFromKeyChain,
 } from '../../redux';
 import {
   GoogleSignin,
@@ -31,8 +31,8 @@ const DashBoard = ({route, navigation}) => {
         console.log(userData);
         //If user authenticate with local sign in.
       } else if (userData.isLoggedin === 'True') {
-        deleteJWTfromAsyncStorage();
-        if (deleteJWTfromAsyncStorage()) {
+        deleteJTWFromKeyChain();
+        if (deleteJTWFromKeyChain()) {
           userData.isLoggedin = 'False';
           console.log(userData);
           navigation.navigate('Login');

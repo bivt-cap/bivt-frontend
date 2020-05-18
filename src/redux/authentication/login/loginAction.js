@@ -27,54 +27,48 @@ export const googleLoginSuccess = (googleLoginDetails) => {
     payload: googleLoginDetails,
   };
 };
-export const encryptJWTToken = async (token) => {
+export const writeJTWtoKeyChain = async (token) => {
   try {
     const jwtToken = token;
-    // Store the credentials
-    await Keychain.setGenericPassword('token', jwtToken);
+    if (jwtToken !== '') {
+      // Store the credentials
+      await Keychain.setGenericPassword('token', jwtToken);
+    } else {
+      console.log('Token not found');
+    }
+  } catch (error) {
+    console.log("Keychain couldn't be accessed!", error);
+  }
+};
+
+export const readJWTFromKeyChain = async () => {
+  try {
     // Retrieve the credentials
     const credentials = await Keychain.getGenericPassword();
     console.log('Credentials', credentials);
     if (credentials) {
       //Encrypt token and send to the asyncStorage because asyncStroage is not SECURE!
-      storeJWTtoAsyncStorage(credentials.password);
-      // console.log('sdf', credentials.password);
       console.log(
         'Credentials successfully loaded for user ' + credentials.username,
       );
+      return credentials.password;
     } else {
       console.log('No credentials stored');
-    }
-  } catch (error) {
-    console.log("Keychain couldn't be accessed!", error);
-  }
-  await Keychain.resetGenericPassword();
-};
-export const storeJWTtoAsyncStorage = async (token) => {
-  try {
-    console.log('Stored Token', token);
-    await AsyncStorage.setItem('@JWT_Key', token);
-  } catch (e) {
-    console.log(e);
-  }
-};
-export const ReadJWTtoAsyncFromStorage = async () => {
-  try {
-    const value = await AsyncStorage.getItem('@JWT_Key');
-    if (value !== null) {
-      return value;
     }
   } catch (e) {
     console.log('Error', e);
   }
 };
 //Once user click logout button clear token from storage.
-export const deleteJWTfromAsyncStorage = async () => {
+export const deleteJTWFromKeyChain = async () => {
   try {
-    await AsyncStorage.removeItem('@JWT_Key');
-    const value = await AsyncStorage.getItem('@JWT_Key');
-    console.log(value);
-    return true;
+    const resetPassword = await Keychain.resetGenericPassword();
+    if (resetPassword) {
+      console.log('Token successfully removed');
+      return true;
+    } else {
+      return false;
+    }
   } catch (e) {
     console.log(e);
   }
@@ -93,13 +87,14 @@ export const loginUser = (loginDetails) => {
       dispatch(loginReguest);
       const response = await bivtURL.post('/auth/local', userInfo);
       if (response.status === 200 && response.data.data.token !== '') {
-        encryptJWTToken(response.data.data.token);
+        writeJTWtoKeyChain(response.data.data.token);
         //get user informations from DB
         dispatch(loginSuccess(response.data.data.user));
       }
     } catch (error) {
       const errorMsg = error.message;
-      dispatch(loginFail(errorMsg));
+      console.log(errorMsg);
+      // dispatch(loginFail(errorMsg));
     }
   };
 };
@@ -110,9 +105,7 @@ export const googleSignIn = async (dispatch) => {
     await GoogleSignin.hasPlayServices();
     const googleuserInfo = await GoogleSignin.signIn();
     console.log('User informations: ', googleuserInfo);
-    // const googleToken = googleuserInfo.idToken;
-    // const response = await bivtURL.post('/auth/google', googleToken);
-    // console.log('Google Data', response);
+
     //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
     dispatch(googleLoginSuccess(googleuserInfo));
   } catch (error) {
@@ -145,11 +138,11 @@ export const checkGoogleSession = async (dispatch) => {
 };
 export const checkLocalSession = async (dispatch) => {
   try {
-    const token = await ReadJWTtoAsyncFromStorage();
+    const token = await readJWTFromKeyChain();
     dispatch(loginReguest);
     if (token !== '') {
       const localToken = 'bearer ' + token;
-      console.log(localToken);
+      // console.log(localToken);
       const headersInfo = {
         'content-type': 'application/json',
         authorization: localToken,
@@ -157,17 +150,19 @@ export const checkLocalSession = async (dispatch) => {
       const config = {
         headers: headersInfo,
       };
-      // NEED: I need a get endpoint that accepts token that sored in storage and it will retrive success and user informations .
+      // NEED: I need a post endpoint that accepts token that sored in storage and it will retrive success and user informations .
       const response = await bivtURL.get('/circle/byUser', config);
       console.log('Returned Status code', response.status);
       if (response.status === 200) {
         //I need to pass those user details that came from the endpoint.
         dispatch(loginSuccess('Yalcin'));
       }
-    } else console.log('Eror while reading token');
+    } else {
+      console.log('Eror while reading token');
+    }
   } catch (error) {
     const errorMsg = error.message;
-    dispatch(loginFail(errorMsg));
-    console.log(errorMsg);
+    // dispatch(loginFail(errorMsg));
+    console.log("User has to login, couldn't find session: ", errorMsg);
   }
 };
