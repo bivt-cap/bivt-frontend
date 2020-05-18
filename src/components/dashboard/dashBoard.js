@@ -53,10 +53,6 @@ const DashBoard = ({route, navigation}) => {
             <Text>Welcome {loginInfo.email} </Text>
             <Text>Name {loginInfo.firstName} </Text>
             <Text>Surname {loginInfo.lastName} </Text>
-            <Text>
-              {/* GOOLGE ICIN BILGILERI BACKENDDEN AL Welcome{' '}
-              {`${loginInfo.firstName} ${loginInfo.lastName}`}{' '} */}
-            </Text>
           </Card>
         )}
 

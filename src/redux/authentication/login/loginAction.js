@@ -169,7 +169,10 @@ export const checkLocalSession = async (dispatch) => {
         headers: headersInfo,
       };
       // NEED: I need a post endpoint that accepts token that sored in storage and it will retrive success and user informations .
+      // const response1 = await bivtURL.post('/auth/check', config);
+      // console.log(response1);
       const response = await bivtURL.get('/circle/byUser', config);
+      console.log('yalcin');
       console.log('Returned Status code', response.status);
       if (response.status === 200) {
         //I need to pass those user details that came from the endpoint.
