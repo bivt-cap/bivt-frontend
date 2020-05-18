@@ -110,10 +110,16 @@ export const googleSignIn = async (dispatch) => {
   try {
     await GoogleSignin.hasPlayServices();
     const googleuserInfo = await GoogleSignin.signIn();
+    const googleToken = {token: googleuserInfo.idToken};
     console.log('User informations: ', googleuserInfo);
-
-    //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
-    dispatch(googleLoginSuccess(googleuserInfo));
+    const response = await bivtURL.post('/auth/google', googleToken);
+    console.log(response.data.data.token);
+    if (response.status === 200 && response.data.data.token !== '') {
+      //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
+      const googleUserInfo = response.data.data.user;
+      console.log(googleUserInfo);
+      dispatch(googleLoginSuccess(googleUserInfo));
+    }
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow
@@ -132,7 +138,13 @@ export const checkGoogleSession = async (dispatch) => {
     const isSignedIn = await GoogleSignin.isSignedIn();
     if (isSignedIn) {
       const currentUser = await GoogleSignin.signInSilently();
-      dispatch(googleLoginSuccess(currentUser));
+      const googleToken = {token: currentUser.idToken};
+      const response = await bivtURL.post('/auth/google', googleToken);
+      if (response.status === 200 && response.data.data.token !== '') {
+        const googleUserInfo = response.data.data.user;
+
+        dispatch(googleLoginSuccess(googleUserInfo));
+      }
     }
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_REQUIRED) {

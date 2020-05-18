@@ -5,7 +5,7 @@
  * @author Yalcin Tatar (https://github.com/yalcinos)
  */
 
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, ActivityIndicator} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -89,12 +89,14 @@ const Login = ({navigation}) => {
   // normal login and google login check seperately and pass different params to the dash.
   // Naviget to Dasboard Feature.
   const checkisLoggedIn = () => {
+    // console.log(userData.googleLoginDetails);
     if (userData.isLoggedin === 'True') {
       navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
     } else if (userData.googleisLoggedin === 'True') {
       //get data from DB not google.
+
       navigation.navigate('DashBoard', {
-        loginInfo: userData.googleLoginDetails.user,
+        loginInfo: userData.googleLoginDetails,
       });
     } else {
       console.log('NOT LOGIN');
@@ -131,11 +133,8 @@ const Login = ({navigation}) => {
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Dark}
           onPress={handleGoogleButtonClick}
-          // disabled={this.state.isSigninInProgress}
         />
-        {/* <Button block style={{margin: 15, marginTop: 50}} onPress={signOut}>
-          <Text>Sign In</Text>
-        </Button> */}
+
         <Form style={styles.form}>
           <H1 style={styles.textCentered}>Login</H1>
           <Item stackedLabel>
