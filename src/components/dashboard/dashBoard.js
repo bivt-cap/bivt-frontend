@@ -52,8 +52,8 @@ const DashBoard = ({route, navigation}) => {
           <Card>
             <Text>Welcome {loginInfo.email} </Text>
             <Text>
-              {/* GOOLGE ICIN BILGILERI BACKENDDEN AL */}
-              Welcome {`${loginInfo.firstName} ${loginInfo.lastName}`}{' '}
+              {/* GOOLGE ICIN BILGILERI BACKENDDEN AL Welcome{' '}
+              {`${loginInfo.firstName} ${loginInfo.lastName}`}{' '} */}
             </Text>
           </Card>
         )}

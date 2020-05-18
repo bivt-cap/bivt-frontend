@@ -28,10 +28,10 @@ export const googleLoginSuccess = (googleLoginDetails) => {
   };
 };
 export const encryptJWTToken = async (token) => {
-  const jwtToken = token;
-  // Store the credentials
-  await Keychain.setGenericPassword('token', jwtToken);
   try {
+    const jwtToken = token;
+    // Store the credentials
+    await Keychain.setGenericPassword('token', jwtToken);
     // Retrieve the credentials
     const credentials = await Keychain.getGenericPassword();
     console.log('Credentials', credentials);
@@ -62,9 +62,7 @@ export const ReadJWTtoAsyncFromStorage = async () => {
   try {
     const value = await AsyncStorage.getItem('@JWT_Key');
     if (value !== null) {
-      console.log('TOKEEN!!', value);
-      // value previously stored
-      return true;
+      return value;
     }
   } catch (e) {
     console.log('Error', e);
@@ -91,15 +89,13 @@ export const loginUser = (loginDetails) => {
 
   return async (dispatch) => {
     //Dispatch: is going to take an action, copy of the object and pass to reducer.
-    dispatch(loginReguest);
     try {
+      dispatch(loginReguest);
       const response = await bivtURL.post('/auth/local', userInfo);
       if (response.status === 200 && response.data.data.token !== '') {
         encryptJWTToken(response.data.data.token);
-        // storeJWTtoAsyncStorage(response.data.data.token);
         //get user informations from DB
         dispatch(loginSuccess(response.data.data.user));
-        // ReadJWTtoAsyncFromStorage();
       }
     } catch (error) {
       const errorMsg = error.message;
@@ -135,8 +131,8 @@ export const googleSignIn = async (dispatch) => {
 export const checkGoogleSession = async (dispatch) => {
   try {
     const isSignedIn = await GoogleSignin.isSignedIn();
-    const currentUser = await GoogleSignin.signInSilently();
     if (isSignedIn) {
+      const currentUser = await GoogleSignin.signInSilently();
       dispatch(googleLoginSuccess(currentUser));
     }
   } catch (error) {
@@ -145,5 +141,33 @@ export const checkGoogleSession = async (dispatch) => {
     } else {
       // some other error
     }
+  }
+};
+export const checkLocalSession = async (dispatch) => {
+  try {
+    const token = await ReadJWTtoAsyncFromStorage();
+    dispatch(loginReguest);
+    if (token !== '') {
+      const localToken = 'bearer ' + token;
+      console.log(localToken);
+      const headersInfo = {
+        'content-type': 'application/json',
+        authorization: localToken,
+      };
+      const config = {
+        headers: headersInfo,
+      };
+      // NEED: I need a get endpoint that accepts token that sored in storage and it will retrive success and user informations .
+      const response = await bivtURL.get('/circle/byUser', config);
+      console.log('Returned Status code', response.status);
+      if (response.status === 200) {
+        //I need to pass those user details that came from the endpoint.
+        dispatch(loginSuccess('Yalcin'));
+      }
+    } else console.log('Eror while reading token');
+  } catch (error) {
+    const errorMsg = error.message;
+    dispatch(loginFail(errorMsg));
+    console.log(errorMsg);
   }
 };

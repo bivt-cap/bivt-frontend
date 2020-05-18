@@ -1,10 +1,11 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ActivityIndicator} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   loginUser,
   googleSignIn,
   checkGoogleSession,
+  checkLocalSession,
   ReadJWTtoAsyncFromStorage,
   deleteJWTfromAsyncStorage,
 } from '../../../redux';
@@ -31,8 +32,6 @@ import {loginFormValidation} from './loginFormValidation';
 
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  // console.log(GoogleSignin.getCurrentUser());
-  // console.log(GoogleSignin.isSignedIn());
   console.log('loginpage', userData);
   const dispatch = useDispatch();
 
@@ -64,6 +63,7 @@ const Login = ({navigation}) => {
       webClientId: GOOGLE_WEB_CLIENT_ID,
     });
     dispatch(checkGoogleSession);
+    dispatch(checkLocalSession);
 
     if (
       !loginError.email.error &&
@@ -83,30 +83,14 @@ const Login = ({navigation}) => {
     //If the token's are different redirect to login page.
     ReadJWTtoAsyncFromStorage();
   };
-  // Check the Google Token is valid. If it's valid navigate to dashboard.
-  // const checkGoogleSession = async () => {
-  //   try {
-  //     const isSignedIn = await GoogleSignin.isSignedIn();
-  //     const currentUser = await GoogleSignin.signInSilently();
-  //     if (isSignedIn) {
-  //       userData.googleisLoggedin === 'True';
-  //       console.log(userData);
-  //       navigation.navigate('DashBoard', {loginInfo: currentUser.user});
-  //     }
-  //   } catch (error) {
-  //     if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-  //       console.log(statusCodes.SIGN_IN_REQUIRED);
-  //     } else {
-  //       // some other error
-  //     }
-  //   }
-  // };
+
   // normal login and google login check seperately and pass different params to the dash.
   // Naviget to Dasboard Feature.
   const checkisLoggedIn = () => {
     if (userData.isLoggedin === 'True') {
       navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
     } else if (userData.googleisLoggedin === 'True') {
+      //get data from DB not google.
       navigation.navigate('DashBoard', {
         loginInfo: userData.googleLoginDetails.user,
       });
@@ -182,11 +166,17 @@ const Login = ({navigation}) => {
         <Button transparent>
           <Text>Forgot Password</Text>
         </Button>
+
         <Button
           block
           style={{margin: 15, marginTop: 50}}
           onPress={handleLoginButtonClick}>
-          <Text>Sign In</Text>
+          {userData.loading === true ? (
+            (console.log(userData),
+            (<ActivityIndicator size="small" color="#00ff00" />))
+          ) : (
+            <Text>Sign in</Text>
+          )}
         </Button>
         {userData.isLoggedin === 'True' ||
         userData.googleisLoggedin === 'True' ? (
