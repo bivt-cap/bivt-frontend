@@ -1,3 +1,10 @@
+/**
+ * The component for Login and
+ *
+ * @version 0.0.1
+ * @author Yalcin Tatar (https://github.com/yalcinos)
+ */
+
 import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet, ActivityIndicator} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';

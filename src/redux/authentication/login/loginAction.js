@@ -1,3 +1,9 @@
+/**
+ * Actions for handling Login and Session.
+ *
+ * @version 0.0.1
+ * @author Yalcin Tatar (https://github.com/yalcinos)
+ */
 import {bivtURL} from '../../apis/bivtApi';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-community/async-storage';
