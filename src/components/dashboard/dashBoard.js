@@ -1,42 +1,64 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {Container, Content, Text, Card, Button} from 'native-base';
 import {
-  Container,
-  Header,
-  Title,
-  Spinner,
-  Content,
-  Button,
-  Item,
-  Label,
-  Input,
-  H1,
-  Body,
-  Left,
-  Right,
-  Icon,
-  Form,
-  Text,
-} from 'native-base';
+  loginUser,
+  googleSignIn,
+  ReadJWTtoAsyncFromStorage,
+  deleteJTWFromKeyChain,
+} from '../../redux';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-community/google-signin';
 
 const DashBoard = ({route, navigation}) => {
-  console.log(route.params);
+  const userData = useSelector((state) => state.login);
+  const dispatch = useDispatch();
+  console.log(userData);
   const {loginInfo} = route.params;
-  // let userFullName = userParams.userData.loginDetails.user.name;
-  console.log(loginInfo);
+
+  const handleLogoutButtonClick = async () => {
+    try {
+      //If user authenticate with google oAuth
+      if (userData.googleisLoggedin === 'True') {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        userData.googleisLoggedin = 'False';
+        navigation.navigate('Login');
+        console.log(userData);
+        //If user authenticate with local sign in.
+      } else if (userData.isLoggedin === 'True') {
+        deleteJTWFromKeyChain();
+        if (deleteJTWFromKeyChain()) {
+          userData.isLoggedin = 'False';
+          console.log(userData);
+          navigation.navigate('Login');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container style={styles.container}>
       <Content>
         {Object.keys(loginInfo).length === 0 ? (
           <Text>Welcome Google </Text>
         ) : (
-          <Text>Welcome {loginInfo.email} </Text>
+          <Card>
+            <Text>Welcome {loginInfo.email} </Text>
+            <Text>Name {loginInfo.firstName} </Text>
+            <Text>Surname {loginInfo.lastName} </Text>
+          </Card>
         )}
 
-        <Button title="Go back" onPress={() => navigation.navigate('Login')} />
+        <Button light onPress={handleLogoutButtonClick}>
+          <Text> Logout </Text>
+        </Button>
       </Content>
     </Container>
   );

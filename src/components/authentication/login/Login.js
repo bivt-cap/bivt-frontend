@@ -1,13 +1,26 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+/**
+ * The component for Login and
+ *
+ * @version 0.0.1
+ * @author Yalcin Tatar (https://github.com/yalcinos)
+ */
+
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, ActivityIndicator} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {loginUser, googleSignIn} from '../../../redux';
-import {GOOGLE_IOS_CLIENT_ID} from 'react-native-dotenv';
+import {
+  loginUser,
+  googleSignIn,
+  checkGoogleSession,
+  checkLocalSession,
+} from '../../../redux';
+import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from 'react-native-dotenv';
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-community/google-signin';
+import styles from './loginStyles';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
@@ -22,10 +35,12 @@ import {
   Text,
 } from 'native-base';
 import {loginFormValidation} from './loginFormValidation';
+
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  console.log('yalcin', userData);
+  console.log('loginpage', userData);
   const dispatch = useDispatch();
+
   // ******************************************************//
   // ************ BEGININ OF STATES DECLARATIONS *********//
   // ***************************************************//
@@ -51,9 +66,14 @@ const Login = ({navigation}) => {
   useEffect(() => {
     GoogleSignin.configure({
       iosClientId: GOOGLE_IOS_CLIENT_ID,
+      webClientId: GOOGLE_WEB_CLIENT_ID,
     });
-    // isSignedIn();
-    // getCurrentUser();
+    dispatch(checkGoogleSession);
+    dispatch(checkLocalSession);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (
       !loginError.email.error &&
       !loginError.password.error &&
@@ -67,12 +87,18 @@ const Login = ({navigation}) => {
   // ************ BEGININ OF FUNCTIONS DECLARATIONS ***********//
   // **********************************************************//
 
-  // normal login and google login check seperately and pass different params to the dash
+  // normal login and google login check seperately and pass different params to the dash.
+  // Naviget to Dasboard Feature.
   const checkisLoggedIn = () => {
+    // console.log(userData.googleLoginDetails);
     if (userData.isLoggedin === 'True') {
-      navigation.navigate('DashBoard', {loginInfo: loginData});
+      navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
     } else if (userData.googleisLoggedin === 'True') {
-      navigation.navigate('DashBoard', {loginInfo: userData.loginDetails.user});
+      //get data from DB not google.
+
+      navigation.navigate('DashBoard', {
+        loginInfo: userData.googleLoginDetails,
+      });
     } else {
       console.log('NOT LOGIN');
     }
@@ -91,11 +117,6 @@ const Login = ({navigation}) => {
   };
   const handleLoginButtonClick = () => {
     setloginError(loginFormValidation(loginData));
-    // dispatch(loginUser(loginData));
-    if (userData.loginDetails === 'Login Sucess') {
-      //Simple navigation to signup page
-      navigation.navigate('Login', loginData);
-    }
   };
   const handleGoogleButtonClick = () => {
     dispatch(googleSignIn);
@@ -113,11 +134,8 @@ const Login = ({navigation}) => {
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Dark}
           onPress={handleGoogleButtonClick}
-          // disabled={this.state.isSigninInProgress}
         />
-        {/* <Button block style={{margin: 15, marginTop: 50}} onPress={signOut}>
-          <Text>Sign In</Text>
-        </Button> */}
+
         <Form style={styles.form}>
           <H1 style={styles.textCentered}>Login</H1>
           <Item stackedLabel>
@@ -150,11 +168,17 @@ const Login = ({navigation}) => {
         <Button transparent>
           <Text>Forgot Password</Text>
         </Button>
+
         <Button
           block
           style={{margin: 15, marginTop: 50}}
           onPress={handleLoginButtonClick}>
-          <Text>Sign In</Text>
+          {userData.loading === true ? (
+            (console.log(userData),
+            (<ActivityIndicator size="small" color="#00ff00" />))
+          ) : (
+            <Text>Sign in</Text>
+          )}
         </Button>
         {userData.isLoggedin === 'True' ||
         userData.googleisLoggedin === 'True' ? (
@@ -166,30 +190,5 @@ const Login = ({navigation}) => {
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#C4E7F4',
-    position: 'absolute',
-    width: '100%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    padding: 10,
-  },
-  form: {
-    marginTop: '50%',
-  },
-  textFieldError: {
-    color: 'red',
-    fontSize: 14,
-  },
-  textContent: {
-    fontSize: 20,
-    color: 'red',
-  },
-  textCentered: {
-    textAlign: 'center',
-  },
-});
 
 export default Login;

@@ -1,5 +1,13 @@
+/**
+ * Actions for handling Login and Session.
+ *
+ * @version 0.0.1
+ * @author Yalcin Tatar (https://github.com/yalcinos)
+ */
 import {bivtURL} from '../../apis/bivtApi';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
+import AsyncStorage from '@react-native-community/async-storage';
+import * as Keychain from 'react-native-keychain';
 
 //Purpose of Action: Describe some changes that we want to make to the data inside of our application.
 export const loginReguest = () => {
@@ -13,7 +21,6 @@ export const loginSuccess = (loginDetails) => {
     payload: loginDetails,
   };
 };
-
 export const loginFail = (error) => {
   return {
     type: 'LOGIN_FAIL',
@@ -26,6 +33,52 @@ export const googleLoginSuccess = (googleLoginDetails) => {
     payload: googleLoginDetails,
   };
 };
+export const writeJTWtoKeyChain = async (token) => {
+  try {
+    const jwtToken = token;
+    if (jwtToken !== '') {
+      // Store the credentials
+      await Keychain.setGenericPassword('token', jwtToken);
+    } else {
+      console.log('Token not found');
+    }
+  } catch (error) {
+    console.log("Keychain couldn't be accessed!", error);
+  }
+};
+
+export const readJWTFromKeyChain = async () => {
+  try {
+    // Retrieve the credentials
+    const credentials = await Keychain.getGenericPassword();
+    console.log('Credentials', credentials);
+    if (credentials) {
+      //Encrypt token and send to the asyncStorage because asyncStroage is not SECURE!
+      console.log(
+        'Credentials successfully loaded for user ' + credentials.username,
+      );
+      return credentials.password;
+    } else {
+      console.log('No credentials stored');
+    }
+  } catch (e) {
+    console.log('Error', e);
+  }
+};
+//Once user click logout button clear token from storage.
+export const deleteJTWFromKeyChain = async () => {
+  try {
+    const resetPassword = await Keychain.resetGenericPassword();
+    if (resetPassword) {
+      console.log('Token successfully removed');
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 //Check sign-in
 export const loginUser = (loginDetails) => {
@@ -33,21 +86,21 @@ export const loginUser = (loginDetails) => {
     email: loginDetails.email,
     password: loginDetails.password,
   };
-  const config = {
-    headers: userInfo,
-  };
+
   return async (dispatch) => {
     //Dispatch: is going to take an action, copy of the object and pass to reducer.
-    dispatch(loginReguest);
     try {
-      const response = await bivtURL.post('/user/auth', userInfo, config);
-      console.log(response);
-      if (response.status === 200) {
-        dispatch(loginSuccess('Login Sucess'));
+      dispatch(loginReguest);
+      const response = await bivtURL.post('/auth/local', userInfo);
+      if (response.status === 200 && response.data.data.token !== '') {
+        writeJTWtoKeyChain(response.data.data.token);
+        //get user informations from DB
+        dispatch(loginSuccess(response.data.data.user));
       }
     } catch (error) {
       const errorMsg = error.message;
-      dispatch(loginFail(errorMsg));
+      console.log(errorMsg);
+      // dispatch(loginFail(errorMsg));
     }
   };
 };
@@ -56,10 +109,17 @@ export const loginUser = (loginDetails) => {
 export const googleSignIn = async (dispatch) => {
   try {
     await GoogleSignin.hasPlayServices();
-    const gooleuserInfo = await GoogleSignin.signIn();
-    console.log('User informations: ', gooleuserInfo);
-    //Code: Here post google token to endpoint
-    dispatch(googleLoginSuccess(gooleuserInfo));
+    const googleuserInfo = await GoogleSignin.signIn();
+    const googleToken = {token: googleuserInfo.idToken};
+    console.log('User informations: ', googleuserInfo);
+    const response = await bivtURL.post('/auth/google', googleToken);
+    console.log(response.data.data.token);
+    if (response.status === 200 && response.data.data.token !== '') {
+      //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
+      const googleUserInfo = response.data.data.user;
+      console.log(googleUserInfo);
+      dispatch(googleLoginSuccess(googleUserInfo));
+    }
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow
@@ -70,5 +130,60 @@ export const googleSignIn = async (dispatch) => {
     } else {
       // some other error happened
     }
+  }
+};
+
+export const checkGoogleSession = async (dispatch) => {
+  try {
+    const isSignedIn = await GoogleSignin.isSignedIn();
+    if (isSignedIn) {
+      const currentUser = await GoogleSignin.signInSilently();
+      const googleToken = {token: currentUser.idToken};
+      const response = await bivtURL.post('/auth/google', googleToken);
+      if (response.status === 200 && response.data.data.token !== '') {
+        const googleUserInfo = response.data.data.user;
+
+        dispatch(googleLoginSuccess(googleUserInfo));
+      }
+    }
+  } catch (error) {
+    if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+      console.log(statusCodes.SIGN_IN_REQUIRED);
+    } else {
+      // some other error
+    }
+  }
+};
+export const checkLocalSession = async (dispatch) => {
+  try {
+    const token = await readJWTFromKeyChain();
+    dispatch(loginReguest);
+    if (token !== '') {
+      const localToken = 'bearer ' + token;
+      // console.log(localToken);
+      const headersInfo = {
+        'content-type': 'application/json',
+        authorization: localToken,
+      };
+      const config = {
+        headers: headersInfo,
+      };
+      // NEED: I need a post endpoint that accepts token that sored in storage and it will retrive success and user informations .
+      // const response1 = await bivtURL.post('/auth/check', config);
+      // console.log(response1);
+      const response = await bivtURL.get('/circle/byUser', config);
+      console.log('yalcin');
+      console.log('Returned Status code', response.status);
+      if (response.status === 200) {
+        //I need to pass those user details that came from the endpoint.
+        dispatch(loginSuccess('Yalcin'));
+      }
+    } else {
+      console.log('Eror while reading token');
+    }
+  } catch (error) {
+    const errorMsg = error.message;
+    // dispatch(loginFail(errorMsg));
+    console.log("User has to login, couldn't find session: ", errorMsg);
   }
 };

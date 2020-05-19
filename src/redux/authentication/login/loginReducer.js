@@ -3,8 +3,10 @@
 const loginInitial = {
   loading: false,
   loginDetails: '',
-  error: '',
+  googleLoginDetails: '',
   isLoggedin: 'False',
+  googleisLoggedin: 'False',
+  error: '',
 };
 
 //Reducer: is a function that is responsible for taking in an action and some existing amount of data
@@ -26,7 +28,7 @@ let loginReducer = (state = loginInitial, action) => {
     case 'GOOGLE_LOGIN_SUCCESS':
       return {
         loading: false,
-        loginDetails: action.payload,
+        googleLoginDetails: action.payload,
         googleisLoggedin: 'True',
         error: '',
       };
