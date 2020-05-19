@@ -8,6 +8,7 @@ import {Provider} from 'react-redux';
 import store from './src/redux/store';
 import Login from './src/components/authentication/login/Login';
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
+import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -22,6 +23,14 @@ const App = () => {
             component={CreateCircle}
             options={{
               title: 'Lets create a perfect circle for you',
+              headerLeft: null,
+            }}
+          />
+          <Stack.Screen
+            name="InviteToCircle"
+            component={InviteToCircle}
+            options={{
+              title: 'Invite people to join your group',
               headerLeft: null,
             }}
           />
