@@ -51,7 +51,6 @@ export const createCircle = (createCircleDetails) => {
     try {
       const response = await bivtURL.post('/circle/create', circleInfo, config);
       const circleRegistrationDetails = response.data;
-      console.log(circleRegistrationDetails);
       dispatch(createCircleSuccess('circle successfully created'));
     } catch (error) {
       const errorMsg = error.response.data.status.errors;
