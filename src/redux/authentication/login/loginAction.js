@@ -27,6 +27,11 @@ export const loginFail = (error) => {
     payload: error,
   };
 };
+export const initialState = () => {
+  return {
+    type: 'RESET_ERROR_MSG',
+  };
+};
 export const googleLoginSuccess = (googleLoginDetails) => {
   return {
     type: 'GOOGLE_LOGIN_SUCCESS',
@@ -100,7 +105,8 @@ export const loginUser = (loginDetails) => {
     } catch (error) {
       const errorMsg = error.message;
       console.log(errorMsg);
-      // dispatch(loginFail(errorMsg));
+      const errorMessgage = 'Please Enter right username/password.';
+      dispatch(loginFail(errorMessgage));
     }
   };
 };
@@ -113,7 +119,7 @@ export const googleSignIn = async (dispatch) => {
     const googleToken = {token: googleuserInfo.idToken};
     console.log('User informations: ', googleuserInfo);
     const response = await bivtURL.post('/auth/google', googleToken);
-    console.log(response.data.data.token);
+    // console.log(response.data.data.token);
     if (response.status === 200 && response.data.data.token !== '') {
       //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
       const googleUserInfo = response.data.data.user;
@@ -123,12 +129,17 @@ export const googleSignIn = async (dispatch) => {
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow
+      console.log(error);
     } else if (error.code === statusCodes.IN_PROGRESS) {
       // operation (e.g. sign in) is in progress already
+      console.log(error);
     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
       // play services not available or outdated
+      console.log(error);
     } else {
-      // some other error happened
+      const errorMessgage =
+        'This email is already registered in the system. Please try to use application login.';
+      dispatch(loginFail(errorMessgage));
     }
   }
 };
@@ -160,7 +171,7 @@ export const checkLocalSession = async (dispatch) => {
     dispatch(loginReguest);
     if (token !== '') {
       const localToken = 'bearer ' + token;
-      // console.log(localToken);
+
       const headersInfo = {
         'content-type': 'application/json',
         authorization: localToken,
@@ -168,22 +179,22 @@ export const checkLocalSession = async (dispatch) => {
       const config = {
         headers: headersInfo,
       };
-      // NEED: I need a post endpoint that accepts token that sored in storage and it will retrive success and user informations .
-      // const response1 = await bivtURL.post('/auth/check', config);
-      // console.log(response1);
-      const response = await bivtURL.get('/circle/byUser', config);
-      console.log('yalcin');
+      // console.log(config);
+      const response = await bivtURL.get('/auth/check', config);
+      console.log(response);
       console.log('Returned Status code', response.status);
       if (response.status === 200) {
-        //I need to pass those user details that came from the endpoint.
-        dispatch(loginSuccess('Yalcin'));
+        dispatch(loginSuccess(response.data.data));
+      } else {
+        dispatch(loginFail('Session is timeout.'));
+        console.log('Session is timeout.');
       }
     } else {
-      console.log('Eror while reading token');
+      console.log('Error while reading token');
     }
   } catch (error) {
     const errorMsg = error.message;
-    // dispatch(loginFail(errorMsg));
+    dispatch(loginFail('Session is timeout'));
     console.log("User has to login, couldn't find session: ", errorMsg);
   }
 };
