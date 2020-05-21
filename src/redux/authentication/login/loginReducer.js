@@ -37,7 +37,10 @@ let loginReducer = (state = loginInitial, action) => {
         loading: false,
         loginDetails: '',
         error: action.payload,
+        errorStatus: 'True',
       };
+    case 'RESET_ERROR_MSG':
+      return state;
     default:
       return state;
   }

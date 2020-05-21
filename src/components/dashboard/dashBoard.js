@@ -2,17 +2,8 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Container, Content, Text, Card, Button} from 'native-base';
-import {
-  loginUser,
-  googleSignIn,
-  ReadJWTtoAsyncFromStorage,
-  deleteJTWFromKeyChain,
-} from '../../redux';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-community/google-signin';
+import {deleteJTWFromKeyChain} from '../../redux';
+import {GoogleSignin} from '@react-native-community/google-signin';
 
 const DashBoard = ({route, navigation}) => {
   const userData = useSelector((state) => state.login);
@@ -34,6 +25,7 @@ const DashBoard = ({route, navigation}) => {
         deleteJTWFromKeyChain();
         if (deleteJTWFromKeyChain()) {
           userData.isLoggedin = 'False';
+          userData.loginDetails = '';
           console.log(userData);
           navigation.navigate('Login');
         }

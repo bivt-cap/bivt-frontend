@@ -6,23 +6,22 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ActivityIndicator} from 'react-native';
+import {StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   loginUser,
   googleSignIn,
   checkGoogleSession,
   checkLocalSession,
+  initialState,
 } from '../../../redux';
 import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from 'react-native-dotenv';
 import {
   GoogleSignin,
   GoogleSigninButton,
-  statusCodes,
 } from '@react-native-community/google-signin';
 import styles from './loginStyles';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+
 import {
   Container,
   Content,
@@ -48,6 +47,7 @@ const Login = ({navigation}) => {
     email: '',
     password: '',
   });
+
   const [loginError, setloginError] = useState({
     email: {
       error: false,
@@ -57,12 +57,11 @@ const Login = ({navigation}) => {
     },
     firstRender: true,
   });
+  console.log(loginError);
   // ******************************************************//
   // ************ END OF STATES DECLERATIONS *********//
   // ***************************************************//
 
-  //When there is no error at validation , run dispatch function and login
-  // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
     GoogleSignin.configure({
       iosClientId: GOOGLE_IOS_CLIENT_ID,
@@ -73,6 +72,8 @@ const Login = ({navigation}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  //When there is no error at validation , run dispatch function and login
+  // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
     if (
       !loginError.email.error &&
@@ -81,21 +82,20 @@ const Login = ({navigation}) => {
     ) {
       dispatch(loginUser(loginData));
     }
-  }, [loginError, loginData, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginError]);
 
   // **********************************************************//
   // ************ BEGININ OF FUNCTIONS DECLARATIONS ***********//
   // **********************************************************//
 
   // normal login and google login check seperately and pass different params to the dash.
-  // Naviget to Dasboard Feature.
+  // Navigate to Dasboard Feature.
   const checkisLoggedIn = () => {
     // console.log(userData.googleLoginDetails);
     if (userData.isLoggedin === 'True') {
       navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
     } else if (userData.googleisLoggedin === 'True') {
-      //get data from DB not google.
-
       navigation.navigate('DashBoard', {
         loginInfo: userData.googleLoginDetails,
       });
@@ -121,6 +121,25 @@ const Login = ({navigation}) => {
   const handleGoogleButtonClick = () => {
     dispatch(googleSignIn);
     console.log(userData);
+  };
+  const showAlertErrorMessage = (errorMsg) => {
+    return Alert.alert(
+      'Error',
+      errorMsg,
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            userData.errorStatus = 'False';
+            userData.error = '';
+            console.log(userData);
+          },
+        },
+      ],
+      {
+        cancelable: false,
+      },
+    );
   };
   // ************************************************//
   // ************ END OF EVENT HANDLERS *********//
@@ -180,12 +199,11 @@ const Login = ({navigation}) => {
             <Text>Sign in</Text>
           )}
         </Button>
-        {userData.isLoggedin === 'True' ||
-        userData.googleisLoggedin === 'True' ? (
-          checkisLoggedIn()
-        ) : (
-          <Text>{userData.error}</Text>
-        )}
+        {userData.isLoggedin === 'True' || userData.googleisLoggedin === 'True'
+          ? checkisLoggedIn()
+          : userData.error !== '' && userData.errorStatus === 'True'
+          ? showAlertErrorMessage(userData.error)
+          : null}
       </Content>
     </Container>
   );
