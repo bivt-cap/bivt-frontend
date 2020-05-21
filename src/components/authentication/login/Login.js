@@ -19,11 +19,9 @@ import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from 'react-native-dotenv';
 import {
   GoogleSignin,
   GoogleSigninButton,
-  statusCodes,
 } from '@react-native-community/google-signin';
 import styles from './loginStyles';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+
 import {
   Container,
   Content,
@@ -34,7 +32,6 @@ import {
   H1,
   Form,
   Text,
-  Toast,
 } from 'native-base';
 import {loginFormValidation} from './loginFormValidation';
 
@@ -60,12 +57,11 @@ const Login = ({navigation}) => {
     },
     firstRender: true,
   });
+  console.log(loginError);
   // ******************************************************//
   // ************ END OF STATES DECLERATIONS *********//
   // ***************************************************//
 
-  //When there is no error at validation , run dispatch function and login
-  // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
     GoogleSignin.configure({
       iosClientId: GOOGLE_IOS_CLIENT_ID,
@@ -76,6 +72,8 @@ const Login = ({navigation}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  //When there is no error at validation , run dispatch function and login
+  // firstRender prob helps to stop sending fetch request when the app first render.
   useEffect(() => {
     if (
       !loginError.email.error &&
@@ -203,8 +201,7 @@ const Login = ({navigation}) => {
         </Button>
         {userData.isLoggedin === 'True' || userData.googleisLoggedin === 'True'
           ? checkisLoggedIn()
-          : null}
-        {userData.error !== '' && userData.errorStatus === 'True'
+          : userData.error !== '' && userData.errorStatus === 'True'
           ? showAlertErrorMessage(userData.error)
           : null}
       </Content>

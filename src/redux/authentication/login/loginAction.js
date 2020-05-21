@@ -85,7 +85,9 @@ export const deleteJTWFromKeyChain = async () => {
   }
 };
 
-//Check sign-in
+/**
+ * Actions for handling Login and Session.
+ */
 export const loginUser = (loginDetails) => {
   const userInfo = {
     email: loginDetails.email,
@@ -186,15 +188,15 @@ export const checkLocalSession = async (dispatch) => {
       if (response.status === 200) {
         dispatch(loginSuccess(response.data.data));
       } else {
-        dispatch(loginFail('Session is timeout.'));
-        console.log('Session is timeout.');
+        dispatch(loginFail('Session is timeout'));
       }
     } else {
+      dispatch(loginFail('Session is timeout'));
       console.log('Error while reading token');
     }
   } catch (error) {
     const errorMsg = error.message;
-    dispatch(loginFail('Session is timeout'));
+    // dispatch(loginFail('Session is timeout'));
     console.log("User has to login, couldn't find session: ", errorMsg);
   }
 };
