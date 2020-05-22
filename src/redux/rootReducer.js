@@ -7,6 +7,7 @@ import inviteToCirlceReducer from './circle/inviteToCircle/inviteToCirlceReducer
 const rootReducer = combineReducers({
   signup: signupReducer,
   login: loginReducer,
+  forgotPassword: loginReducer,
   createCircle: createCirlceReducer,
   inviteToCircle: inviteToCirlceReducer,
 });

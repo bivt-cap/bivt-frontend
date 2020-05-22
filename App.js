@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
 import Login from './src/components/authentication/login/Login';
+import ForgotPassword from './src/components/authentication/forgotPassword/ForgotPassword';
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
 const Stack = createStackNavigator();
@@ -17,7 +18,13 @@ const App = () => {
       <Provider store={store}>
         <Stack.Navigator initialRouteName="Signup">
           <Stack.Screen name="SignUp" component={Signup} />
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerLeft: null,
+            }}
+          />
           <Stack.Screen
             name="CreateCircle"
             component={CreateCircle}
@@ -35,6 +42,14 @@ const App = () => {
             }}
           />
           <Stack.Screen name="DashBoard" component={DashBoard} />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{
+              title: 'Forgot Password',
+              headerLeft: null,
+            }}
+          />
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
