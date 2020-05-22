@@ -37,6 +37,7 @@ export const inviteToCircleFailure = (error) => {
  * This function calls the REST api to invite new members to a circle
  * The tempAuthToken is only for testing, once the user login they must use that auth token
  */
+//For testing - add a temp auth token below:
 const tempAuthToken = '';
 
 export const inviteToCircle = (inviteToCircleDetails, _circleId) => {

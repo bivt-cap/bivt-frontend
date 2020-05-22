@@ -24,10 +24,12 @@ import {inviteToCircleValidation} from './inviteToCircleValidation';
 const InviteToCircle = ({navigation}) => {
   const dispatch = useDispatch();
   const inviteToCircleStatus = useSelector((state) => state.inviteToCircle);
+  //Default state of the invite to circle form
   const [inviteToCircleDetails, setInviteToCircleDetails] = useState({
     inviteeEmail: '',
   });
-
+  //The state gets updated when ever a user types something in the input box
+  //Using the array deconstruction ES6 to updated a particular field's state
   const handleInviteToCircleInputChange = (key, value) => {
     setInviteToCircleDetails((prevState) => {
       return {
@@ -38,7 +40,7 @@ const InviteToCircle = ({navigation}) => {
   };
 
   /**
-   * Invite To Circle Form validation:
+   * Invite To Circle Form validation's default state:
    */
   const [inviteToCircleError, setInviteToCircleError] = useState({
     inviteeEmail: {

@@ -24,10 +24,12 @@ import {createCircleValidation} from './createCircleValidation';
 const CreateCircle = ({navigation}) => {
   const dispatch = useDispatch();
   const createCircleStatus = useSelector((state) => state.createCircle);
+  //Default state of the create group form
   const [createCircleDetails, setUserCreateCircleDetails] = useState({
     groupName: '',
   });
-
+  //The state gets updated when ever a user types something in the input box
+  //Using the array deconstruction ES6 to updated a particular field's state
   const handleCreateCircleInputChange = (key, value) => {
     setUserCreateCircleDetails((prevState) => {
       return {
@@ -38,7 +40,7 @@ const CreateCircle = ({navigation}) => {
   };
 
   /**
-   * Create Circle Form validation:
+   * Create Circle Form validation's default state:
    */
   const [createCircleError, setCreateCircleError] = useState({
     groupName: {
@@ -88,7 +90,6 @@ const CreateCircle = ({navigation}) => {
           onPress={submitCreateCircleForm}>
           <Text>Create Circle</Text>
         </Button>
-
         {createCircleStatus.loading ? (
           <Text>...loading</Text>
         ) : createCircleStatus.error.length > 0 ? (

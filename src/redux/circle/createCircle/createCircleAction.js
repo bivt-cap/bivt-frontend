@@ -37,6 +37,7 @@ export const createCircleFailure = (error) => {
  * The tempAuthToken is only for testing, once the user logsin they must use that auth token
  * to create a group
  */
+//For testing - add a temp auth token below:
 const tempAuthToken = '';
 
 export const createCircle = (createCircleDetails) => {

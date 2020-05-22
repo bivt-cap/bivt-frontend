@@ -24,6 +24,7 @@ import {signupFormValidation} from './signupFormValidation';
 const Signup = ({navigation}) => {
   const dispatch = useDispatch();
   const signupStatus = useSelector((state) => state.signup);
+  //Default state of the signup form
   const [userSignupDetails, setUserSignupDetails] = useState({
     firstName: '',
     lastName: '',
@@ -31,7 +32,8 @@ const Signup = ({navigation}) => {
     password: '',
     coPassword: '',
   });
-
+  //The state gets updated when ever a user types something in the input box
+  //Using the array deconstruction ES6 to updated a particular field's state
   const handleSignupInputChange = (key, value) => {
     setUserSignupDetails((prevState) => {
       return {
@@ -40,7 +42,9 @@ const Signup = ({navigation}) => {
       };
     });
   };
-
+  /**
+   * Signup Form validation's default state:
+   */
   const [signupError, setSignupError] = useState({
     firstName: {
       error: false,
