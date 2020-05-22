@@ -38,6 +38,18 @@ export const googleLoginSuccess = (googleLoginDetails) => {
     payload: googleLoginDetails,
   };
 };
+export const forgotPasswordFail = (error) => {
+  return {
+    type: 'FORGOT_PASSWORD_FAIL',
+    payload: error,
+  };
+};
+export const forgotPasswordSuccess = (forgotPasswordDetails) => {
+  return {
+    type: 'FORGOT_PASSWORD_SUCCESS',
+    payload: forgotPasswordDetails,
+  };
+};
 export const writeJTWtoKeyChain = async (token) => {
   try {
     const jwtToken = token;
@@ -145,7 +157,37 @@ export const googleSignIn = async (dispatch) => {
     }
   }
 };
-
+export const forgotUserPassword = (userEmail) => {
+  try {
+    const emailDetail = {
+      email: userEmail.email,
+    };
+    return async (dispatch) => {
+      //Dispatch: is going to take an action, copy of the object and pass to reducer.
+      try {
+        dispatch(loginReguest);
+        const response = await bivtURL.post(
+          '/user/forgotPassword',
+          emailDetail,
+        );
+        if (response.status === 200 && response.data.emailToken !== '') {
+          //send email to the user
+          dispatch(
+            forgotPasswordSuccess(
+              'Email succesfully sent! \nClick the link in the email to reset your password!',
+            ),
+          );
+        }
+      } catch (error) {
+        const errorMsg = error.message;
+        console.log(errorMsg);
+        const errorMessgage =
+          'User not found. Please enter valid Email Address';
+        dispatch(forgotPasswordFail(errorMessgage));
+      }
+    };
+  } catch (error) {}
+};
 export const checkGoogleSession = async (dispatch) => {
   try {
     const isSignedIn = await GoogleSignin.isSignedIn();

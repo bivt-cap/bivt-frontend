@@ -6,6 +6,7 @@ const loginInitial = {
   googleLoginDetails: '',
   isLoggedin: 'False',
   googleisLoggedin: 'False',
+  forgotPasswordDetails: '',
   error: '',
 };
 
@@ -31,6 +32,20 @@ let loginReducer = (state = loginInitial, action) => {
         googleLoginDetails: action.payload,
         googleisLoggedin: 'True',
         error: '',
+      };
+    case 'FORGOT_PASSWORD_SUCCESS':
+      return {
+        loading: false,
+        error: '',
+        emailSent: 'True',
+        forgotPasswordDetails: action.payload,
+      };
+    case 'FORGOT_PASSWORD_FAIL':
+      return {
+        loading: false,
+        emailSent: 'False',
+        error: action.payload,
+        pwErrorStatus: 'True',
       };
     case 'LOGIN_FAIL':
       return {

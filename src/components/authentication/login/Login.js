@@ -37,7 +37,7 @@ import {loginFormValidation} from './loginFormValidation';
 
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  console.log('loginpage', userData);
+  // console.log('loginpage', userData);
   const dispatch = useDispatch();
 
   // ******************************************************//
@@ -57,7 +57,7 @@ const Login = ({navigation}) => {
     },
     firstRender: true,
   });
-  console.log(loginError);
+
   // ******************************************************//
   // ************ END OF STATES DECLERATIONS *********//
   // ***************************************************//
@@ -92,7 +92,6 @@ const Login = ({navigation}) => {
   // normal login and google login check seperately and pass different params to the dash.
   // Navigate to Dasboard Feature.
   const checkisLoggedIn = () => {
-    // console.log(userData.googleLoginDetails);
     if (userData.isLoggedin === 'True') {
       navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
     } else if (userData.googleisLoggedin === 'True') {
@@ -122,6 +121,9 @@ const Login = ({navigation}) => {
     dispatch(googleSignIn);
     console.log(userData);
   };
+  const handleForgotButtonClick = () => {
+    navigation.navigate('ForgotPassword');
+  };
   const showAlertErrorMessage = (errorMsg) => {
     return Alert.alert(
       'Error',
@@ -132,7 +134,6 @@ const Login = ({navigation}) => {
           onPress: () => {
             userData.errorStatus = 'False';
             userData.error = '';
-            console.log(userData);
           },
         },
       ],
@@ -184,7 +185,7 @@ const Login = ({navigation}) => {
             />
           </Item>
         </Form>
-        <Button transparent>
+        <Button transparent onPress={handleForgotButtonClick}>
           <Text>Forgot Password</Text>
         </Button>
 
