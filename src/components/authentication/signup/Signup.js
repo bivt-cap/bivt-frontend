@@ -24,7 +24,10 @@ import {signupFormValidation} from './signupFormValidation';
 const Signup = ({navigation}) => {
   const dispatch = useDispatch();
   const signupStatus = useSelector((state) => state.signup);
-  //Default state of the signup form
+
+  // ****************************************************//
+  // ************ BEGINING OF STATES DECLARATIONS ******//
+  // **************************************************//
   const [userSignupDetails, setUserSignupDetails] = useState({
     firstName: '',
     lastName: '',
@@ -32,19 +35,7 @@ const Signup = ({navigation}) => {
     password: '',
     coPassword: '',
   });
-  //The state gets updated when ever a user types something in the input box
-  //Using the array deconstruction ES6 to updated a particular field's state
-  const handleSignupInputChange = (key, value) => {
-    setUserSignupDetails((prevState) => {
-      return {
-        ...prevState,
-        [key]: value,
-      };
-    });
-  };
-  /**
-   * Signup Form validation's default state:
-   */
+
   const [signupError, setSignupError] = useState({
     firstName: {
       error: false,
@@ -63,6 +54,22 @@ const Signup = ({navigation}) => {
     },
     firstRender: true,
   });
+  // ****************************************************//
+  // ************ END OF STATES DECLARATIONS ***********//
+  // **************************************************//
+
+  /**
+   * The state gets updated when ever a user types something in the input box
+   * Using the array deconstruction ES6 to updated a particular field's state
+   */
+  const handleSignupInputChange = (key, value) => {
+    setUserSignupDetails((prevState) => {
+      return {
+        ...prevState,
+        [key]: value,
+      };
+    });
+  };
 
   /**
    * Form validation:
@@ -89,8 +96,8 @@ const Signup = ({navigation}) => {
   /**
    * The following function redirect users to create circle page once the
    * account has been succesfully created.
-   * Note: this is just for a testing purpose, in this project user will validate the email
-   * and then login again to go to create circle page.
+   * Note: this is just for a testing purpose, in this project user will validate
+   * the email and then login again to go to create circle page.
    */
   useEffect(() => {
     if (signupStatus.registrationDetails === 'account successfully created') {

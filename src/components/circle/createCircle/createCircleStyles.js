@@ -11,6 +11,13 @@ const createCircleStyles = StyleSheet.create({
   createCircleForm: {
     marginTop: '10%',
   },
+  createCircleDropDown: {
+    width: '100%',
+    marginTop: '8%',
+  },
+  createCircleDropDownItem: {
+    marginTop: '5%',
+  },
   createCircleButton: {
     marginTop: '10%',
   },

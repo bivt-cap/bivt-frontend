@@ -10,14 +10,15 @@ import Login from './src/components/authentication/login/Login';
 import ForgotPassword from './src/components/authentication/forgotPassword/ForgotPassword';
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
+import ChoosePlugins from './src/components/plugin/ChoosePlugin';
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
       <Provider store={store}>
-        <Stack.Navigator initialRouteName="Signup">
-          <Stack.Screen name="SignUp" component={Signup} />
+        <Stack.Navigator initialRouteName="CreateCircle">
+          <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen
             name="Login"
             component={Login}
@@ -25,6 +26,15 @@ const App = () => {
               headerLeft: null,
             }}
           />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{
+              title: 'Forgot Password',
+              headerLeft: null,
+            }}
+          />
+          <Stack.Screen name="DashBoard" component={DashBoard} />
           <Stack.Screen
             name="CreateCircle"
             component={CreateCircle}
@@ -41,12 +51,11 @@ const App = () => {
               headerLeft: null,
             }}
           />
-          <Stack.Screen name="DashBoard" component={DashBoard} />
           <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPassword}
+            name="ChoosePlugins"
+            component={ChoosePlugins}
             options={{
-              title: 'Forgot Password',
+              title: 'Select best plugins for you:',
               headerLeft: null,
             }}
           />

@@ -4,9 +4,9 @@
  * @version 0.0.1
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
  */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {createCircle} from '../../../redux';
+import {createCircle, getCircleTypesAndPluginsDetail} from '../../../redux';
 import {
   Container,
   Header,
@@ -17,6 +17,7 @@ import {
   Label,
   Button,
   Text,
+  Picker,
 } from 'native-base';
 import createCircleStyles from './createCircleStyles';
 import {createCircleValidation} from './createCircleValidation';
@@ -24,29 +25,47 @@ import {createCircleValidation} from './createCircleValidation';
 const CreateCircle = ({navigation}) => {
   const dispatch = useDispatch();
   const createCircleStatus = useSelector((state) => state.createCircle);
-  //Default state of the create group form
-  const [createCircleDetails, setUserCreateCircleDetails] = useState({
+  // ****************************************************//
+  // ************ BEGINING OF STATES DECLARATIONS ******//
+  // **************************************************//
+  const [createCircleDetails, setCreateCircleDetails] = useState({
     groupName: '',
+    selectedGroupType: 0,
   });
-  //The state gets updated when ever a user types something in the input box
-  //Using the array deconstruction ES6 to updated a particular field's state
+
+  const [createCircleError, setCreateCircleError] = useState({
+    groupName: {
+      error: false,
+    },
+    selectedGroupType: {
+      error: false,
+    },
+  });
+  const [userMessage, setUserMessage] = useState('');
+  // ****************************************************//
+  // ************ END OF STATES DECLARATIONS ***********//
+  // **************************************************//
+
+  /**
+   * This function fetch available groups and correponding plugins
+   * on the page load
+   */
+  useEffect(() => {
+    dispatch(getCircleTypesAndPluginsDetail());
+  }, []);
+
+  /**
+   * The state gets updated when ever a user types something in the input box
+   * Using the array deconstruction ES6 to updated a particular field's state
+   */
   const handleCreateCircleInputChange = (key, value) => {
-    setUserCreateCircleDetails((prevState) => {
+    setCreateCircleDetails((prevState) => {
       return {
         ...prevState,
         [key]: value,
       };
     });
   };
-
-  /**
-   * Create Circle Form validation's default state:
-   */
-  const [createCircleError, setCreateCircleError] = useState({
-    groupName: {
-      error: false,
-    },
-  });
 
   /**
    * Form validation:
@@ -59,11 +78,50 @@ const CreateCircle = ({navigation}) => {
     );
     createCircleValidationErrors.then((errors) => {
       setCreateCircleError(errors);
-      if (!errors.groupName.error) {
+      if (!errors.groupName.error && !errors.selectedGroupType.error) {
         dispatch(createCircle(createCircleDetails));
       }
     });
   };
+  /**
+   * This function populate the circle type options in drop down/picker
+   */
+  const circleTypeOptions = () => {
+    return createCircleStatus.circleTypesAndPluginsDetails.circleType.map(
+      (circleType) => {
+        return (
+          <Picker.Item
+            label={circleType.name.toString()}
+            value={circleType.id}
+            key={circleType.id}
+          />
+        );
+      },
+    );
+  };
+  /**
+   * This function handle the change in value of the drop down/picker
+   */
+  const onPickerValueChange = (value) => {
+    setCreateCircleDetails((prevState) => {
+      return {
+        ...prevState,
+        selectedGroupType: value,
+      };
+    });
+  };
+  /**
+   * The following function redirect users to choose plugins page once the
+   * group has been succesfully created.
+   */
+  useEffect(() => {
+    if (createCircleStatus.circleRegistrationDetails.status !== undefined) {
+      if (createCircleStatus.circleRegistrationDetails.status.id === 200) {
+        setUserMessage('account created');
+        navigation.navigate('ChoosePlugins');
+      }
+    }
+  }, [createCircleStatus.circleRegistrationDetails, navigation]);
 
   return (
     <Container style={createCircleStyles.createCircleContainer}>
@@ -83,6 +141,29 @@ const CreateCircle = ({navigation}) => {
               }
             />
           </Item>
+          <Item
+            stackedLabel
+            style={createCircleStyles.createCircleDropDownItem}>
+            <Label>Select your group type*</Label>
+            {createCircleError.selectedGroupType.error && (
+              <Label style={createCircleStyles.textFieldError}>
+                {createCircleError.selectedGroupType.message}
+              </Label>
+            )}
+            <Picker
+              note
+              mode="dropdown"
+              style={createCircleStyles.createCircleDropDown}
+              selectedValue={createCircleDetails.selectedGroupType}
+              onValueChange={onPickerValueChange.bind(this)}>
+              <Picker.Item label="choose one:" value={0} key={0} />
+              {createCircleStatus.circleTypesAndPluginsDetails === '' ? (
+                <Picker.Item label="loading" value={0} key={0} />
+              ) : (
+                circleTypeOptions()
+              )}
+            </Picker>
+          </Item>
         </Form>
         <Button
           full
@@ -95,7 +176,7 @@ const CreateCircle = ({navigation}) => {
         ) : createCircleStatus.error.length > 0 ? (
           <Text>{createCircleStatus.error}</Text>
         ) : (
-          <Text>{createCircleStatus.circleRegistrationDetails}</Text>
+          <Text>{userMessage}</Text>
         )}
       </Content>
     </Container>
