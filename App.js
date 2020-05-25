@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import Signup from './src/components/authentication/signup/Signup';
 import DashBoard from './src/components/dashboard/dashBoard';
@@ -10,13 +10,18 @@ import Login from './src/components/authentication/login/Login';
 import ForgotPassword from './src/components/authentication/forgotPassword/ForgotPassword';
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
+import SplashScreen from 'react-native-splash-screen';
 const Stack = createStackNavigator();
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <NavigationContainer>
       <Provider store={store}>
-        <Stack.Navigator initialRouteName="Signup">
+        <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="SignUp" component={Signup} />
           <Stack.Screen
             name="Login"
