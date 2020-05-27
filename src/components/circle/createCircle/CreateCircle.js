@@ -29,15 +29,15 @@ const CreateCircle = ({navigation}) => {
   // ************ BEGINING OF STATES DECLARATIONS ******//
   // **************************************************//
   const [createCircleDetails, setCreateCircleDetails] = useState({
-    groupName: '',
-    selectedGroupType: 0,
+    circleName: '',
+    selectedCircleType: 0,
   });
 
   const [createCircleError, setCreateCircleError] = useState({
-    groupName: {
+    circleName: {
       error: false,
     },
-    selectedGroupType: {
+    selectedCircleType: {
       error: false,
     },
   });
@@ -47,7 +47,7 @@ const CreateCircle = ({navigation}) => {
   // **************************************************//
 
   /**
-   * This function fetch available groups and correponding plugins
+   * This function fetch available circles and correponding plugins
    * on the page load
    */
   useEffect(() => {
@@ -78,7 +78,7 @@ const CreateCircle = ({navigation}) => {
     );
     createCircleValidationErrors.then((errors) => {
       setCreateCircleError(errors);
-      if (!errors.groupName.error && !errors.selectedGroupType.error) {
+      if (!errors.circleName.error && !errors.selectedCircleType.error) {
         dispatch(createCircle(createCircleDetails));
       }
     });
@@ -106,21 +106,26 @@ const CreateCircle = ({navigation}) => {
     setCreateCircleDetails((prevState) => {
       return {
         ...prevState,
-        selectedGroupType: value,
+        selectedCircleType: value,
       };
     });
   };
   /**
    * The following function redirect users to choose plugins page once the
-   * group has been succesfully created.
+   * circle has been succesfully created.
    */
   useEffect(() => {
+    setUserMessage('');
     if (createCircleStatus.circleRegistrationDetails.status !== undefined) {
       if (createCircleStatus.circleRegistrationDetails.status.id === 200) {
         setUserMessage('account created');
-        navigation.navigate('ChoosePlugins');
+        navigation.navigate('ChoosePlugins', {
+          createCircleStatus: createCircleStatus,
+          createCircleDetails: createCircleDetails,
+        });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createCircleStatus.circleRegistrationDetails, navigation]);
 
   return (
@@ -130,31 +135,31 @@ const CreateCircle = ({navigation}) => {
         <Form style={createCircleStyles.createCircleForm}>
           <Item stackedLabel>
             <Label>Circle Name*</Label>
-            {createCircleError.groupName.error && (
+            {createCircleError.circleName.error && (
               <Label style={createCircleStyles.textFieldError}>
-                {createCircleError.groupName.message}
+                {createCircleError.circleName.message}
               </Label>
             )}
             <Input
               onChangeText={(val) =>
-                handleCreateCircleInputChange('groupName', val)
+                handleCreateCircleInputChange('circleName', val)
               }
             />
           </Item>
           <Item
             stackedLabel
             style={createCircleStyles.createCircleDropDownItem}>
-            <Label>Select your group type*</Label>
-            {createCircleError.selectedGroupType.error && (
+            <Label>Select your circle type*</Label>
+            {createCircleError.selectedCircleType.error && (
               <Label style={createCircleStyles.textFieldError}>
-                {createCircleError.selectedGroupType.message}
+                {createCircleError.selectedCircleType.message}
               </Label>
             )}
             <Picker
               note
               mode="dropdown"
               style={createCircleStyles.createCircleDropDown}
-              selectedValue={createCircleDetails.selectedGroupType}
+              selectedValue={createCircleDetails.selectedCircleType}
               onValueChange={onPickerValueChange.bind(this)}>
               <Picker.Item label="choose one:" value={0} key={0} />
               {createCircleStatus.circleTypesAndPluginsDetails === '' ? (
