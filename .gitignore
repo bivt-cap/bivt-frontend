@@ -58,4 +58,8 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
+# Environment Variables
 .env
+
+# VSCode local configuration folder
+.vscode

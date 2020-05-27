@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {savePlugin} from '../../../redux';
 import {
   Container,
   Header,
@@ -8,14 +10,17 @@ import {
   Text,
   Toast,
   Body,
-  Button,
   View,
   Icon,
   Fab,
 } from 'native-base';
 import choosePluginStyles from './choosePluginStyles';
-
+console.disableYellowBox = true;
 const ChoosePlugins = ({route, navigation}) => {
+  const dispatch = useDispatch();
+  const choosePluginsResponseDetails = useSelector(
+    (state) => state.choosePlugin,
+  );
   /**
    * We are getting the following information(next three const) from
    * create circle page
@@ -30,6 +35,7 @@ const ChoosePlugins = ({route, navigation}) => {
   // ************ BEGINING OF STATES DECLARATIONS ******//
   // **************************************************//
   const [checkBoxStateControl, setCheckBoxStateControl] = useState(0);
+  const [userMessage, setUserMessage] = useState('');
   let checkBoxInitialState = {};
   // ****************************************************//
   // ************ END OF STATES DECLARATIONS ***********//
@@ -52,7 +58,6 @@ const ChoosePlugins = ({route, navigation}) => {
    */
   const handleCheckBoxChange = (plugInId) => {
     let pluginCount = 0;
-    console.log(checkBoxStateControl);
     for (const element in checkBoxStateControl) {
       if (checkBoxStateControl[element]) {
         pluginCount++;
@@ -74,9 +79,54 @@ const ChoosePlugins = ({route, navigation}) => {
     }
   };
 
+  /**
+   * The following function push the three seleted plugins to the DB
+   * There is no API avalable to store receive all three plugins at one, so fow now
+   * we are using a for loop. I am not using axios.all intentially.
+   */
   const submitSelectedPlugins = () => {
-    console.log('Hi');
+    let pluginCount = 0;
+    let chosenPlugins = [];
+    for (const element in checkBoxStateControl) {
+      if (checkBoxStateControl[element]) {
+        pluginCount++;
+        chosenPlugins.push(element.split('_')[1]);
+      }
+    }
+    if (pluginCount === 3) {
+      setUserMessage('...processing');
+      const circleId =
+        createCircleStatus.circleRegistrationDetails.data.circleId;
+      for (let i = 0; i < 3; i++) {
+        dispatch(savePlugin(chosenPlugins[i], circleId));
+      }
+    } else {
+      Toast.show({
+        text: 'please choose three plugins to continue!',
+        buttonText: 'Okay',
+      });
+    }
   };
+
+  /**
+   * The following function redirect to dashboard after plugins have been saved succesfully.
+   */
+  useEffect(() => {
+    if (
+      choosePluginsResponseDetails.choosePluginsResponseDetails.status !==
+      undefined
+    ) {
+      if (
+        choosePluginsResponseDetails.choosePluginsResponseDetails.status.id ===
+        200
+      ) {
+        setUserMessage('...Saved !Ready to go to dashboard');
+        //navigation.navigate('DashBoard');
+      }
+    } else {
+      setUserMessage(choosePluginsResponseDetails.error);
+    }
+  }, [choosePluginsResponseDetails, navigation]);
 
   /**
    * @author Arsh
@@ -137,6 +187,13 @@ const ChoosePlugins = ({route, navigation}) => {
           </Fab>
         </View>
       </Content>
+      {choosePluginsResponseDetails.loading ? (
+        <Text>...loading</Text>
+      ) : createCircleStatus.error.length > 0 ? (
+        <Text>{createCircleStatus.error[0]}</Text>
+      ) : (
+        <Text>{userMessage}</Text>
+      )}
     </Container>
   );
 };
