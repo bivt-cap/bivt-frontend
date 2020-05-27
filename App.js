@@ -11,6 +11,7 @@ import ForgotPassword from './src/components/authentication/forgotPassword/Forgo
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
 import SplashScreen from 'react-native-splash-screen';
+import Chat from './src/components/plugins/chat/Chat';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -26,6 +27,13 @@ const App = () => {
           <Stack.Screen
             name="Login"
             component={Login}
+            options={{
+              headerLeft: null,
+            }}
+          />
+          <Stack.Screen
+            name="Chat"
+            component={Chat}
             options={{
               headerLeft: null,
             }}

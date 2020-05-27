@@ -34,7 +34,9 @@ const DashBoard = ({route, navigation}) => {
       console.error(error);
     }
   };
-
+  const handleChatLogin = async () => {
+    navigation.navigate('Chat', {userInfo: userData.loginDetails});
+  };
   return (
     <Container style={styles.container}>
       <Content>
@@ -50,6 +52,9 @@ const DashBoard = ({route, navigation}) => {
 
         <Button light onPress={handleLogoutButtonClick}>
           <Text> Logout </Text>
+        </Button>
+        <Button onPress={handleChatLogin}>
+          <Text> Chat </Text>
         </Button>
       </Content>
     </Container>

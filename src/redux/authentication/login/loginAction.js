@@ -6,7 +6,6 @@
  */
 import {bivtURL} from '../../apis/bivtApi';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
-import AsyncStorage from '@react-native-community/async-storage';
 import * as Keychain from 'react-native-keychain';
 
 //Purpose of Action: Describe some changes that we want to make to the data inside of our application.
