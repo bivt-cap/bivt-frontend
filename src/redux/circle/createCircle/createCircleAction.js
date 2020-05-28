@@ -35,14 +35,14 @@ export const createCircleFailure = (error) => {
 /**
  * This function calls the REST api to create a circle
  * The tempAuthToken is only for testing, once the user logsin they must use that auth token
- * to create a group
+ * to create a circle
  */
 //For testing - add a temp auth token below:
 const tempAuthToken = '';
 
 export const createCircle = (createCircleDetails) => {
   const circleInfo = {
-    name: createCircleDetails.groupName,
+    name: createCircleDetails.circleName,
   };
   const config = {
     headers: {Authorization: `Bearer ${tempAuthToken}`},
@@ -52,7 +52,7 @@ export const createCircle = (createCircleDetails) => {
     try {
       const response = await bivtURL.post('/circle/create', circleInfo, config);
       const circleRegistrationDetails = response.data;
-      dispatch(createCircleSuccess('circle successfully created'));
+      dispatch(createCircleSuccess(circleRegistrationDetails));
     } catch (error) {
       const errorMsg = error.response.data.status.errors;
       dispatch(createCircleFailure(errorMsg));
