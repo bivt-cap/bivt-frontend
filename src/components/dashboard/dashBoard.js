@@ -1,16 +1,18 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Container, Content, Text, Card, Button} from 'native-base';
 import {deleteJTWFromKeyChain} from '../../redux';
 import {GoogleSignin} from '@react-native-community/google-signin';
-
+import ImagePicker from 'react-native-image-picker';
+import Fire from '../plugins/chat/Fire';
 const DashBoard = ({route, navigation}) => {
   const userData = useSelector((state) => state.login);
   const dispatch = useDispatch();
   console.log(userData);
   const {loginInfo} = route.params;
-
+  const [image, setImage] = useState();
+  console.log(image);
   const handleLogoutButtonClick = async () => {
     try {
       //If user authenticate with google oAuth
@@ -37,6 +39,44 @@ const DashBoard = ({route, navigation}) => {
   const handleChatLogin = async () => {
     navigation.navigate('Chat', {userInfo: userData.loginDetails});
   };
+  // More info on all the options is below in the API Reference... just some common use cases shown here
+  const options = {
+    title: 'Select Avatar',
+    customButtons: [{name: 'fb', title: 'Choose Photo from Library'}],
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+  /**
+   * The first arg is the options object for customization (it can also be null or omitted for default options),
+   * The second arg is the callback which sends object: response (more info in the API Reference)
+   */
+  const uploadImage = async () => {
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = {uri: response.uri};
+        let path = response.uri;
+        if (Platform.OS === 'ios') {
+          path = '~' + path.substring(path.indexOf('/Documents'));
+        }
+        if (!response.fileName) {
+          response.fileName = path.split('/').pop();
+        }
+
+        setImage(source);
+        Fire.shared.uploadPhotos(response.fileName.toString(), source.uri);
+      }
+    });
+  };
   return (
     <Container style={styles.container}>
       <Content>
@@ -55,6 +95,9 @@ const DashBoard = ({route, navigation}) => {
         </Button>
         <Button onPress={handleChatLogin}>
           <Text> Chat </Text>
+        </Button>
+        <Button onPress={uploadImage}>
+          <Text> Upload Image </Text>
         </Button>
       </Content>
     </Container>

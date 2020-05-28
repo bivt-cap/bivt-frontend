@@ -63,6 +63,12 @@ class Fire {
   };
   //Function: Push messages to DB
   saveMessages = (message) => this.fireBaseTable.push(message);
+
+  uploadPhotos = (photoName, path) => {
+    const storage = firebase.storage();
+    var imageRef = storage.ref('images/' + photoName).put(path);
+    return imageRef;
+  };
 }
 
 Fire.shared = new Fire();
