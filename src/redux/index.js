@@ -1,4 +1,5 @@
-//Authentication
+// Autentication
+export * from './authentication/bootstrap/bootstrapAction';
 export * from './authentication/signup/signupAction';
 export * from './authentication/login/loginAction';
 //Create Circle

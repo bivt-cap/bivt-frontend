@@ -1,15 +1,25 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+import React from 'react';
+import {Image} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {Container, Content, Text, Card, Button} from 'native-base';
-import {deleteJTWFromKeyChain} from '../../redux';
+import {
+  Container,
+  Content,
+  Text,
+  Button,
+  Card,
+  CardItem,
+  Body,
+} from 'native-base';
+import {deleteJTWFromKeyChain, resetBootstrap} from '../../redux';
 import {GoogleSignin} from '@react-native-community/google-signin';
 
 const DashBoard = ({route, navigation}) => {
-  const userData = useSelector((state) => state.login);
+  // Dispatch - Redux hook
   const dispatch = useDispatch();
-  console.log(userData);
-  const {loginInfo} = route.params;
+
+  // Stored State - Redux hook
+  const bootstrapState = useSelector((state) => state.bootstrap);
+  const userData = useSelector((state) => state.login);
 
   const handleLogoutButtonClick = async () => {
     try {
@@ -18,63 +28,63 @@ const DashBoard = ({route, navigation}) => {
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
         userData.googleisLoggedin = 'False';
-        navigation.navigate('Login');
-        console.log(userData);
+        //navigation.navigate('Login');
+        //console.log(userData);
         //If user authenticate with local sign in.
       } else if (userData.isLoggedin === 'True') {
-        deleteJTWFromKeyChain();
-        if (deleteJTWFromKeyChain()) {
-          userData.isLoggedin = 'False';
-          userData.loginDetails = '';
-          console.log(userData);
-          navigation.navigate('Login');
-        }
+        //deleteJTWFromKeyChain();
+        //if (deleteJTWFromKeyChain()) {
+        userData.isLoggedin = 'False';
+        userData.loginDetails = '';
+        //console.log(userData);
+        //navigation.navigate('Login');
+        //}
       }
+      deleteJTWFromKeyChain();
+      dispatch(resetBootstrap());
+      navigation.navigate('Bootstrap');
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <Container style={styles.container}>
-      <Content>
-        {Object.keys(loginInfo).length === 0 ? (
-          <Text>Welcome Google </Text>
-        ) : (
-          <Card>
-            <Text>Welcome {loginInfo.email} </Text>
-            <Text>Name {loginInfo.firstName} </Text>
-            <Text>Surname {loginInfo.lastName} </Text>
-          </Card>
-        )}
-
-        <Button light onPress={handleLogoutButtonClick}>
+    <Container>
+      <Content padder>
+        <Card>
+          <CardItem header bordered>
+            <Text>User</Text>
+          </CardItem>
+          <CardItem bordered>
+            <Body>
+              <Text>Email: {bootstrapState.user.email}</Text>
+              <Text>First Name: {bootstrapState.user.firstName}</Text>
+              <Text>Last Name: {bootstrapState.user.lastName}</Text>
+              <Text>Photo URL: {bootstrapState.user.photoUrl}</Text>
+              <Text>Date of Birth: {bootstrapState.user.dateOfBirth}</Text>
+            </Body>
+          </CardItem>
+        </Card>
+        <Card>
+          <CardItem header bordered>
+            <Text>Circle</Text>
+          </CardItem>
+          <CardItem bordered>
+            <Body>
+              <Text>Id: {bootstrapState.circles[0].id}</Text>
+              <Text>Name: {bootstrapState.circles[0].name}</Text>
+              <Text>Is Admin: {bootstrapState.circles[0].isAdmin}</Text>
+              <Text>Is Owner: {bootstrapState.circles[0].isOwner}</Text>
+              <Text>Joined On: {bootstrapState.circles[0].joinedOn}</Text>
+            </Body>
+          </CardItem>
+        </Card>
+        <Button onPress={handleLogoutButtonClick}>
           <Text> Logout </Text>
         </Button>
       </Content>
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#C4E7F4',
-    position: 'absolute',
-    width: '100%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    padding: 10,
-  },
-  form: {
-    marginTop: '50%',
-  },
-  textContent: {
-    fontSize: 20,
-    color: 'red',
-  },
-  textCentered: {
-    textAlign: 'center',
-  },
-});
 
 export default DashBoard;

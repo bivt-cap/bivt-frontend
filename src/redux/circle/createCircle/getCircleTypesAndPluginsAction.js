@@ -41,11 +41,10 @@ export const getCircleTypesAndPluginsFailure = (error) => {
  * token to create a CIRCLE
  */
 //For testing - add a temp auth token below:
-const tempAuthToken = '';
 
-export const getCircleTypesAndPluginsDetail = () => {
+export const getCircleTypesAndPluginsDetail = (token) => {
   const config = {
-    headers: {Authorization: `Bearer ${tempAuthToken}`},
+    headers: {Authorization: `Bearer ${token}`},
   };
   return async (dispatch) => {
     dispatch(getCircleTypesAndPluginsRequest());

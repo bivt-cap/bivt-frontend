@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * This component handles the creation of new groups/circles.
  *
@@ -6,7 +7,11 @@
  */
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {createCircle, getCircleTypesAndPluginsDetail} from '../../../redux';
+import {
+  createCircle,
+  getCircleTypesAndPluginsDetail,
+  resetBootstrap,
+} from '../../../redux';
 import {
   Container,
   Header,
@@ -21,6 +26,9 @@ import {
 } from 'native-base';
 import createCircleStyles from './createCircleStyles';
 import {createCircleValidation} from './createCircleValidation';
+
+// Token Key Chain
+import JwtKeyChain from '../../../utils/jwtKeyChain';
 
 const CreateCircle = ({navigation}) => {
   const dispatch = useDispatch();
@@ -41,6 +49,7 @@ const CreateCircle = ({navigation}) => {
       error: false,
     },
   });
+
   const [userMessage, setUserMessage] = useState('');
   // ****************************************************//
   // ************ END OF STATES DECLARATIONS ***********//
@@ -51,13 +60,38 @@ const CreateCircle = ({navigation}) => {
    * on the page load
    */
   useEffect(() => {
-    dispatch(getCircleTypesAndPluginsDetail());
+    const getTypes = async () => {
+      // Read the token from the Key Chain
+      const token = await JwtKeyChain.read();
+      dispatch(getCircleTypesAndPluginsDetail(token));
+    };
+    getTypes();
   }, []);
 
+  //useEffect(() => {
+  //  if (createCircleStatus.circleRegistrationDetails !== null) {
+  //    dispatch(resetBootstrap());
+  //    navigation.navigate('Bootstrap');
+  //  }
+  //}, [createCircleStatus]);
+
   /**
-   * The state gets updated when ever a user types something in the input box
-   * Using the array deconstruction ES6 to updated a particular field's state
+   * The following function redirect users to choose plugins page once the
+   * circle has been succesfully created.
    */
+  useEffect(() => {
+    setUserMessage('');
+    if (createCircleStatus.circleRegistrationDetails !== null) {
+      setUserMessage('account created');
+      navigation.navigate('ChoosePlugins', {
+        createCircleStatus: createCircleStatus,
+        createCircleDetails: createCircleDetails,
+      });
+    }
+  }, [createCircleStatus.circleRegistrationDetails]);
+
+  //The state gets updated when ever a user types something in the input box
+  //Using the array deconstruction ES6 to updated a particular field's state
   const handleCreateCircleInputChange = (key, value) => {
     setCreateCircleDetails((prevState) => {
       return {
@@ -76,10 +110,15 @@ const CreateCircle = ({navigation}) => {
     let createCircleValidationErrors = createCircleValidation(
       createCircleDetails,
     );
-    createCircleValidationErrors.then((errors) => {
+    createCircleValidationErrors.then(async (errors) => {
+      // Read the token from the Key Chain
+      const token = await JwtKeyChain.read();
+
+      console.log('createCircleValidationErrors');
+      // Show erros
       setCreateCircleError(errors);
       if (!errors.circleName.error && !errors.selectedCircleType.error) {
-        dispatch(createCircle(createCircleDetails));
+        dispatch(createCircle(createCircleDetails, token));
       }
     });
   };
@@ -110,23 +149,6 @@ const CreateCircle = ({navigation}) => {
       };
     });
   };
-  /**
-   * The following function redirect users to choose plugins page once the
-   * circle has been succesfully created.
-   */
-  useEffect(() => {
-    setUserMessage('');
-    if (createCircleStatus.circleRegistrationDetails.status !== undefined) {
-      if (createCircleStatus.circleRegistrationDetails.status.id === 200) {
-        setUserMessage('account created');
-        navigation.navigate('ChoosePlugins', {
-          createCircleStatus: createCircleStatus,
-          createCircleDetails: createCircleDetails,
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createCircleStatus.circleRegistrationDetails, navigation]);
 
   return (
     <Container style={createCircleStyles.createCircleContainer}>
@@ -180,9 +202,7 @@ const CreateCircle = ({navigation}) => {
           <Text>...loading</Text>
         ) : createCircleStatus.error.length > 0 ? (
           <Text>{createCircleStatus.error}</Text>
-        ) : (
-          <Text>{userMessage}</Text>
-        )}
+        ) : null}
       </Content>
     </Container>
   );

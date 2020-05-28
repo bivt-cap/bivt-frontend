@@ -16,7 +16,7 @@ import {
 
 const createCircleInitialState = {
   loading: false,
-  circleRegistrationDetails: '',
+  circleRegistrationDetails: null,
   circleTypesAndPluginsDetails: '',
   error: '',
 };
@@ -39,7 +39,7 @@ let createCirlceReducer = (state = createCircleInitialState, action) => {
       return {
         ...state,
         loading: false,
-        circleRegistrationDetails: '',
+        circleRegistrationDetails: null,
         error: action.payload,
       };
     case GET_CIRCLE_TYPES_AND_PLUGINS_REQUEST:
