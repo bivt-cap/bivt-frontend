@@ -94,13 +94,12 @@ const Signup = ({navigation}) => {
    */
   useEffect(() => {
     if (signupStatus.registrationDetails === 'account successfully created') {
-      navigation.navigate('CreateCircle');
+      navigation.navigate('SignupFeedback');
     }
   }, [signupStatus, navigation]);
 
   return (
     <Container style={signupStyles.signupContainer}>
-      <Header />
       <Content>
         <Form style={signupStyles.signupForm}>
           <Item stackedLabel>
@@ -169,14 +168,6 @@ const Signup = ({navigation}) => {
           style={signupStyles.signupButton}
           onPress={submitSignupForm}>
           <Text>Signup</Text>
-        </Button>
-        <Button
-          full
-          style={signupStyles.loginButton}
-          onPress={() => {
-            navigation.navigate('Login');
-          }}>
-          <Text>Log in</Text>
         </Button>
         {signupStatus.loading ? (
           <Text>...loading</Text>

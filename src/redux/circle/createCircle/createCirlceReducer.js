@@ -13,7 +13,7 @@ import {
 
 const createCircleInitialState = {
   loading: false,
-  circleRegistrationDetails: '',
+  circleRegistrationDetails: null,
   error: '',
 };
 
@@ -33,7 +33,7 @@ let createCirlceReducer = (state = createCircleInitialState, action) => {
     case CREATE_CIRCLE_FAILURE:
       return {
         loading: false,
-        circleRegistrationDetails: '',
+        circleRegistrationDetails: null,
         error: action.payload,
       };
     default:

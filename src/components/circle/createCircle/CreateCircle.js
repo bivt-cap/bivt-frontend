@@ -1,12 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * This component handles the creation of new groups/circles.
  *
  * @version 0.0.1
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
  */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {createCircle} from '../../../redux';
+import {createCircle, resetBootstrap} from '../../../redux';
 import {
   Container,
   Header,
@@ -21,13 +22,18 @@ import {
 import createCircleStyles from './createCircleStyles';
 import {createCircleValidation} from './createCircleValidation';
 
+// Token Key Chain
+import JwtKeyChain from '../../../utils/jwtKeyChain';
+
 const CreateCircle = ({navigation}) => {
   const dispatch = useDispatch();
   const createCircleStatus = useSelector((state) => state.createCircle);
+
   //Default state of the create group form
   const [createCircleDetails, setUserCreateCircleDetails] = useState({
     groupName: '',
   });
+
   //The state gets updated when ever a user types something in the input box
   //Using the array deconstruction ES6 to updated a particular field's state
   const handleCreateCircleInputChange = (key, value) => {
@@ -48,6 +54,14 @@ const CreateCircle = ({navigation}) => {
     },
   });
 
+  useEffect(() => {
+    console.debug(createCircleStatus.circleRegistrationDetails);
+    if (createCircleStatus.circleRegistrationDetails !== null) {
+      dispatch(resetBootstrap());
+      navigation.navigate('Bootstrap');
+    }
+  }, [createCircleStatus]);
+
   /**
    * Form validation:
    * On submission, this function sends the data to get validated
@@ -57,10 +71,13 @@ const CreateCircle = ({navigation}) => {
     let createCircleValidationErrors = createCircleValidation(
       createCircleDetails,
     );
-    createCircleValidationErrors.then((errors) => {
+    createCircleValidationErrors.then(async (errors) => {
+      // Read the token from the Key Chain
+      const token = await JwtKeyChain.read();
+      // Show erros
       setCreateCircleError(errors);
       if (!errors.groupName.error) {
-        dispatch(createCircle(createCircleDetails));
+        dispatch(createCircle(createCircleDetails, token));
       }
     });
   };
@@ -94,9 +111,7 @@ const CreateCircle = ({navigation}) => {
           <Text>...loading</Text>
         ) : createCircleStatus.error.length > 0 ? (
           <Text>{createCircleStatus.error}</Text>
-        ) : (
-          <Text>{createCircleStatus.circleRegistrationDetails}</Text>
-        )}
+        ) : null}
       </Content>
     </Container>
   );
