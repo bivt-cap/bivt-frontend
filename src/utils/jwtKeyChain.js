@@ -10,7 +10,6 @@ import {DEBUG_TOKEN} from 'react-native-dotenv';
 const write = async (token) => {
   if (token) {
     const result = await Keychain.setGenericPassword('token', token);
-    console.debug('JWT Token - write: ', result);
   }
 };
 
@@ -20,8 +19,6 @@ const write = async (token) => {
 const read = async () => {
   // Token
   let token = DEBUG_TOKEN;
-
-  //console.log(DEBUG_TOKEN);
 
   // Only for Development purpose
   if (!token) {

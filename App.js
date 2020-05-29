@@ -79,7 +79,14 @@ const App = () => {
                 }}
               />
               <Stack.Screen name="ApproveCircle" component={ApproveCircle} />
-              <Stack.Screen name="DashBoard" component={DashBoard} />
+              <Stack.Screen
+                name="DashBoard"
+                component={DashBoard}
+                options={{
+                  title: 'DashBoard',
+                  headerLeft: null,
+                }}
+              />
             </>
           ) : (
             <>

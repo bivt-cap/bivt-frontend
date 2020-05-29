@@ -101,7 +101,6 @@ export const getCirclesUserIsPartOf = (token) => {
       .then((response) => {
         if (response.status === 200) {
           const circles = response.data.data.circles;
-
           if (circles) {
             const inCircle = circles.find((circle) => circle.joinedAt !== null);
             // User belongs to a Circle?
@@ -118,7 +117,6 @@ export const getCirclesUserIsPartOf = (token) => {
         }
       })
       .catch((error) => {
-        console.log(error);
         if (error.response) {
           if (error.response.status === 404) {
             dispatch(userDontBelongsToaCircle());

@@ -30,7 +30,9 @@ const bootstrapReducer = (state = bootstrapInitialState, action) => {
   // Type
   switch (action.type) {
     case RESET:
-      return bootstrapInitialState;
+      return {
+        ...bootstrapInitialState,
+      };
     case AUTH_TOKEN_IS_VALID:
       return {
         ...state,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * This component let users choose the plugins
  *
@@ -6,7 +7,7 @@
  */
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {savePlugin} from '../../../redux';
+import {savePlugin, resetBootstrap} from '../../../redux';
 import {
   Container,
   Header,
@@ -134,6 +135,7 @@ const ChoosePlugins = ({route, navigation}) => {
         200
       ) {
         setUserMessage('...Saved !Ready to go to dashboard');
+        dispatch(resetBootstrap);
         navigation.navigate('Bootstrap');
       }
     } else {

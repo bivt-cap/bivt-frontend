@@ -30,7 +30,7 @@ import {Col, Grid} from 'react-native-easy-grid';
 import bootstrapStyles from './bootstrapStyles';
 
 // Screen
-const Bootstrap = () => {
+const Bootstrap = ({navigation}) => {
   // Dispatch - Redux hook
   const dispatch = useDispatch();
 
@@ -61,6 +61,10 @@ const Bootstrap = () => {
     const loadCircles = async () => {
       const token = await JwtKeyChain.read();
       dispatch(getCirclesUserIsPartOf(token));
+      const initialRouteName = bootstrapState.initialRouteName;
+      if (initialRouteName && initialRouteName !== 'Bootstrap') {
+        navigation.navigate(initialRouteName);
+      }
     };
 
     // Check if the user is Signed In
