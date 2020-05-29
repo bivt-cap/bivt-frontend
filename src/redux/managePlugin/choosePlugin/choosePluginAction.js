@@ -37,18 +37,15 @@ export const choosePluginFailure = (error) => {
  * This function calls the REST api to add three selected plugins to the DB
  * There is no API avalable to store receive all three plugins at one, so fow now
  * we are using a for loop. I am not using axios.all intentially.
- * The tempAuthToken is only for testing, once the user login they must use that auth token
  */
-//For testing - add a temp auth token below:
-const tempAuthToken = '';
 
-export const savePlugin = (chosenPlugins, _circleId) => {
+export const savePlugin = (chosenPlugins, _circleId, token) => {
   const choosePluginInfo = {
     id: chosenPlugins,
     circleId: _circleId,
   };
   const config = {
-    headers: {Authorization: `Bearer ${tempAuthToken}`},
+    headers: {Authorization: `Bearer ${token}`},
   };
   return async (dispatch) => {
     dispatch(choosePluginRequest);
