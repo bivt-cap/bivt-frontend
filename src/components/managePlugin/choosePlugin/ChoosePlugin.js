@@ -1,3 +1,9 @@
+/**
+ * This component let users choose the plugins
+ *
+ * @version 0.0.1
+ * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ */
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {savePlugin} from '../../../redux';
@@ -16,6 +22,10 @@ import {
 } from 'native-base';
 import choosePluginStyles from './choosePluginStyles';
 console.disableYellowBox = true;
+
+// Token Key Chain
+import JwtKeyChain from '../../../utils/jwtKeyChain';
+
 const ChoosePlugins = ({route, navigation}) => {
   const dispatch = useDispatch();
   const choosePluginsResponseDetails = useSelector(
@@ -84,7 +94,7 @@ const ChoosePlugins = ({route, navigation}) => {
    * There is no API avalable to store receive all three plugins at one, so fow now
    * we are using a for loop. I am not using axios.all intentially.
    */
-  const submitSelectedPlugins = () => {
+  const submitSelectedPlugins = async () => {
     let pluginCount = 0;
     let chosenPlugins = [];
     for (const element in checkBoxStateControl) {
@@ -95,10 +105,12 @@ const ChoosePlugins = ({route, navigation}) => {
     }
     if (pluginCount === 3) {
       setUserMessage('...processing');
-      const circleId =
-        createCircleStatus.circleRegistrationDetails.data.circleId;
+      // Read the token from the Key Chain
+      const token = await JwtKeyChain.read();
+      const circleId = createCircleStatus.circleRegistrationDetails.circleId;
+
       for (let i = 0; i < 3; i++) {
-        dispatch(savePlugin(chosenPlugins[i], circleId));
+        dispatch(savePlugin(chosenPlugins[i], circleId, token));
       }
     } else {
       Toast.show({
@@ -109,7 +121,8 @@ const ChoosePlugins = ({route, navigation}) => {
   };
 
   /**
-   * The following function redirect to dashboard after plugins have been saved succesfully.
+   * The following function redirect to dashboard after
+   * plugins have been saved succesfully.
    */
   useEffect(() => {
     if (
@@ -121,7 +134,7 @@ const ChoosePlugins = ({route, navigation}) => {
         200
       ) {
         setUserMessage('...Saved !Ready to go to dashboard');
-        //navigation.navigate('DashBoard');
+        navigation.navigate('Bootstrap');
       }
     } else {
       setUserMessage(choosePluginsResponseDetails.error);
@@ -175,17 +188,6 @@ const ChoosePlugins = ({route, navigation}) => {
         </ListItem>
         {/* false signifies non-recommended plugins */}
         {loadPlugins(false)}
-        <View style={choosePluginStyles.selectPluginContainer}>
-          <Fab
-            active={true}
-            direction="up"
-            containerStyle={{}}
-            style={choosePluginStyles.selectPluginButton}
-            position="bottomRight"
-            onPress={submitSelectedPlugins}>
-            <Icon name="play" useNativeDriver={false} />
-          </Fab>
-        </View>
       </Content>
       {choosePluginsResponseDetails.loading ? (
         <Text>...loading</Text>
@@ -194,6 +196,17 @@ const ChoosePlugins = ({route, navigation}) => {
       ) : (
         <Text>{userMessage}</Text>
       )}
+      <View style={choosePluginStyles.selectPluginContainer}>
+        <Fab
+          active={true}
+          direction="up"
+          containerStyle={{}}
+          style={choosePluginStyles.selectPluginButton}
+          position="bottomRight"
+          onPress={submitSelectedPlugins}>
+          <Icon name="play" useNativeDriver={false} />
+        </Fab>
+      </View>
     </Container>
   );
 };
