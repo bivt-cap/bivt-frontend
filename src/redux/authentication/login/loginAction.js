@@ -6,7 +6,8 @@
  */
 import {bivtURL} from '../../apis/bivtApi';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
-import * as Keychain from 'react-native-keychain';
+// import AsyncStorage from '@react-native-community/async-storage';
+import JwtKeyChain from '../../../utils/jwtKeyChain';
 
 //Purpose of Action: Describe some changes that we want to make to the data inside of our application.
 export const loginReguest = () => {
@@ -54,7 +55,7 @@ export const writeJTWtoKeyChain = async (token) => {
     const jwtToken = token;
     if (jwtToken !== '') {
       // Store the credentials
-      await Keychain.setGenericPassword('token', jwtToken);
+      await JwtKeyChain.write(jwtToken);
     } else {
       console.log('Token not found');
     }
@@ -66,13 +67,8 @@ export const writeJTWtoKeyChain = async (token) => {
 export const readJWTFromKeyChain = async () => {
   try {
     // Retrieve the credentials
-    const credentials = await Keychain.getGenericPassword();
-    console.log('Credentials', credentials);
-    if (credentials) {
-      //Encrypt token and send to the asyncStorage because asyncStroage is not SECURE!
-      console.log(
-        'Credentials successfully loaded for user ' + credentials.username,
-      );
+    const credentials = await JwtKeyChain.read();
+    if (credentials != null) {
       return credentials.password;
     } else {
       console.log('No credentials stored');
@@ -84,7 +80,7 @@ export const readJWTFromKeyChain = async () => {
 //Once user click logout button clear token from storage.
 export const deleteJTWFromKeyChain = async () => {
   try {
-    const resetPassword = await Keychain.resetGenericPassword();
+    const resetPassword = await JwtKeyChain.remove();
     if (resetPassword) {
       console.log('Token successfully removed');
       return true;
@@ -130,13 +126,14 @@ export const googleSignIn = async (dispatch) => {
     await GoogleSignin.hasPlayServices();
     const googleuserInfo = await GoogleSignin.signIn();
     const googleToken = {token: googleuserInfo.idToken};
-    console.log('User informations: ', googleuserInfo);
+    console.debug('GOOGLE: ', googleuserInfo);
     const response = await bivtURL.post('/auth/google', googleToken);
-    // console.log(response.data.data.token);
+    console.debug('API: ', response.data.token);
     if (response.status === 200 && response.data.data.token !== '') {
       //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
+      writeJTWtoKeyChain(response.data.data.token);
       const googleUserInfo = response.data.data.user;
-      console.log(googleUserInfo);
+      console.debug('API: ', googleUserInfo);
       dispatch(googleLoginSuccess(googleUserInfo));
     }
   } catch (error) {

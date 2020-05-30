@@ -7,18 +7,30 @@
 
 export async function createCircleValidation(createCircleDetails) {
   const validationErrors = {
-    groupName: {
+    circleName: {
+      error: false,
+    },
+    selectedCircleType: {
       error: false,
     },
   };
   if (
-    createCircleDetails.groupName.length < 3 ||
-    createCircleDetails.groupName.length > 56
+    createCircleDetails.circleName.length < 3 ||
+    createCircleDetails.circleName.length > 56
   ) {
-    validationErrors.groupName = {
+    validationErrors.circleName = {
       error: true,
       message:
-        'The Group name must have a minimum of 3 characters and a maximum of 56 characters',
+        'The Circle name must have a minimum of 3 characters and a maximum of 56 characters',
+    };
+  }
+  if (
+    createCircleDetails.selectedCircleType <= 0 ||
+    createCircleDetails.selectedCircleType > 5
+  ) {
+    validationErrors.selectedCircleType = {
+      error: true,
+      message: 'Please select the type of circle you would like to create',
     };
   }
   return validationErrors;

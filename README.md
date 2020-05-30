@@ -1,4 +1,4 @@
-# BIVT Front-End
+# Kovan
 
 One Paragraph of project description goes here
 

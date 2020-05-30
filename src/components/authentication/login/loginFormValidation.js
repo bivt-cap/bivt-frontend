@@ -1,3 +1,5 @@
+import {EMAIL_REGEX, PASSWORD_REGEX} from '../../../utils/regexUtil';
+
 export function loginFormValidation(userLoginDetails) {
   const validationInfo = {
     email: {
@@ -29,7 +31,7 @@ export function loginFormValidation(userLoginDetails) {
       message: 'Please enter a password',
     };
   } else {
-    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    const passwordRegex = PASSWORD_REGEX;
     if (!passwordRegex.test(String(userLoginDetails.password))) {
       validationInfo.password = {
         error: true,
