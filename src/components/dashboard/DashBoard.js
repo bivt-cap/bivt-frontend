@@ -14,7 +14,8 @@ import {deleteJTWFromKeyChain, resetBootstrap} from '../../redux';
 import {GoogleSignin} from '@react-native-community/google-signin';
 import ImagePicker from 'react-native-image-picker';
 import Fire from '../plugins/chat/Fire';
-
+import RNFetchBlob from 'rn-fetch-blob';
+import {uploadImage} from '../plugins/chat/uploadImage';
 const DashBoard = ({route, navigation}) => {
   // Dispatch - Redux hook
   const dispatch = useDispatch();
@@ -63,11 +64,12 @@ const DashBoard = ({route, navigation}) => {
       path: 'images',
     },
   };
+
   /**
    * The first arg is the options object for customization (it can also be null or omitted for default options),
    * The second arg is the callback which sends object: response (more info in the API Reference)
    */
-  const uploadImage = async () => {
+  const getImage = async () => {
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
 
@@ -87,11 +89,18 @@ const DashBoard = ({route, navigation}) => {
           response.fileName = path.split('/').pop();
         }
 
-        setImage(source);
-        Fire.shared.uploadPhotos(response.fileName.toString(), source.uri);
+        // setImage(source);
+        // Fire.shared.uploadPhotos(response.fileName, source.uri);
+        uploadImage(response.uri, response.fileName)
+          .then((url) => {
+            console.log('uploaded');
+            setImage({image_uri: url});
+          })
+          .catch((error) => console.log(error));
       }
     });
   };
+
   return (
     <Container>
       <Content padder>
@@ -129,7 +138,7 @@ const DashBoard = ({route, navigation}) => {
         <Button onPress={handleChatButtonClick}>
           <Text> Chat </Text>
         </Button>
-        <Button onPress={uploadImage}>
+        <Button onPress={getImage}>
           <Text> Upload Image </Text>
         </Button>
       </Content>

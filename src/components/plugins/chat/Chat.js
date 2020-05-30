@@ -7,16 +7,20 @@
 
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {GiftedChat} from 'react-native-gifted-chat';
-import {TypingAnimation} from 'react-native-typing-animation';
-import {Text} from 'native-base';
+import {
+  GiftedChat,
+  Actions,
+  InputToolbar,
+  Send,
+} from 'react-native-gifted-chat';
+import {Text, Icon, Item, Input, Button} from 'native-base';
+
 import Fire from './Fire';
 
 const Chat = ({route, navigation}) => {
   const userData = useSelector((state) => state.login);
   console.log('UserInformation', userData);
   const {userInfo} = route.params;
-  console.log(userInfo);
 
   // ******************************************************//
   // ************ BEGININ OF STATES DECLARATIONS *********//
@@ -25,8 +29,6 @@ const Chat = ({route, navigation}) => {
     messages: [],
     isLoading: false,
   });
-  console.log(message);
-
   useEffect(() => {
     Fire.shared.getMessageHistory((msg) =>
       setMessage((prevstate) => ({
@@ -49,10 +51,38 @@ const Chat = ({route, navigation}) => {
       _id: userInfo.email,
     };
   };
+  const renderSend = (props) => {
+    return (
+      <Send {...props}>
+        <Icon name="md-send" style={{color: 'blue', marginRight: 10}} />
+      </Send>
+    );
+  };
+  const renderInputToolbar = (props) => {
+    return (
+      <InputToolbar
+        {...props}
+        // eslint-disable-next-line react-native/no-inline-styles
+        containerStyle={{
+          borderRadius: 20,
+        }}
+      />
+    );
+  };
+  const renderCameraButton = () => {
+    return (
+      <Button transparent>
+        <Icon name="ios-camera" />
+      </Button>
+    );
+  };
   return message.isLoading ? (
     <GiftedChat
       messages={message.messages}
       onSend={Fire.shared.sendMessages}
+      renderSend={renderSend}
+      renderInputToolbar={renderInputToolbar}
+      renderActions={renderCameraButton}
       user={user()}
     />
   ) : (
