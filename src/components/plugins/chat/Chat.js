@@ -22,7 +22,7 @@ const Chat = ({route}) => {
   // ***************************************************//
   const [message, setMessage] = useState({
     messages: [],
-    isLoading: false,
+    isLoading: true,
   });
   const [image, setImage] = useState();
 
@@ -31,9 +31,10 @@ const Chat = ({route}) => {
       setMessage((prevstate) => ({
         ...prevstate,
         messages: GiftedChat.append(prevstate.messages, msg),
-        isLoading: true,
+        isLoading: false,
       })),
     );
+
     return () => {
       console.log('...unmounting');
       Fire.shared.disConnectFromFireBase();
@@ -43,7 +44,7 @@ const Chat = ({route}) => {
 
   const user = () => {
     return {
-      name: userInfo.email,
+      name: `${userInfo.firstName} ${userInfo.lastName}`,
       _id: userInfo.email,
     };
   };
@@ -117,7 +118,7 @@ const Chat = ({route}) => {
       </Button>
     );
   };
-  return message.isLoading ? (
+  return !message.isLoading ? (
     <GiftedChat
       messages={message.messages}
       onSend={Fire.shared.sendMessages}
