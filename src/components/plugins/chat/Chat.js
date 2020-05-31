@@ -6,20 +6,15 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {
-  GiftedChat,
-  Actions,
-  InputToolbar,
-  Send,
-} from 'react-native-gifted-chat';
-import {Text, Icon, Item, Input, Button} from 'native-base';
-
+import {useSelector} from 'react-redux';
+import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
+import {Platform} from 'react-native';
+import {Spinner, Icon, Button} from 'native-base';
+import {uploadImage} from './uploadImage';
 import Fire from './Fire';
+import ImagePicker from 'react-native-image-picker';
 
-const Chat = ({route, navigation}) => {
-  const userData = useSelector((state) => state.login);
-  console.log('UserInformation', userData);
+const Chat = ({route}) => {
   const {userInfo} = route.params;
 
   // ******************************************************//
@@ -29,6 +24,8 @@ const Chat = ({route, navigation}) => {
     messages: [],
     isLoading: false,
   });
+  const [image, setImage] = useState();
+
   useEffect(() => {
     Fire.shared.getMessageHistory((msg) =>
       setMessage((prevstate) => ({
@@ -47,10 +44,54 @@ const Chat = ({route, navigation}) => {
   const user = () => {
     return {
       name: userInfo.email,
-      avatar: 'https://placeimg.com/140/140/any',
       _id: userInfo.email,
     };
   };
+
+  // More info on all the options is below in the API Reference... just some common use cases shown here
+  const options = {
+    title: 'Upload An Image',
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+
+  /**
+   * The first arg is the options object for customization (it can also be null or omitted for default options),
+   * The second arg is the callback which sends object: response (more info in the API Reference)
+   */
+  const getImage = async () => {
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        // const source = {uri: response.uri};
+        let path = response.uri;
+        if (Platform.OS === 'ios') {
+          path = '~' + path.substring(path.indexOf('/Documents'));
+        }
+        if (!response.fileName) {
+          response.fileName = path.split('/').pop();
+        }
+        uploadImage(response.uri, response.fileName)
+          .then((url) => {
+            console.log('uploaded');
+            setImage({image_uri: url});
+            let userValue = user();
+            Fire.shared.sendImages(url, userValue);
+          })
+          .catch((error) => console.log(error));
+      }
+    });
+  };
+
   const renderSend = (props) => {
     return (
       <Send {...props}>
@@ -71,7 +112,7 @@ const Chat = ({route, navigation}) => {
   };
   const renderCameraButton = () => {
     return (
-      <Button transparent>
+      <Button transparent onPress={getImage}>
         <Icon name="ios-camera" />
       </Button>
     );
@@ -83,10 +124,11 @@ const Chat = ({route, navigation}) => {
       renderSend={renderSend}
       renderInputToolbar={renderInputToolbar}
       renderActions={renderCameraButton}
+      renderUsernameOnMessage={true}
       user={user()}
     />
   ) : (
-    <Text>...loading</Text>
+    <Spinner color="blue" />
   );
 };
 

@@ -1,19 +1,28 @@
 import firebase from 'firebase';
-
+import {
+  API_KEY,
+  AUTH_DOMAIN,
+  DB_URL,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+  MESSEAGING_SENDING_ID,
+  APP_ID,
+  MEASUREMENT_ID,
+} from 'react-native-dotenv';
 class Fire {
   constructor() {
     this.initializeFireBaseConfig();
   }
   initializeFireBaseConfig = () =>
     firebase.initializeApp({
-      apiKey: 'AIzaSyBCCGcb9_O3ifiOlhGc3iljQNZch3aD1gU',
-      authDomain: 'kovan-chat.firebaseapp.com',
-      databaseURL: 'https://kovan-chat.firebaseio.com',
-      projectId: 'kovan-chat',
-      storageBucket: 'kovan-chat.appspot.com',
-      messagingSenderId: '373620589219',
-      appId: '1:373620589219:web:a78580cec84a2ce6cb3516',
-      measurementId: 'G-714FYVKT9P',
+      apiKey: API_KEY,
+      authDomain: AUTH_DOMAIN,
+      databaseURL: DB_URL,
+      projectId: PROJECT_ID,
+      storageBucket: STORAGE_BUCKET,
+      messagingSenderId: MESSEAGING_SENDING_ID,
+      appId: APP_ID,
+      measurementId: MEASUREMENT_ID,
     });
 
   //Function: Create a reference in our db where the all messages will be stored.
@@ -29,7 +38,7 @@ class Fire {
   // Function: Format snapshot value that comes from DB for Gifted Chat.
   parse = (snapshot) => {
     // 1.
-    const {timestamp: numberStamp, text, user} = snapshot.val();
+    const {timestamp: numberStamp, text, user, image} = snapshot.val();
     const {key: _id} = snapshot;
     const createdAt = new Date(numberStamp);
     const message = {
@@ -37,6 +46,7 @@ class Fire {
       createdAt,
       text,
       user,
+      image,
     };
     return message;
   };
@@ -48,7 +58,6 @@ class Fire {
   get timestamp() {
     return firebase.database.ServerValue.TIMESTAMP;
   }
-
   sendMessages = (messages) => {
     for (let i = 0; i < messages.length; i++) {
       const {text, user} = messages[i];
@@ -61,13 +70,19 @@ class Fire {
       this.saveMessages(message);
     }
   };
+  sendImages = (messages, userInfo) => {
+    console.log(messages);
+
+    // 4.
+    const message = {
+      user: userInfo,
+      timestamp: this.timestamp,
+      image: messages,
+    };
+    this.saveMessages(message);
+  };
   //Function: Push messages to DB
   saveMessages = (message) => this.fireBaseTable.push(message);
-
-  // uploadPhotos = (photoName, path) => {
-  //   const storage = firebase.storage();
-  //   storage.ref(`images/${photoName}`).put(path);
-  // };
 }
 
 Fire.shared = new Fire();

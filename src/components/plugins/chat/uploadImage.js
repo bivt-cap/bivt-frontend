@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import {Image, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
 export const uploadImage = async (
@@ -17,7 +17,7 @@ export const uploadImage = async (
     const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
     let uploadBlob = null;
 
-    const imageRef = firebase.storage().ref('images').child(shortImageName);
+    const imageRef = firebase.storage().ref('images/').child(shortImageName);
 
     fs.readFile(uploadUri, 'base64')
       .then((data) => {
@@ -32,6 +32,7 @@ export const uploadImage = async (
         return imageRef.getDownloadURL();
       })
       .then((url) => {
+        // Fire.shared.saveMessages({image: url});
         resolve(url);
       })
       .catch((error) => {
