@@ -1,7 +1,15 @@
+/**
+ * This component is responsible to load data in spending tabs
+ *
+ * @version 0.0.1
+ * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ */
+//react
 import React from 'react';
+
+//native base
 import {
   Container,
-  Header,
   Content,
   Button,
   ListItem,
@@ -40,6 +48,19 @@ const Spendings = () => {
           </Body>
           <Right>
             <Text>$80</Text>
+          </Right>
+        </ListItem>
+        <ListItem icon>
+          <Left>
+            <Button style={{backgroundColor: '#007AFF'}}>
+              <Icon active name="beer" />
+            </Button>
+          </Left>
+          <Body>
+            <Text>Lunch with Yalcin</Text>
+          </Body>
+          <Right>
+            <Text>$30</Text>
           </Right>
         </ListItem>
         <ListItem icon>

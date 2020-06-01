@@ -87,6 +87,14 @@ const App = () => {
                   headerLeft: null,
                 }}
               />
+              <Stack.Screen
+                name="ExpenseManager"
+                component={ExpenseManager}
+                options={{
+                  title: 'Manage your expenses',
+                  headerLeft: null,
+                }}
+              />
             </>
           ) : (
             <>
@@ -110,14 +118,6 @@ const App = () => {
                 component={ForgotPassword}
                 options={{
                   title: 'Forgot Password',
-                  headerLeft: null,
-                }}
-              />
-              <Stack.Screen
-                name="ExpenseManager"
-                component={ExpenseManager}
-                options={{
-                  title: 'Manage your expenses',
                   headerLeft: null,
                 }}
               />

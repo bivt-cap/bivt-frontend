@@ -9,3 +9,5 @@ export * from './circle/createCircle/getCircleTypesAndPluginsAction';
 export * from './circle/inviteToCircle/inviteToCircleAction';
 //Choose plugins
 export * from './managePlugin/choosePlugin/choosePluginAction';
+//Expense Manager plugin
+export * from './plugins/expenseManager/expenseManagerAction';
