@@ -82,7 +82,6 @@ const Spendingsmodal = (props) => {
   const handleAddBill = async () => {
     let spendingsModalValidationErrors = spendingsModalValidation(billDetails);
     spendingsModalValidationErrors.then(async (errors) => {
-      console.log('errors');
       setBillDetailsError(errors);
       if (!errors.billName.error && !errors.billAmount.error) {
         const token = await JwtKeyChain.read();
@@ -131,13 +130,7 @@ const Spendingsmodal = (props) => {
             <Form style={SpendingsmodalStyles.modalForm}>
               <Item stackedLabel>
                 <Label>Bill Name*</Label>
-                {billDetailsError.billName.error && (
-                  <Label style={SpendingsmodalStyles.textFieldError}>
-                    {billDetailsError.billName.message}
-                  </Label>
-                )}
                 <Input
-                  style={{marginTop: 10}}
                   onChangeText={(val) =>
                     handleModalFormInputChange('billName', val)
                   }
@@ -145,11 +138,6 @@ const Spendingsmodal = (props) => {
               </Item>
               <Item stackedLabel>
                 <Label>Bill Amount in CAD*</Label>
-                {billDetailsError.billAmount.error && (
-                  <Label style={SpendingsmodalStyles.textFieldError}>
-                    {billDetailsError.billAmount.message}
-                  </Label>
-                )}
                 <Input
                   keyboardType="numeric"
                   onChangeText={(val) =>
@@ -212,6 +200,16 @@ const Spendingsmodal = (props) => {
                   style={SpendingsmodalStyles.actionButton}>
                   <Text>Close</Text>
                 </Button>
+                {billDetailsError.billName.error && (
+                  <Label style={SpendingsmodalStyles.textFieldError}>
+                    {billDetailsError.billName.message}
+                  </Label>
+                )}
+                {billDetailsError.billAmount.error && (
+                  <Label style={SpendingsmodalStyles.textFieldError}>
+                    {billDetailsError.billAmount.message}
+                  </Label>
+                )}
               </Content>
             </Form>
           </View>

@@ -21,8 +21,9 @@ export async function spendingsModalValidation(billDetails) {
         'The bill name must have a minimum of 3 characters and a maximum of 56 characters',
     };
   }
+  //Fix to accept only numbers
   if (
-    typeof billDetails.billAmount !== 'number' ||
+    typeof parseFloat(billDetails.billAmount) !== 'number' ||
     billDetails.billAmount < 0
   ) {
     validationErrors.billAmount = {

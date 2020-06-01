@@ -27,7 +27,7 @@ const SpendingsmodalStyles = StyleSheet.create({
     borderRadius: 20,
     padding: 25,
     width: '90%',
-    height: '70%',
+    height: '80%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
