@@ -30,6 +30,8 @@ import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
 import ChoosePlugins from './src/components/managePlugin/choosePlugin/ChoosePlugin';
 import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManager';
+import Chat from './src/components/plugins/chat/Chat';
+
 const Stack = createStackNavigator();
 
 // Main
@@ -85,6 +87,13 @@ const App = () => {
                 component={DashBoard}
                 options={{
                   title: 'DashBoard',
+                  headerLeft: null,
+                }}
+              />
+              <Stack.Screen
+                name="Chat"
+                component={Chat}
+                options={{
                   headerLeft: null,
                 }}
               />
