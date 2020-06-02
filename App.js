@@ -21,6 +21,7 @@ import Login from './src/components/authentication/login/Login';
 import Signup from './src/components/authentication/signup/Signup';
 import SignupFeedback from './src/components/authentication/signup/SignupFeedback';
 import ForgotPassword from './src/components/authentication/forgotPassword/ForgotPassword';
+import Chat from './src/components/plugins/chat/Chat';
 
 // Screens - Signed In
 import DashBoard from './src/components/dashboard/DashBoard';
@@ -84,6 +85,13 @@ const App = () => {
                 component={DashBoard}
                 options={{
                   title: 'DashBoard',
+                  headerLeft: null,
+                }}
+              />
+              <Stack.Screen
+                name="Chat"
+                component={Chat}
+                options={{
                   headerLeft: null,
                 }}
               />
