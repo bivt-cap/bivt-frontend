@@ -21,6 +21,7 @@ import Login from './src/components/authentication/login/Login';
 import Signup from './src/components/authentication/signup/Signup';
 import SignupFeedback from './src/components/authentication/signup/SignupFeedback';
 import ForgotPassword from './src/components/authentication/forgotPassword/ForgotPassword';
+import ResendValidationEmail from './src/components/authentication/resendValidationEmail/ResendValidationEmail';
 
 // Screens - Signed In
 import DashBoard from './src/components/dashboard/DashBoard';
@@ -111,6 +112,14 @@ const App = () => {
                 options={{
                   title: 'Forgot Password',
                   headerLeft: null,
+                }}
+              />
+              <Stack.Screen
+                name="ResendValidationEmail"
+                component={ResendValidationEmail}
+                options={{
+                  title: 'Resend Validation Email',
+                  animationEnabled: false,
                 }}
               />
               <Stack.Screen
