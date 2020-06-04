@@ -9,6 +9,7 @@ import store from './src/redux/store';
 import Login from './src/components/authentication/login/Login';
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
+import TodoList from './src/components/todoList/TodoList';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
             }}
           />
           <Stack.Screen name="DashBoard" component={DashBoard} />
+          {/* <Stack.Screen name="To-do list" component={TodoList} /> */}
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
