@@ -148,7 +148,7 @@ const App = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen name="DashBoard" component={DashBoard} />
-          <Stack.Screen name="To-do list" component={TodoList} />
+          {/* <Stack.Screen name="To-do list" component={TodoList} /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </Root>

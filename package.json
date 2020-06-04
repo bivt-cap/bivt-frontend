@@ -29,12 +29,9 @@
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.7.0",
-<<<<<<< HEAD
     "react-native-swipe-list-view": "^3.1.0",
-=======
     "react-native-splash-screen": "^3.2.0",
     "react-native-typing-animation": "^0.1.7",
->>>>>>> 99efd08da32a2e4868aaf7ac909f1a5f7573c358
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
