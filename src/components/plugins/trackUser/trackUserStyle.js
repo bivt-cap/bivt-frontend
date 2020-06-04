@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   },
   map: {
     position: 'absolute',
+    height: '90%',
     top: 0,
     left: 0,
     right: 0,
