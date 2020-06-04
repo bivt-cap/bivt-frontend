@@ -18,7 +18,7 @@ import {Container, Tabs, Tab, Icon, Content, Fab, Toast} from 'native-base';
 import {Row, Grid} from 'react-native-easy-grid';
 
 //styles
-import {ExpenseManagerStyles} from './expenseManagerStyles';
+import {expenseManagerStyles} from './expenseManagerStyles';
 
 //Components
 import Spendingsmodal from './SpendingsModal';
@@ -49,38 +49,7 @@ const ExpenseManager = () => {
   // ****************************************************//
   // ************ BEGINING OF EFFECTS ******************//
   // **************************************************//
-  useEffect(() => {
-    console.log(expenseManagerState);
-    if (expenseManagerState.error) {
-      Alert.alert(
-        'Error occured',
-        expenseManagerState.error.toString(),
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {text: 'OK'},
-        ],
-        {cancelable: false},
-      );
-    } else if (expenseManagerState.addBillResponseDetails === 200) {
-      closeModal();
-      console.log('Saved');
-      Alert.alert(
-        'Bill Saved',
-        'Success',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {text: 'OK'},
-        ],
-        {cancelable: false},
-      );
-    }
-  }, [expenseManagerState]);
+
   // ****************************************************//
   // ************ End OF EFFECTS ***********************//
   // **************************************************//
@@ -117,7 +86,7 @@ const ExpenseManager = () => {
         active={true}
         direction="up"
         containerStyle={{}}
-        style={ExpenseManagerStyles.selectPluginButton}
+        style={expenseManagerStyles.selectPluginButton}
         position="bottomRight"
         onPress={() => {
           setModalVisible(true);

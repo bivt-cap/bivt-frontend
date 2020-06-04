@@ -8,7 +8,7 @@
 import {StyleSheet} from 'react-native';
 
 //Main Styles
-const ExpenseManagerStyles = StyleSheet.create({
+const expenseManagerStyles = StyleSheet.create({
   addExpenseButton: {
     marginTop: '-80%',
     backgroundColor: 'red',
@@ -16,7 +16,7 @@ const ExpenseManagerStyles = StyleSheet.create({
 });
 
 //Add spendings modal styles
-const SpendingsmodalStyles = StyleSheet.create({
+const spendingsmodalStyles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -27,7 +27,7 @@ const SpendingsmodalStyles = StyleSheet.create({
     borderRadius: 20,
     padding: 25,
     width: '90%',
-    height: '80%',
+    height: '60%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -71,6 +71,11 @@ const SpendingsmodalStyles = StyleSheet.create({
   modalDropDown: {},
   modalDropDownItem: {},
   modalButton: {},
+  pickerWidth: {
+    width: '100%',
+  },
+  datePickerTextStyle: {color: 'green'},
+  datePickerplaceHolderTextStyle: {color: '#d3d3d3'},
 });
 
-export {ExpenseManagerStyles, SpendingsmodalStyles};
+export {expenseManagerStyles, spendingsmodalStyles};

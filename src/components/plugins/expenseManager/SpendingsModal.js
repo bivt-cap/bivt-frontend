@@ -8,11 +8,11 @@
 import React, {useState, useEffect} from 'react';
 
 //react native
-import {Modal, View} from 'react-native';
+import {Modal, View, Alert} from 'react-native';
 
 //redux
 import {useSelector, useDispatch} from 'react-redux';
-import {addBill} from '../../../redux';
+import {addBill, getBillCategories} from '../../../redux';
 
 //native base
 import {
@@ -28,7 +28,7 @@ import {
 } from 'native-base';
 
 //styles
-import {SpendingsmodalStyles} from './expenseManagerStyles';
+import {spendingsmodalStyles} from './expenseManagerStyles';
 
 // Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
@@ -45,7 +45,7 @@ const Spendingsmodal = (props) => {
   const [billDetails, setBillDetails] = useState({
     billName: '',
     billAmount: '',
-    billCategory: 'Food',
+    billCategory: 1,
     billDate: new Date(),
   });
   const [billDetailsError, setBillDetailsError] = useState({
@@ -56,6 +56,8 @@ const Spendingsmodal = (props) => {
       error: false,
     },
   });
+  const [addBillmsg, setAddBillmsg] = useState('');
+  const minDate = new Date(2019, 1, 1);
   // ****************************************************//
   // ************ END OF STATES DECLARATIONS ***********//
   // **************************************************//
@@ -77,18 +79,75 @@ const Spendingsmodal = (props) => {
   };
 
   /**
+   * Add Categories in the dropdown
+   */
+  const loadCategoryDropDown = () => {
+    return expenseManagerState.loadCategoriesResponseDetails.categories.map(
+      (category) => {
+        return (
+          <Picker.Item
+            label={category.categoryName.toString()}
+            value={category.id}
+            key={category.id}
+          />
+        );
+      },
+    );
+  };
+
+  /**
    * Adds the bill to list
    */
   const handleAddBill = async () => {
-    let spendingsModalValidationErrors = spendingsModalValidation(billDetails);
-    spendingsModalValidationErrors.then(async (errors) => {
-      setBillDetailsError(errors);
-      if (!errors.billName.error && !errors.billAmount.error) {
-        const token = await JwtKeyChain.read();
-        const circleId = bootstrapState.circles[0].id;
-        dispatch(addBill(billDetails, circleId, token));
-      }
+    setAddBillmsg('');
+    resetErrorState()
+      .then(() => {
+        let spendingsModalValidationErrors = spendingsModalValidation(
+          billDetails,
+        );
+        spendingsModalValidationErrors.then(async (errors) => {
+          setBillDetailsError(errors);
+          if (!errors.billName.error && !errors.billAmount.error) {
+            const token = await JwtKeyChain.read();
+            const circleId = bootstrapState.circles[0].id;
+            const _billDetails = billDetails;
+            dispatch(addBill(_billDetails, circleId, token));
+            resetBillState();
+            resetErrorState();
+            setAddBillmsg('...processing');
+          }
+        });
+      })
+      .catch(() => {
+        console.log('Caught an error.');
+      });
+  };
+
+  const resetBillState = async () => {
+    setBillDetails({
+      billName: '',
+      billAmount: '',
+      billCategory: '1',
+      billDate: new Date(),
     });
+  };
+
+  const resetErrorState = async () => {
+    setBillDetailsError({
+      billName: {
+        error: false,
+      },
+      billAmount: {
+        error: false,
+      },
+    });
+  };
+
+  const closeModal = () => {
+    setAddBillmsg('');
+    resetBillState();
+    resetErrorState();
+    props.closeModal();
   };
 
   // ****************************************************//
@@ -98,36 +157,57 @@ const Spendingsmodal = (props) => {
   // ****************************************************//
   // ************ BEGINING OF EFFECTS ******************//
   // **************************************************//
+  //loads bill categories onload
   useEffect(() => {
-    setBillDetails({
-      billName: '',
-      billAmount: '',
-      billCategory: 'Food',
-      billDate: new Date(),
-    });
-    setBillDetailsError({
-      billName: {
-        error: false,
-      },
-      billAmount: {
-        error: false,
-      },
-    });
-  }, [expenseManagerState.addBillResponseDetails]);
+    const fetchCategories = async () => {
+      const token = await JwtKeyChain.read();
+      dispatch(getBillCategories(token));
+    };
+    fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (expenseManagerState.error) {
+      setAddBillmsg('Error, try again later');
+      Alert.alert(
+        'Error occured',
+        expenseManagerState.error.toString(),
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {text: 'OK'},
+        ],
+        {cancelable: false},
+      );
+    } else if (expenseManagerState.addBillResponseDetails === 200) {
+      setAddBillmsg('Done');
+      setTimeout(() => {
+        setAddBillmsg('');
+      }, 1000);
+      closeModal();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expenseManagerState]);
+
   // ****************************************************//
   // ************ End OF EFFECTS ***********************//
   // **************************************************//
 
   return (
-    <View style={SpendingsmodalStyles.centeredView}>
+    <View style={spendingsmodalStyles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
         visible={props.modalVisible}
-        onRequestClose={() => {}}>
-        <View style={SpendingsmodalStyles.centeredView}>
-          <View style={SpendingsmodalStyles.modalView}>
-            <Form style={SpendingsmodalStyles.modalForm}>
+        onDismiss={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <View style={spendingsmodalStyles.centeredView}>
+          <View style={spendingsmodalStyles.modalView}>
+            <Form style={spendingsmodalStyles.modalForm}>
               <Item stackedLabel>
                 <Label>Bill Name*</Label>
                 <Input
@@ -145,29 +225,28 @@ const Spendingsmodal = (props) => {
                   }
                 />
               </Item>
-              <Item stackedLabel style={SpendingsmodalStyles.modalDropDownItem}>
+              <Item stackedLabel style={spendingsmodalStyles.modalDropDownItem}>
                 <Label>Select a category*</Label>
                 <Picker
                   note
                   mode="dropdown"
-                  style={{width: '100%'}}
+                  style={spendingsmodalStyles.pickerWidth}
                   selectedValue={billDetails.billCategory}
                   onValueChange={(value) => {
                     handleModalFormInputChange('billCategory', value);
                   }}>
-                  <Picker.Item label="Food" value="Food" />
-                  <Picker.Item label="Home" value="Home" />
-                  <Picker.Item label="Bills" value="Bills" />
-                  <Picker.Item label="Repairs" value="Repairs" />
-                  <Picker.Item label="Vehicle" value="Vehicle" />
-                  <Picker.Item label="Others" value="Others" />
+                  {expenseManagerState.loadCategoriesResponseDetails === '' ? (
+                    <Picker.Item label="loading" value={0} key={0} />
+                  ) : (
+                    loadCategoryDropDown()
+                  )}
                 </Picker>
               </Item>
               <Item stackedLabel>
                 <Label>Bill Date:</Label>
                 <DatePicker
                   defaultDate={billDetails.billDate}
-                  minimumDate={new Date(2019, 1, 1)}
+                  minimumDate={minDate}
                   maximumDate={billDetails.billDate}
                   locale={'en'}
                   timeZoneOffsetInMinutes={undefined}
@@ -175,40 +254,47 @@ const Spendingsmodal = (props) => {
                   animationType={'fade'}
                   androidMode={'default'}
                   // placeHolderText="Select date"
-                  textStyle={{color: 'green'}}
-                  placeHolderTextStyle={{color: '#d3d3d3'}}
+                  textStyle={spendingsmodalStyles.datePickerTextStyle}
+                  placeHolderTextStyle={
+                    spendingsmodalStyles.datePickerplaceHolderTextStyle
+                  }
                   onDateChange={(value) => {
                     handleModalFormInputChange('billDate', value);
                   }}
                   disabled={false}
                 />
               </Item>
-              <Content style={SpendingsmodalStyles.actionButtonsContainer}>
+              <Content style={spendingsmodalStyles.actionButtonsContainer}>
                 <Button
                   onPress={handleAddBill}
                   bordered
                   block
                   success
-                  style={SpendingsmodalStyles.actionButton}>
+                  style={spendingsmodalStyles.actionButton}>
                   <Text>Add</Text>
                 </Button>
                 <Button
-                  onPress={props.closeModal}
+                  onPress={closeModal}
                   bordered
                   block
                   warning
-                  style={SpendingsmodalStyles.actionButton}>
+                  style={spendingsmodalStyles.actionButton}>
                   <Text>Close</Text>
                 </Button>
                 {billDetailsError.billName.error && (
-                  <Label style={SpendingsmodalStyles.textFieldError}>
+                  <Label style={spendingsmodalStyles.textFieldError}>
                     {billDetailsError.billName.message}
                   </Label>
                 )}
                 {billDetailsError.billAmount.error && (
-                  <Label style={SpendingsmodalStyles.textFieldError}>
+                  <Label style={spendingsmodalStyles.textFieldError}>
                     {billDetailsError.billAmount.message}
                   </Label>
+                )}
+                {expenseManagerState.loading ? (
+                  <Label>...</Label>
+                ) : (
+                  <Label>{addBillmsg}</Label>
                 )}
               </Content>
             </Form>
