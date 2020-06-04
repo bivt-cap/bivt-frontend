@@ -21,7 +21,7 @@ import Login from './src/components/authentication/login/Login';
 import Signup from './src/components/authentication/signup/Signup';
 import SignupFeedback from './src/components/authentication/signup/SignupFeedback';
 import ForgotPassword from './src/components/authentication/forgotPassword/ForgotPassword';
-import Chat from './src/components/plugins/chat/Chat';
+import ResendValidationEmail from './src/components/authentication/resendValidationEmail/ResendValidationEmail';
 
 // Screens - Signed In
 import DashBoard from './src/components/dashboard/DashBoard';
@@ -30,6 +30,8 @@ import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
 import ChoosePlugins from './src/components/managePlugin/choosePlugin/ChoosePlugin';
 import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManager';
+import Chat from './src/components/plugins/chat/Chat';
+
 const Stack = createStackNavigator();
 
 // Main
@@ -119,6 +121,14 @@ const App = () => {
                 options={{
                   title: 'Forgot Password',
                   headerLeft: null,
+                }}
+              />
+              <Stack.Screen
+                name="ResendValidationEmail"
+                component={ResendValidationEmail}
+                options={{
+                  title: 'Resend Validation Email',
+                  animationEnabled: false,
                 }}
               />
               <Stack.Screen
