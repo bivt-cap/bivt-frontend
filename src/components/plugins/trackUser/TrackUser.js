@@ -52,7 +52,6 @@ const TrackUser = () => {
         loadingIndicatorColor={'#606060'}
         userLocationUpdateInterval={5000}
         userLocationAnnotationTitle
-        followsUserLocation={true}
       />
     </Container>
   );
