@@ -6,8 +6,8 @@
  */
 import {bivtURL} from '../../apis/bivtApi';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as Keychain from 'react-native-keychain';
+// import AsyncStorage from '@react-native-community/async-storage';
+import JwtKeyChain from '../../../utils/jwtKeyChain';
 
 //Purpose of Action: Describe some changes that we want to make to the data inside of our application.
 export const loginReguest = () => {
@@ -38,12 +38,24 @@ export const googleLoginSuccess = (googleLoginDetails) => {
     payload: googleLoginDetails,
   };
 };
+export const forgotPasswordFail = (error) => {
+  return {
+    type: 'FORGOT_PASSWORD_FAIL',
+    payload: error,
+  };
+};
+export const forgotPasswordSuccess = (forgotPasswordDetails) => {
+  return {
+    type: 'FORGOT_PASSWORD_SUCCESS',
+    payload: forgotPasswordDetails,
+  };
+};
 export const writeJTWtoKeyChain = async (token) => {
   try {
     const jwtToken = token;
     if (jwtToken !== '') {
       // Store the credentials
-      await Keychain.setGenericPassword('token', jwtToken);
+      await JwtKeyChain.write(jwtToken);
     } else {
       console.log('Token not found');
     }
@@ -55,13 +67,8 @@ export const writeJTWtoKeyChain = async (token) => {
 export const readJWTFromKeyChain = async () => {
   try {
     // Retrieve the credentials
-    const credentials = await Keychain.getGenericPassword();
-    console.log('Credentials', credentials);
-    if (credentials) {
-      //Encrypt token and send to the asyncStorage because asyncStroage is not SECURE!
-      console.log(
-        'Credentials successfully loaded for user ' + credentials.username,
-      );
+    const credentials = await JwtKeyChain.read();
+    if (credentials != null) {
       return credentials.password;
     } else {
       console.log('No credentials stored');
@@ -73,7 +80,7 @@ export const readJWTFromKeyChain = async () => {
 //Once user click logout button clear token from storage.
 export const deleteJTWFromKeyChain = async () => {
   try {
-    const resetPassword = await Keychain.resetGenericPassword();
+    const resetPassword = await JwtKeyChain.remove();
     if (resetPassword) {
       console.log('Token successfully removed');
       return true;
@@ -119,13 +126,14 @@ export const googleSignIn = async (dispatch) => {
     await GoogleSignin.hasPlayServices();
     const googleuserInfo = await GoogleSignin.signIn();
     const googleToken = {token: googleuserInfo.idToken};
-    console.log('User informations: ', googleuserInfo);
+    console.debug('GOOGLE: ', googleuserInfo);
     const response = await bivtURL.post('/auth/google', googleToken);
-    // console.log(response.data.data.token);
+    console.debug('API: ', response.data.token);
     if (response.status === 200 && response.data.data.token !== '') {
       //Code: Here fetch google data from backend not from Google. Talk Eduardo with google auth endpoint
+      writeJTWtoKeyChain(response.data.data.token);
       const googleUserInfo = response.data.data.user;
-      console.log(googleUserInfo);
+      console.debug('API: ', googleUserInfo);
       dispatch(googleLoginSuccess(googleUserInfo));
     }
   } catch (error) {
@@ -145,7 +153,37 @@ export const googleSignIn = async (dispatch) => {
     }
   }
 };
-
+export const forgotUserPassword = (userEmail) => {
+  try {
+    const emailDetail = {
+      email: userEmail.email,
+    };
+    return async (dispatch) => {
+      //Dispatch: is going to take an action, copy of the object and pass to reducer.
+      try {
+        dispatch(loginReguest);
+        const response = await bivtURL.post(
+          '/user/forgotPassword',
+          emailDetail,
+        );
+        if (response.status === 200 && response.data.emailToken !== '') {
+          //send email to the user
+          dispatch(
+            forgotPasswordSuccess(
+              'Email succesfully sent! \nClick the link in the email to reset your password!',
+            ),
+          );
+        }
+      } catch (error) {
+        const errorMsg = error.message;
+        console.log(errorMsg);
+        const errorMessgage =
+          'User not found. Please enter valid Email Address';
+        dispatch(forgotPasswordFail(errorMessgage));
+      }
+    };
+  } catch (error) {}
+};
 export const checkGoogleSession = async (dispatch) => {
   try {
     const isSignedIn = await GoogleSignin.isSignedIn();

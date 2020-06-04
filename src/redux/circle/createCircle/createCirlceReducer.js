@@ -9,11 +9,15 @@ import {
   CREATE_CIRCLE_REQUEST,
   CREATE_CIRCLE_SUCCESS,
   CREATE_CIRCLE_FAILURE,
+  GET_CIRCLE_TYPES_AND_PLUGINS_REQUEST,
+  GET_CIRCLE_TYPES_AND_PLUGINS_SUCCESS,
+  GET_CIRCLE_TYPES_AND_PLUGINS_FAILURE,
 } from './createCirlceTypes';
 
 const createCircleInitialState = {
   loading: false,
-  circleRegistrationDetails: '',
+  circleRegistrationDetails: null,
+  circleTypesAndPluginsDetails: '',
   error: '',
 };
 
@@ -26,14 +30,35 @@ let createCirlceReducer = (state = createCircleInitialState, action) => {
       };
     case CREATE_CIRCLE_SUCCESS:
       return {
+        ...state,
         loading: false,
         circleRegistrationDetails: action.payload,
         error: '',
       };
     case CREATE_CIRCLE_FAILURE:
       return {
+        ...state,
         loading: false,
-        circleRegistrationDetails: '',
+        circleRegistrationDetails: null,
+        error: action.payload,
+      };
+    case GET_CIRCLE_TYPES_AND_PLUGINS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_CIRCLE_TYPES_AND_PLUGINS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        circleTypesAndPluginsDetails: action.payload,
+        error: '',
+      };
+    case GET_CIRCLE_TYPES_AND_PLUGINS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        circleTypesAndPluginsDetails: '',
         error: action.payload,
       };
     default:

@@ -6,14 +6,14 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ActivityIndicator, Alert} from 'react-native';
+import {ActivityIndicator, Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   loginUser,
   googleSignIn,
   checkGoogleSession,
   checkLocalSession,
-  initialState,
+  resetBootstrap,
 } from '../../../redux';
 import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from 'react-native-dotenv';
 import {
@@ -29,7 +29,6 @@ import {
   Item,
   Label,
   Input,
-  H1,
   Form,
   Text,
 } from 'native-base';
@@ -37,7 +36,7 @@ import {loginFormValidation} from './loginFormValidation';
 
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  console.log('loginpage', userData);
+  // console.log('loginpage', userData);
   const dispatch = useDispatch();
 
   // ******************************************************//
@@ -57,7 +56,7 @@ const Login = ({navigation}) => {
     },
     firstRender: true,
   });
-  console.log(loginError);
+
   // ******************************************************//
   // ************ END OF STATES DECLERATIONS *********//
   // ***************************************************//
@@ -67,8 +66,8 @@ const Login = ({navigation}) => {
       iosClientId: GOOGLE_IOS_CLIENT_ID,
       webClientId: GOOGLE_WEB_CLIENT_ID,
     });
-    dispatch(checkGoogleSession);
-    dispatch(checkLocalSession);
+    //dispatch(checkGoogleSession);
+    //dispatch(checkLocalSession);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -90,17 +89,13 @@ const Login = ({navigation}) => {
   // **********************************************************//
 
   // normal login and google login check seperately and pass different params to the dash.
-  // Navigate to Dasboard Feature.
   const checkisLoggedIn = () => {
-    // console.log(userData.googleLoginDetails);
-    if (userData.isLoggedin === 'True') {
-      navigation.navigate('DashBoard', {loginInfo: userData.loginDetails});
-    } else if (userData.googleisLoggedin === 'True') {
-      navigation.navigate('DashBoard', {
-        loginInfo: userData.googleLoginDetails,
-      });
-    } else {
-      console.log('NOT LOGIN');
+    if (
+      userData.isLoggedin === 'True' ||
+      userData.googleisLoggedin === 'True'
+    ) {
+      dispatch(resetBootstrap());
+      navigation.navigate('Bootstrap');
     }
   };
 
@@ -122,6 +117,13 @@ const Login = ({navigation}) => {
     dispatch(googleSignIn);
     console.log(userData);
   };
+  const handleForgotButtonClick = () => {
+    navigation.navigate('ForgotPassword');
+  };
+  const handleSugnUpButtonClick = () => {
+    navigation.navigate('SignUp');
+  };
+
   const showAlertErrorMessage = (errorMsg) => {
     return Alert.alert(
       'Error',
@@ -132,7 +134,6 @@ const Login = ({navigation}) => {
           onPress: () => {
             userData.errorStatus = 'False';
             userData.error = '';
-            console.log(userData);
           },
         },
       ],
@@ -146,59 +147,65 @@ const Login = ({navigation}) => {
   // ************************************************//
 
   return (
-    <Container style={styles.container}>
-      <Content>
-        <GoogleSigninButton
-          style={{width: 192, height: 48}}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={handleGoogleButtonClick}
-        />
-
-        <Form style={styles.form}>
-          <H1 style={styles.textCentered}>Login</H1>
-          <Item stackedLabel>
-            <Label>Email*</Label>
+    <Container>
+      <Content style={{padding: 15}}>
+        <Form>
+          <Item>
+            <Input
+              placeholder="Email"
+              autoCapitalize="none"
+              onChangeText={(val) => handleLoginInputChanges('email', val)}
+            />
             {loginError.email.error && (
               <Label style={styles.textFieldError}>
                 {loginError.email.message}
               </Label>
             )}
-            <Input
-              autoCapitalize="none"
-              onChangeText={(val) => handleLoginInputChanges('email', val)}
-            />
           </Item>
-          <Item stackedLabel last>
-            <Label>Password*</Label>
-            {loginError.password.error && (
-              <Label style={styles.textFieldError}>
-                {loginError.password.message}
-              </Label>
-            )}
+          <Item last>
             <Input
+              placeholder="Password"
               secureTextEntry
               onChangeText={(value) =>
                 handleLoginInputChanges('password', value)
               }
             />
+            {loginError.password.error && (
+              <Label style={styles.textFieldError}>
+                {loginError.password.message}
+              </Label>
+            )}
           </Item>
+          <Button
+            block
+            style={{marginTop: 20}}
+            onPress={handleLoginButtonClick}>
+            {userData.loading === true ? (
+              (console.log(userData),
+              (<ActivityIndicator size="small" color="#00ff00" />))
+            ) : (
+              <Text>Sign in</Text>
+            )}
+          </Button>
         </Form>
-        <Button transparent>
+
+        <Text style={{marginTop: 15, textAlign: 'center'}}>Or</Text>
+
+        <GoogleSigninButton
+          style={{width: 192, height: 48, marginTop: 15}}
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={handleGoogleButtonClick}
+        />
+
+        <Button transparent onPress={handleForgotButtonClick}>
           <Text>Forgot Password</Text>
         </Button>
 
-        <Button
-          block
-          style={{margin: 15, marginTop: 50}}
-          onPress={handleLoginButtonClick}>
-          {userData.loading === true ? (
-            (console.log(userData),
-            (<ActivityIndicator size="small" color="#00ff00" />))
-          ) : (
-            <Text>Sign in</Text>
-          )}
+        <Button full light info onPress={handleSugnUpButtonClick}>
+          <Text>Sign Up</Text>
         </Button>
+
         {userData.isLoggedin === 'True' || userData.googleisLoggedin === 'True'
           ? checkisLoggedIn()
           : userData.error !== '' && userData.errorStatus === 'True'
