@@ -1,48 +1,22 @@
 import React, {useState, useEffect, Platform, Alert} from 'react';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {Container, Header, Content, Footer, Text} from 'native-base';
 import Geolocation from '@react-native-community/geolocation';
 import styles from './trackUserStyle';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 const TrackUser = () => {
   const [userLocation, setuserLocation] = useState();
+  const [mapStyle, setMapStyle] = useState({marginBottom: 1});
   useEffect(() => {
     // getCurrentPosition();
     Geolocation.getCurrentPosition((info) => console.log(info));
   });
+  const onMapReady = () => setMapStyle({marginBottom: 0});
 
-  // const getCurrentPosition = () => {
-  //   try {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         const region = {
-  //           latitude: position.coords.latitude,
-  //           longitude: position.coords.longitude,
-  //         };
-  //         setuserLocation(region);
-  //       },
-  //       (error) => {
-  //         //TODO: better design
-  //         switch (error.code) {
-  //           case 1:
-  //             if (Platform.OS === 'ios') {
-  //               Alert.alert('', 'asdas');
-  //             } else {
-  //               Alert.alert('', 'Psdfds');
-  //             }
-  //             break;
-  //           default:
-  //             Alert.alert('', 'dsfsd');
-  //         }
-  //       },
-  //     );
-  //   } catch (e) {
-  //     alert(e.message || '');
-  //   }
-  // };
   return (
-    <Container style={styles.container}>
+    <Container style={{flex: 1}}>
       <MapView
-        style={styles.map}
+        style={{flex: 1, marginBottom: mapStyle.marginBottom}}
+        onMapReady={onMapReady}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         followsUserLocation={true}

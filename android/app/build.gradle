@@ -187,8 +187,10 @@ android {
         }
     }
 }
+apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
 
 dependencies {
+    
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:28.0.0"
     implementation "com.facebook.react:react-native:0.20.1"
@@ -218,6 +220,7 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    addUnimodulesDependencies()
 }
 apply plugin: 'com.google.gms.google-services' // <--- this should be the last line
 
