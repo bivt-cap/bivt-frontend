@@ -24,6 +24,9 @@ const DashBoard = ({route, navigation}) => {
   const handleChatButtonClick = async () => {
     navigation.navigate('Chat', {userInfo: bootstrapState.user});
   };
+  const handleTrackUserButton = async () => {
+    navigation.navigate('TrackUser', {userInfo: bootstrapState.user});
+  };
   const handleLogoutButtonClick = async () => {
     try {
       //If user authenticate with google oAuth
@@ -87,6 +90,9 @@ const DashBoard = ({route, navigation}) => {
         </Button>
         <Button onPress={handleChatButtonClick}>
           <Text> Chat </Text>
+        </Button>
+        <Button onPress={handleTrackUserButton}>
+          <Text> Track User </Text>
         </Button>
       </Content>
     </Container>
