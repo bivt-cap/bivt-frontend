@@ -32,6 +32,7 @@ import TodoList from './src/components/plugins/todoList/TodoList';
 import ChoosePlugins from './src/components/managePlugin/choosePlugin/ChoosePlugin';
 import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManager';
 import Chat from './src/components/plugins/chat/Chat';
+import TrackUser from './src/components/plugins/trackUser/TrackUser';
 
 const Stack = createStackNavigator();
 
@@ -103,6 +104,14 @@ const App = () => {
                 name="Chat"
                 component={Chat}
                 options={{
+                  headerLeft: null,
+                }}
+              />
+              <Stack.Screen
+                name="TrackUser"
+                component={TrackUser}
+                options={{
+                  title: 'Maps',
                   headerLeft: null,
                 }}
               />
