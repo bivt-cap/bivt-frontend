@@ -111,7 +111,9 @@ const Spendingsmodal = (props) => {
             const token = await JwtKeyChain.read();
             const circleId = bootstrapState.circles[0].id;
             const _billDetails = billDetails;
-            dispatch(addBill(_billDetails, circleId, token));
+            dispatch(addBill(_billDetails, circleId, token)).then(() => {
+              props.fetchBills();
+            });
             resetBillState();
             resetErrorState();
             setAddBillmsg('...processing');
@@ -169,19 +171,7 @@ const Spendingsmodal = (props) => {
 
   useEffect(() => {
     if (expenseManagerState.error) {
-      setAddBillmsg('Error, try again later');
-      Alert.alert(
-        'Error occured',
-        expenseManagerState.error.toString(),
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {text: 'OK'},
-        ],
-        {cancelable: false},
-      );
+      console.log(expenseManagerState.error.toString());
     } else if (expenseManagerState.addBillResponseDetails === 200) {
       setAddBillmsg('Done');
       setTimeout(() => {

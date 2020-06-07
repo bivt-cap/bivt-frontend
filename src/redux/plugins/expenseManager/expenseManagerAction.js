@@ -116,6 +116,45 @@ export const getBillCategories = (token) => {
 };
 
 /**
+ * Fetch bills
+ */
+export const getBills = (_circleId, token) => {
+  const circleDetails = {
+    circleId: _circleId,
+  };
+  const config = {
+    headers: {Authorization: `Bearer ${token}`},
+  };
+  return async (dispatch) => {
+    dispatch(expenseManagerRequest);
+    try {
+      const response = await bivtURL.post(
+        '/plugin/expenses/bills',
+        circleDetails,
+        config,
+      );
+      const loadBillsResponseDetails = response.data;
+      if (loadBillsResponseDetails.status.id === 200) {
+        dispatch(expenseManagerLoadBillsSuccess(loadBillsResponseDetails.data));
+      } else {
+        dispatch(expenseManagerLoadBillsFailure('Error! try again later'));
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response.status === 401) {
+        dispatch(expenseManagerLoadBillsFailure('Unauthorised'));
+      } else if (error.response.status === 422) {
+        dispatch(
+          expenseManagerLoadBillsFailure(error.response.data.status.errors),
+        );
+      } else {
+        dispatch(expenseManagerLoadBillsFailure('Error! try again later'));
+      }
+    }
+  };
+};
+
+/**
  * This function calls the REST api to add a bill to the DB
  */
 export const addBill = (_billDetails, _circleId, token) => {
