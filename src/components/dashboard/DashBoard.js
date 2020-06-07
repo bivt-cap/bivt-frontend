@@ -24,6 +24,10 @@ const DashBoard = ({route, navigation}) => {
   const handleChatButtonClick = async () => {
     navigation.navigate('Chat', {userInfo: bootstrapState.user});
   };
+
+  const handleTodoListButtonClick = async () => {
+    navigation.navigate('TodoList', {userInfo: bootstrapState.user});
+  };
   const handleTrackUserButton = async () => {
     navigation.navigate('TrackUser', {userInfo: bootstrapState.user});
   };
@@ -90,6 +94,9 @@ const DashBoard = ({route, navigation}) => {
         </Button>
         <Button onPress={handleChatButtonClick}>
           <Text> Chat </Text>
+        </Button>
+        <Button onPress={handleTodoListButtonClick}>
+          <Text> TodoList </Text>
         </Button>
         <Button onPress={handleTrackUserButton}>
           <Text> Track User </Text>

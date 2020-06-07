@@ -28,6 +28,7 @@ import DashBoard from './src/components/dashboard/DashBoard';
 import ApproveCircle from './src/components/circle/approveCircle/ApproveCircle';
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
+import TodoList from './src/components/plugins/todoList/TodoList';
 import ChoosePlugins from './src/components/managePlugin/choosePlugin/ChoosePlugin';
 import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManager';
 import Chat from './src/components/plugins/chat/Chat';
@@ -90,6 +91,14 @@ const App = () => {
                   title: 'DashBoard',
                   headerLeft: null,
                 }}
+              />
+              <Stack.Screen
+                name="TodoList"
+                options={{
+                  title: 'Todo List',
+                  headerLeft: null,
+                }}
+                component={TodoList}
               />
               <Stack.Screen
                 name="Chat"
