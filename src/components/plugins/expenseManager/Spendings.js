@@ -8,12 +8,22 @@
 import React from 'react';
 
 //native base
-import {Container, Content} from 'native-base';
+import {Container, Content, ListItem, Body, Right, Text} from 'native-base';
 
 const Spendings = (props) => {
   return (
     <Container>
-      <Content>{props.data}</Content>
+      <Content>
+        <ListItem itemDivider>
+          <Body>
+            <Text>Total</Text>
+          </Body>
+          <Right>
+            <Text>${props.sum}</Text>
+          </Right>
+        </ListItem>
+        {props.data}
+      </Content>
     </Container>
   );
 };

@@ -123,6 +123,9 @@ const Login = ({navigation}) => {
   const handleSugnUpButtonClick = () => {
     navigation.navigate('SignUp');
   };
+  const handleResendValidationEmailButtonClick = () => {
+    navigation.navigate('ResendValidationEmail');
+  };
 
   const showAlertErrorMessage = (errorMsg) => {
     return Alert.alert(
@@ -204,6 +207,10 @@ const Login = ({navigation}) => {
 
         <Button full light info onPress={handleSugnUpButtonClick}>
           <Text>Sign Up</Text>
+        </Button>
+
+        <Button transparent onPress={handleResendValidationEmailButtonClick}>
+          <Text>Resend Validation Email</Text>
         </Button>
 
         {userData.isLoggedin === 'True' || userData.googleisLoggedin === 'True'

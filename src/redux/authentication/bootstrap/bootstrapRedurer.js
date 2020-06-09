@@ -59,13 +59,13 @@ const bootstrapReducer = (state = bootstrapInitialState, action) => {
         ...state,
         isLoading: false,
         circles: action.payload,
-        initialRouteName: 'ExpenseManager',
+        initialRouteName: 'DashBoard',
       };
     case CIRCLES_NEED_CREATE:
       return {
         ...state,
         isLoading: false,
-        initialRouteName: 'ExpenseManager',
+        initialRouteName: 'CreateCircle',
       };
   }
 

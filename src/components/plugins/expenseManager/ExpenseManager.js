@@ -53,6 +53,7 @@ const ExpenseManager = () => {
   // **************************************************//
   const [active, setActive] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  let sumBreakDown = {};
   // ****************************************************//
   // ************ END OF STATES DECLARATIONS ***********//
   // **************************************************//
@@ -60,15 +61,27 @@ const ExpenseManager = () => {
   // ****************************************************//
   // ************ BEGINING OF ACTIONS ******************//
   // **************************************************//
-  //Closes the modal
+
   const closeModal = () => {
     setModalVisible(false);
   };
 
+  //fetch bills from the DB
+  const fetchBills = async () => {
+    const token = await JwtKeyChain.read();
+    const circleId = bootstrapState.circles[0].id;
+    dispatch(getBills(circleId, token));
+  };
+
+  //loads bills on the screen
   const loadBills = (interval) => {
     const now = moment();
+    let sum = 0;
     return expenseManagerState.loadBillsResponseDetails.bills.map((bill) => {
       if (moment(bill.billDate).isSame(now, interval)) {
+        // eslint-disable-next-line radix
+        sum = sum + parseInt(bill.billAmount);
+        sumBreakDown[interval] = sum;
         return (
           <ListItem icon key={bill.id}>
             <Left>
@@ -114,18 +127,27 @@ const ExpenseManager = () => {
     });
   };
 
-  const fetchBills = async () => {
-    const token = await JwtKeyChain.read();
-    const circleId = bootstrapState.circles[0].id;
-    dispatch(getBills(circleId, token));
-  };
-
   const deleteBill = async (billId) => {
     const token = await JwtKeyChain.read();
     const circleId = bootstrapState.circles[0].id;
-    dispatch(removeBill(billId, circleId, token)).then(() => {
-      fetchBills();
-    });
+    dispatch(removeBill(billId, circleId, token)).then(
+      () => {
+        fetchBills();
+      },
+      (error) => {
+        Alert.alert(
+          'Error',
+          'There was a problem deleting the bill',
+          [
+            {
+              text: 'Ok',
+              style: 'cancel',
+            },
+          ],
+          {cancelable: false},
+        );
+      },
+    );
   };
   // ****************************************************//
   // ************ END OF ACTIONS ***********************//
@@ -138,9 +160,25 @@ const ExpenseManager = () => {
   //loads bils
   useEffect(() => {
     fetchBills();
-    console.log(expenseManagerState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  //Alert on error
+  useEffect(() => {
+    if (expenseManagerState.error) {
+      Alert.alert(
+        'Error',
+        expenseManagerState.error,
+        [
+          {
+            text: 'Ok',
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+  }, [expenseManagerState]);
   // ****************************************************//
   // ************ End OF EFFECTS ***********************//
   // **************************************************//
@@ -157,21 +195,30 @@ const ExpenseManager = () => {
                     {expenseManagerState.loadBillsResponseDetails === '' ? (
                       <Spendings data={<Text>NA</Text>} />
                     ) : (
-                      <Spendings data={loadBills('Week')} />
+                      <Spendings
+                        data={loadBills('Week')}
+                        sum={sumBreakDown.Week}
+                      />
                     )}
                   </Tab>
                   <Tab heading="This Month">
                     {expenseManagerState.loadBillsResponseDetails === '' ? (
                       <Spendings data="NA" />
                     ) : (
-                      <Spendings data={loadBills('Month')} />
+                      <Spendings
+                        data={loadBills('Month')}
+                        sum={sumBreakDown.Month}
+                      />
                     )}
                   </Tab>
                   <Tab heading="This Year">
                     {expenseManagerState.loadBillsResponseDetails === '' ? (
                       <Spendings data="NA" />
                     ) : (
-                      <Spendings data={loadBills('Year')} />
+                      <Spendings
+                        data={loadBills('Year')}
+                        sum={sumBreakDown.Year}
+                      />
                     )}
                   </Tab>
                 </Tabs>

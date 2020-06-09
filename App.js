@@ -21,14 +21,19 @@ import Login from './src/components/authentication/login/Login';
 import Signup from './src/components/authentication/signup/Signup';
 import SignupFeedback from './src/components/authentication/signup/SignupFeedback';
 import ForgotPassword from './src/components/authentication/forgotPassword/ForgotPassword';
+import ResendValidationEmail from './src/components/authentication/resendValidationEmail/ResendValidationEmail';
 
 // Screens - Signed In
 import DashBoard from './src/components/dashboard/DashBoard';
 import ApproveCircle from './src/components/circle/approveCircle/ApproveCircle';
 import CreateCircle from './src/components/circle/createCircle/CreateCircle';
 import InviteToCircle from './src/components/circle/inviteToCircle/InviteToCircle';
+import TodoList from './src/components/plugins/todoList/TodoList';
 import ChoosePlugins from './src/components/managePlugin/choosePlugin/ChoosePlugin';
 import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManager';
+import Chat from './src/components/plugins/chat/Chat';
+import TrackUser from './src/components/plugins/trackUser/TrackUser';
+
 const Stack = createStackNavigator();
 
 // Main
@@ -88,6 +93,29 @@ const App = () => {
                 }}
               />
               <Stack.Screen
+                name="TodoList"
+                options={{
+                  title: 'Todo List',
+                  headerLeft: null,
+                }}
+                component={TodoList}
+              />
+              <Stack.Screen
+                name="Chat"
+                component={Chat}
+                options={{
+                  headerLeft: null,
+                }}
+              />
+              <Stack.Screen
+                name="TrackUser"
+                component={TrackUser}
+                options={{
+                  title: 'Maps',
+                  headerLeft: null,
+                }}
+              />
+              <Stack.Screen
                 name="ExpenseManager"
                 component={ExpenseManager}
                 options={{
@@ -118,6 +146,22 @@ const App = () => {
                 component={ForgotPassword}
                 options={{
                   title: 'Forgot Password',
+                  headerLeft: null,
+                }}
+              />
+              <Stack.Screen
+                name="ResendValidationEmail"
+                component={ResendValidationEmail}
+                options={{
+                  title: 'Resend Validation Email',
+                  animationEnabled: false,
+                }}
+              />
+              <Stack.Screen
+                name="ExpenseManager"
+                component={ExpenseManager}
+                options={{
+                  title: 'Manage your expenses',
                   headerLeft: null,
                 }}
               />

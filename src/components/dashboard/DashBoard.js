@@ -1,5 +1,4 @@
-import React from 'react';
-import {Image} from 'react-native';
+import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   Container,
@@ -20,7 +19,21 @@ const DashBoard = ({route, navigation}) => {
   // Stored State - Redux hook
   const bootstrapState = useSelector((state) => state.bootstrap);
   const userData = useSelector((state) => state.login);
+  console.log(bootstrapState);
 
+  const handleChatButtonClick = async () => {
+    navigation.navigate('Chat', {userInfo: bootstrapState.user});
+  };
+
+  const handleTodoListButtonClick = async () => {
+    navigation.navigate('TodoList', {userInfo: bootstrapState.user});
+  };
+  const handleTrackUserButton = async () => {
+    navigation.navigate('TrackUser', {userInfo: bootstrapState.user});
+  };
+  const handleExpensesButton = async () => {
+    navigation.navigate('ExpenseManager', {userInfo: bootstrapState.user});
+  };
   const handleLogoutButtonClick = async () => {
     try {
       //If user authenticate with google oAuth
@@ -81,6 +94,18 @@ const DashBoard = ({route, navigation}) => {
         </Card>
         <Button onPress={handleLogoutButtonClick}>
           <Text> Logout </Text>
+        </Button>
+        <Button onPress={handleChatButtonClick}>
+          <Text> Chat </Text>
+        </Button>
+        <Button onPress={handleTodoListButtonClick}>
+          <Text> TodoList </Text>
+        </Button>
+        <Button onPress={handleTrackUserButton}>
+          <Text> Track User </Text>
+        </Button>
+        <Button onPress={handleExpensesButton}>
+          <Text> Expenses Plugin </Text>
         </Button>
       </Content>
     </Container>
