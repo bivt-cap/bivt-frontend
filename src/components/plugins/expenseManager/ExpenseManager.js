@@ -12,7 +12,7 @@ import {Text, Alert} from 'react-native';
 
 //redux
 import {useSelector, useDispatch} from 'react-redux';
-import {getBills} from '../../../redux';
+import {getBills, removeBill} from '../../../redux';
 
 //native base
 import {
@@ -88,17 +88,44 @@ const ExpenseManager = () => {
             </Body>
             <Right>
               <Text>${bill.billAmount}</Text>
-              <Icon active name="remove" />
+              <Icon
+                active
+                name="remove-circle-outline"
+                onPress={() => {
+                  Alert.alert(
+                    'Warning',
+                    'Are you sure you want to delete the bill?',
+                    [
+                      {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      {text: 'OK', onPress: () => deleteBill(bill.id)},
+                    ],
+                    {cancelable: false},
+                  );
+                }}
+              />
             </Right>
           </ListItem>
         );
       }
     });
   };
+
   const fetchBills = async () => {
     const token = await JwtKeyChain.read();
     const circleId = bootstrapState.circles[0].id;
     dispatch(getBills(circleId, token));
+  };
+
+  const deleteBill = async (billId) => {
+    const token = await JwtKeyChain.read();
+    const circleId = bootstrapState.circles[0].id;
+    dispatch(removeBill(billId, circleId, token)).then(() => {
+      fetchBills();
+    });
   };
   // ****************************************************//
   // ************ END OF ACTIONS ***********************//

@@ -4,7 +4,7 @@
  * @version 0.0.1
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
  */
-
+import moment from 'moment';
 import {bivtURL} from '../../apis/bivtApi';
 
 import {
@@ -15,6 +15,8 @@ import {
   EXPENSE_MANAGER_LOAD_BILLS_FAILURE,
   EXPENSE_MANAGER_ADD_BILL_SUCCESS,
   EXPENSE_MANAGER_ADD_BILL_FAILURE,
+  EXPENSE_MANAGER_REMOVE_BILL_SUCCESS,
+  EXPENSE_MANAGER_REMOVE_BILL_FAILURE,
   EXPENSE_MANAGER_FAILURE,
 } from './expenseManagerTypes';
 
@@ -64,6 +66,20 @@ export const expenseManagerAddBillSuccess = (addBillResponseDetails) => {
 export const expenseManagerAddBillFailure = (error) => {
   return {
     type: EXPENSE_MANAGER_ADD_BILL_FAILURE,
+    payload: error,
+  };
+};
+
+//Delete Bills
+export const expenseManagerRemoveBillSuccess = (removeBillResponseDetails) => {
+  return {
+    type: EXPENSE_MANAGER_REMOVE_BILL_SUCCESS,
+    payload: removeBillResponseDetails,
+  };
+};
+export const expenseManagerRemoveBillFailure = (error) => {
+  return {
+    type: EXPENSE_MANAGER_REMOVE_BILL_FAILURE,
     payload: error,
   };
 };
@@ -162,7 +178,7 @@ export const addBill = (_billDetails, _circleId, token) => {
     billName: _billDetails.billName,
     billAmount: _billDetails.billAmount,
     billCategory: _billDetails.billCategory,
-    billDate: _billDetails.billDate.toISOString().split('T')[0],
+    billDate: moment(_billDetails.billDate).format(moment.HTML5_FMT.DATE),
     circleId: _circleId,
   };
   const config = {
@@ -187,6 +203,44 @@ export const addBill = (_billDetails, _circleId, token) => {
         );
       } else {
         dispatch(expenseManagerAddBillFailure('Error! try again later'));
+      }
+    }
+  };
+};
+
+/**
+ * This function calls the REST api to delete the bill
+ */
+export const removeBill = (_billId, _circleId, token) => {
+  const billDetails = {
+    billId: _billId,
+    circleId: _circleId,
+  };
+  const config = {
+    headers: {Authorization: `Bearer ${token}`},
+  };
+  return async (dispatch) => {
+    dispatch(expenseManagerRequest);
+    try {
+      const response = await bivtURL.post(
+        '/plugin/expenses/removeBill',
+        billDetails,
+        config,
+      );
+      const removeBillResponseDetails = response.data;
+      console.log(removeBillResponseDetails);
+      dispatch(
+        expenseManagerRemoveBillSuccess(removeBillResponseDetails.status.id),
+      );
+    } catch (error) {
+      if (error.response.status === 401) {
+        dispatch(expenseManagerRemoveBillFailure('Unauthorised'));
+      } else if (error.response.status === 422) {
+        dispatch(
+          expenseManagerRemoveBillFailure(error.response.data.status.errors),
+        );
+      } else {
+        dispatch(expenseManagerRemoveBillFailure('Error! try again later'));
       }
     }
   };

@@ -13,6 +13,8 @@ import {
   EXPENSE_MANAGER_LOAD_BILLS_FAILURE,
   EXPENSE_MANAGER_ADD_BILL_SUCCESS,
   EXPENSE_MANAGER_ADD_BILL_FAILURE,
+  EXPENSE_MANAGER_REMOVE_BILL_SUCCESS,
+  EXPENSE_MANAGER_REMOVE_BILL_FAILURE,
   EXPENSE_MANAGER_FAILURE,
 } from './expenseManagerTypes';
 
@@ -70,6 +72,20 @@ let expenseManagerReducer = (state = choosePluginInitialState, action) => {
         ...state,
         loading: false,
         addBillResponseDetails: '',
+        error: action.payload,
+      };
+    case EXPENSE_MANAGER_REMOVE_BILL_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        removeBillResponseDetails: action.payload,
+        error: '',
+      };
+    case EXPENSE_MANAGER_REMOVE_BILL_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        removeBillResponseDetails: '',
         error: action.payload,
       };
     case EXPENSE_MANAGER_FAILURE:
