@@ -10,13 +10,12 @@ import {StyleSheet} from 'react-native';
 //Main Styles
 const expenseManagerStyles = StyleSheet.create({
   addExpenseButton: {
-    marginTop: '-80%',
     backgroundColor: 'red',
   },
 });
 
-//Add spendings modal styles
-const spendingsmodalStyles = StyleSheet.create({
+//spendings modal styles
+const modalStyles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -78,4 +77,4 @@ const spendingsmodalStyles = StyleSheet.create({
   datePickerplaceHolderTextStyle: {color: '#d3d3d3'},
 });
 
-export {expenseManagerStyles, spendingsmodalStyles};
+export {expenseManagerStyles, modalStyles};

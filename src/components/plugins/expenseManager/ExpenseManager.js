@@ -39,6 +39,8 @@ import {expenseManagerStyles} from './expenseManagerStyles';
 //Components
 import Spendingsmodal from './SpendingsModal';
 import Spendings from './Spendings';
+import BudgetModal from './BudgetModal';
+import Budget from './Budget';
 import expenseCategoryIcons from './expenseCategoryIcons';
 
 // Token Key Chain
@@ -51,8 +53,9 @@ const ExpenseManager = () => {
   // ****************************************************//
   // ************ BEGINING OF STATES DECLARATIONS ******//
   // **************************************************//
-  const [active, setActive] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const [spendingsModalVisible, setSpendingsModalVisible] = useState(false);
+  const [budgetModalVisible, setBudgetModalVisible] = useState(false);
   let sumBreakDown = {};
   // ****************************************************//
   // ************ END OF STATES DECLARATIONS ***********//
@@ -62,8 +65,10 @@ const ExpenseManager = () => {
   // ************ BEGINING OF ACTIONS ******************//
   // **************************************************//
 
+  //close modal
   const closeModal = () => {
-    setModalVisible(false);
+    setSpendingsModalVisible(false);
+    setBudgetModalVisible(false);
   };
 
   //fetch bills from the DB
@@ -127,6 +132,7 @@ const ExpenseManager = () => {
     });
   };
 
+  //delete bill
   const deleteBill = async (billId) => {
     const token = await JwtKeyChain.read();
     const circleId = bootstrapState.circles[0].id;
@@ -149,6 +155,11 @@ const ExpenseManager = () => {
       },
     );
   };
+
+  //Monitor switching tabs
+  const handleChangeTab = (i) => {
+    setActiveTab(i);
+  };
   // ****************************************************//
   // ************ END OF ACTIONS ***********************//
   // **************************************************//
@@ -168,7 +179,7 @@ const ExpenseManager = () => {
     if (expenseManagerState.error) {
       Alert.alert(
         'Error',
-        expenseManagerState.error,
+        ...expenseManagerState.error,
         [
           {
             text: 'Ok',
@@ -188,7 +199,7 @@ const ExpenseManager = () => {
       <Content>
         <Grid>
           <Row size={100}>
-            <Tabs>
+            <Tabs onChangeTab={({i}) => handleChangeTab(i)}>
               <Tab heading="Spendings">
                 <Tabs>
                   <Tab heading="This Week">
@@ -203,7 +214,7 @@ const ExpenseManager = () => {
                   </Tab>
                   <Tab heading="This Month">
                     {expenseManagerState.loadBillsResponseDetails === '' ? (
-                      <Spendings data="NA" />
+                      <Spendings data={<Text>NA</Text>} />
                     ) : (
                       <Spendings
                         data={loadBills('Month')}
@@ -213,7 +224,7 @@ const ExpenseManager = () => {
                   </Tab>
                   <Tab heading="This Year">
                     {expenseManagerState.loadBillsResponseDetails === '' ? (
-                      <Spendings data="NA" />
+                      <Spendings data={<Text>NA</Text>} />
                     ) : (
                       <Spendings
                         data={loadBills('Year')}
@@ -230,19 +241,27 @@ const ExpenseManager = () => {
           </Row>
         </Grid>
         <Spendingsmodal
-          modalVisible={modalVisible}
+          spendingsModalVisible={spendingsModalVisible}
           closeModal={closeModal}
           fetchBills={fetchBills}
+        />
+        <BudgetModal
+          budgetModalVisible={budgetModalVisible}
+          closeModal={closeModal}
         />
       </Content>
       <Fab
         active={true}
         direction="up"
         containerStyle={{}}
-        style={expenseManagerStyles.selectPluginButton}
+        style={expenseManagerStyles.addExpenseButton}
         position="bottomRight"
         onPress={() => {
-          setModalVisible(true);
+          activeTab === 0
+            ? setSpendingsModalVisible(true)
+            : activeTab === 1
+            ? setBudgetModalVisible(true)
+            : '';
         }}>
         <Icon name="add" useNativeDriver={false} />
       </Fab>

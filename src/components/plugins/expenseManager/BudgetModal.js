@@ -1,5 +1,5 @@
 /**
- * The Modal to add a bill to the list
+ * The Modal to add a budget
  *
  * @version 0.0.1
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
@@ -12,7 +12,7 @@ import {Modal, View, Alert} from 'react-native';
 
 //redux
 import {useSelector, useDispatch} from 'react-redux';
-import {addBill, getBillCategories} from '../../../redux';
+import {addBudget} from '../../../redux';
 
 //native base
 import {
@@ -23,9 +23,11 @@ import {
   Button,
   Text,
   Content,
-  Picker,
   DatePicker,
 } from 'native-base';
+
+//etc
+import moment from 'moment';
 
 //styles
 import {modalStyles} from './expenseManagerStyles';
@@ -33,9 +35,9 @@ import {modalStyles} from './expenseManagerStyles';
 // Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 
-import {spendingsModalValidation} from './spendingsModalValidation';
+import {budgetModalValidation} from './budgetModalValidation';
 
-const Spendingsmodal = (props) => {
+const Budgetmodal = (props) => {
   const dispatch = useDispatch();
   const bootstrapState = useSelector((state) => state.bootstrap);
   const expenseManagerState = useSelector((state) => state.expenseManager);
@@ -43,24 +45,27 @@ const Spendingsmodal = (props) => {
   // ************ BEGINING OF STATES DECLARATIONS ******//
   // **************************************************//
 
-  const [billDetails, setBillDetails] = useState({
-    billName: '',
-    billAmount: '',
-    billCategory: 1,
-    billDate: new Date(),
+  const [budgetDetails, setBudgetDetails] = useState({
+    budgetName: '',
+    budgetAmount: '',
+    budgetFrom: moment().toDate(),
+    budgetTo: moment().add(1, 'months').toDate(), //adds one month
   });
 
-  const [billDetailsError, setBillDetailsError] = useState({
-    billName: {
+  const [budgetDetailsError, setBudgetDetailsError] = useState({
+    budgetName: {
       error: false,
     },
-    billAmount: {
+    budgetAmount: {
+      error: false,
+    },
+    budgetDate: {
       error: false,
     },
   });
 
-  const [addBillmsg, setAddBillmsg] = useState('');
-  const minDate = new Date(2019, 1, 1);
+  const [addBudgetmsg, setAddBudgetmsg] = useState('');
+  const maxDate = moment().add(1, 'years').toDate(); //adds one year
   // ****************************************************//
   // ************ END OF STATES DECLARATIONS ***********//
   // **************************************************//
@@ -74,7 +79,7 @@ const Spendingsmodal = (props) => {
    * @param value - entered value
    */
   const handleModalFormInputChange = (key, value) => {
-    setBillDetails((prevState) => {
+    setBudgetDetails((prevState) => {
       return {
         ...prevState,
         [key]: value,
@@ -83,44 +88,25 @@ const Spendingsmodal = (props) => {
   };
 
   /**
-   * Add Categories in the dropdown
+   * Adds the budget to list
    */
-  const loadCategoryDropDown = () => {
-    return expenseManagerState.loadCategoriesResponseDetails.categories.map(
-      (category) => {
-        return (
-          <Picker.Item
-            label={category.categoryName.toString()}
-            value={category.id}
-            key={category.id}
-          />
-        );
-      },
-    );
-  };
-
-  /**
-   * Adds the bill to list
-   */
-  const handleAddBill = async () => {
-    setAddBillmsg('');
+  const handleAddBudget = async () => {
+    setAddBudgetmsg('');
     resetErrorState()
       .then(() => {
-        let spendingsModalValidationErrors = spendingsModalValidation(
-          billDetails,
-        );
-        spendingsModalValidationErrors.then(async (errors) => {
-          setBillDetailsError(errors);
-          if (!errors.billName.error && !errors.billAmount.error) {
+        let budgetModalValidationErrors = budgetModalValidation(budgetDetails);
+        budgetModalValidationErrors.then(async (errors) => {
+          setBudgetDetailsError(errors);
+          if (!errors.budgetName.error && !errors.budgetAmount.error) {
             const token = await JwtKeyChain.read();
             const circleId = bootstrapState.circles[0].id;
-            const _billDetails = billDetails;
-            dispatch(addBill(_billDetails, circleId, token)).then(() => {
-              props.fetchBills();
-            });
-            resetBillState();
+            const _budgetDetails = budgetDetails;
+            // dispatch(addBudget(_budgetDetails, circleId, token)).then(() => {
+            //   props.fetchBudgets();
+            // });
+            resetBudgetState();
             resetErrorState();
-            setAddBillmsg('...processing');
+            setAddBudgetmsg('...processing');
           }
         });
       })
@@ -129,29 +115,32 @@ const Spendingsmodal = (props) => {
       });
   };
 
-  const resetBillState = async () => {
-    setBillDetails({
-      billName: '',
-      billAmount: '',
-      billCategory: '1',
-      billDate: new Date(),
+  const resetBudgetState = async () => {
+    setBudgetDetails({
+      budgetName: '',
+      budgetAmount: '',
+      budgetFrom: moment().toDate(),
+      budgetTo: moment().add(1, 'months').toDate(), //adds one month
     });
   };
 
   const resetErrorState = async () => {
-    setBillDetailsError({
-      billName: {
+    setBudgetDetailsError({
+      budgetName: {
         error: false,
       },
-      billAmount: {
+      budgetAmount: {
+        error: false,
+      },
+      budgetDate: {
         error: false,
       },
     });
   };
 
   const closeModal = () => {
-    setAddBillmsg('');
-    resetBillState();
+    setAddBudgetmsg('');
+    resetBudgetState();
     resetErrorState();
     props.closeModal();
   };
@@ -164,23 +153,13 @@ const Spendingsmodal = (props) => {
   // ************ BEGINING OF EFFECTS ******************//
   // **************************************************//
 
-  //loads bill categories onload
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const token = await JwtKeyChain.read();
-      dispatch(getBillCategories(token));
-    };
-    fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (expenseManagerState.error) {
       console.log(expenseManagerState.error.toString());
-    } else if (expenseManagerState.addBillResponseDetails === 200) {
-      setAddBillmsg('Done');
+    } else if (expenseManagerState.addBudgetResponseDetails === 200) {
+      setAddBudgetmsg('Done');
       setTimeout(() => {
-        setAddBillmsg('');
+        setAddBudgetmsg('');
       }, 1000);
       closeModal();
     }
@@ -196,7 +175,7 @@ const Spendingsmodal = (props) => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={props.spendingsModalVisible}
+        visible={props.budgetModalVisible}
         onDismiss={() => {
           Alert.alert('Modal has been closed.');
         }}>
@@ -204,45 +183,28 @@ const Spendingsmodal = (props) => {
           <View style={modalStyles.modalView}>
             <Form style={modalStyles.modalForm}>
               <Item stackedLabel>
-                <Label>Bill Name*</Label>
+                <Label>Budget Name*</Label>
                 <Input
                   onChangeText={(val) =>
-                    handleModalFormInputChange('billName', val)
+                    handleModalFormInputChange('budgetName', val)
                   }
                 />
               </Item>
               <Item stackedLabel>
-                <Label>Bill Amount in CAD*</Label>
+                <Label>Budget Amount in CAD*</Label>
                 <Input
                   keyboardType="numeric"
                   onChangeText={(val) =>
-                    handleModalFormInputChange('billAmount', val)
+                    handleModalFormInputChange('budgetAmount', val)
                   }
                 />
               </Item>
-              <Item stackedLabel style={modalStyles.modalDropDownItem}>
-                <Label>Select a category*</Label>
-                <Picker
-                  note
-                  mode="dropdown"
-                  style={modalStyles.pickerWidth}
-                  selectedValue={billDetails.billCategory}
-                  onValueChange={(value) => {
-                    handleModalFormInputChange('billCategory', value);
-                  }}>
-                  {expenseManagerState.loadCategoriesResponseDetails === '' ? (
-                    <Picker.Item label="loading" value={0} key={0} />
-                  ) : (
-                    loadCategoryDropDown()
-                  )}
-                </Picker>
-              </Item>
               <Item stackedLabel>
-                <Label>Bill Date:</Label>
+                <Label>Budget From:</Label>
                 <DatePicker
-                  defaultDate={billDetails.billDate}
-                  minimumDate={minDate}
-                  maximumDate={billDetails.billDate}
+                  defaultDate={budgetDetails.budgetFrom}
+                  minimumDate={budgetDetails.budgetFrom}
+                  maximumDate={maxDate}
                   locale={'en'}
                   timeZoneOffsetInMinutes={undefined}
                   modalTransparent={false}
@@ -254,14 +216,36 @@ const Spendingsmodal = (props) => {
                     modalStyles.datePickerplaceHolderTextStyle
                   }
                   onDateChange={(value) => {
-                    handleModalFormInputChange('billDate', value);
+                    handleModalFormInputChange('budgetFrom', value);
+                  }}
+                  disabled={false}
+                />
+              </Item>
+              <Item stackedLabel>
+                <Label>Budget To:</Label>
+                <DatePicker
+                  defaultDate={budgetDetails.budgetTo}
+                  minimumDate={budgetDetails.budgetFrom}
+                  maximumDate={maxDate}
+                  locale={'en'}
+                  timeZoneOffsetInMinutes={undefined}
+                  modalTransparent={false}
+                  animationType={'fade'}
+                  androidMode={'default'}
+                  // placeHolderText="Select date"
+                  textStyle={modalStyles.datePickerTextStyle}
+                  placeHolderTextStyle={
+                    modalStyles.datePickerplaceHolderTextStyle
+                  }
+                  onDateChange={(value) => {
+                    handleModalFormInputChange('budgetTo', value);
                   }}
                   disabled={false}
                 />
               </Item>
               <Content style={modalStyles.actionButtonsContainer}>
                 <Button
-                  onPress={handleAddBill}
+                  onPress={handleAddBudget}
                   bordered
                   block
                   success
@@ -276,20 +260,25 @@ const Spendingsmodal = (props) => {
                   style={modalStyles.actionButton}>
                   <Text>Close</Text>
                 </Button>
-                {billDetailsError.billName.error && (
+                {budgetDetailsError.budgetName.error && (
                   <Label style={modalStyles.textFieldError}>
-                    {billDetailsError.billName.message}
+                    {budgetDetailsError.budgetName.message}
                   </Label>
                 )}
-                {billDetailsError.billAmount.error && (
+                {budgetDetailsError.budgetAmount.error && (
                   <Label style={modalStyles.textFieldError}>
-                    {billDetailsError.billAmount.message}
+                    {budgetDetailsError.budgetAmount.message}
+                  </Label>
+                )}
+                {budgetDetailsError.budgetDate.error && (
+                  <Label style={modalStyles.textFieldError}>
+                    {budgetDetailsError.budgetDate.message}
                   </Label>
                 )}
                 {expenseManagerState.loading ? (
                   <Label>...</Label>
                 ) : (
-                  <Label>{addBillmsg}</Label>
+                  <Label>{addBudgetmsg}</Label>
                 )}
               </Content>
             </Form>
@@ -300,4 +289,4 @@ const Spendingsmodal = (props) => {
   );
 };
 
-export default Spendingsmodal;
+export default Budgetmodal;
