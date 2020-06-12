@@ -5,6 +5,7 @@ import loginReducer from './authentication/login/loginReducer';
 import createCirlceReducer from './circle/createCircle/createCirlceReducer';
 import inviteToCirlceReducer from './circle/inviteToCircle/inviteToCirlceReducer';
 import choosePluginReducer from './managePlugin/choosePlugin/choosePluginReducer';
+import userLocationTrack from './plugins/trackUser/trackUserReducer';
 const rootReducer = combineReducers({
   bootstrap: bootstrapReducer,
   signup: signupReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   forgotPassword: loginReducer,
   createCircle: createCirlceReducer,
   inviteToCircle: inviteToCirlceReducer,
+  locationTrack: userLocationTrack,
   choosePlugin: choosePluginReducer,
 });
 

@@ -1,23 +1,22 @@
 import React, {useState, useEffect, Platform, Alert} from 'react';
 import {Container, Header, Content, Footer, Text} from 'native-base';
-import Geolocation from '@react-native-community/geolocation';
+import {useSelector, useDispatch} from 'react-redux';
 import styles from './trackUserStyle';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
-import {Dimensions} from 'react-native';
+import {mapLoadFail, mapLoadSuccess, userWatchLocation} from '../../../redux';
 
 const TrackUser = () => {
+  const usersLocation = useSelector((state) => state.locationTrack);
+  console.log(usersLocation);
+
+  const dispatch = useDispatch();
+
   const [userLocation, setuserLocation] = useState({
     latitude: null,
     longitude: null,
     errorMsg: '',
   });
-  // const [region, setRegion] = useState({
-  //   latitude: null,
-  //   longitude: null,
-  //   latitudeDelta: 0.005,
-  //   longitudeDelta: 0.005,
-  // });
 
   const [mapStyle, setMapStyle] = useState({marginBottom: 1});
 
@@ -33,18 +32,25 @@ const TrackUser = () => {
   const getLocation = async () => {
     let {status} = await Location.requestPermissionsAsync();
     if (status !== 'granted') {
-      setuserLocation({errorMsg: 'errrorr'});
-    }
-    let location = await Location.getLastKnownPositionAsync({});
-    Location.watchPositionAsync({}, (coord) => {
-      console.log('WAYCHH', coord);
-    });
-    setuserLocation({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    });
+      dispatch(
+        mapLoadFail('Please give permission for accessing your location'),
+      );
+    } else {
+      let location = await Location.getCurrentPositionAsync({});
+      dispatch(
+        mapLoadSuccess({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }),
+      );
 
-    console.log(userLocation);
+      Location.watchPositionAsync(
+        {accuracy: Location.Accuracy.Highest, timeInterval: 2000},
+        (coord) => {
+          dispatch(userWatchLocation(coord));
+        },
+      );
+    }
   };
 
   return (
