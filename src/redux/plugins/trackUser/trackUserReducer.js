@@ -1,8 +1,6 @@
 const userLocationDetails = {
-  userCoordinates: null,
-  membersInCircle: null,
-  mapLoading: false,
-  circleLoading: false,
+  mapLoading: true,
+  circleLoading: true,
   errorMsg: '',
 };
 
@@ -15,35 +13,33 @@ let trackUserReducer = (state = userLocationDetails, action) => {
       };
     case 'MAP_INTIAL_FAIL':
       return {
+        ...state,
         userCoordinates: null,
         mapLoading: true,
         errorMsg: action.payload,
       };
-    case 'USER_LOCATION_TRACK':
+    case 'USER_LOCATION_TRACK_SUCCESS':
       return {
+        ...state,
         userCoordinates: action.payload,
         mapLoading: false,
-        errorMsg: '',
       };
-    case 'GET_USER_INFORMATIONS_IN_SAME_GROUP':
+    case 'GET_USERS_OF_CIRCLE_SUCCESS':
       return {
-        circleLoading: true,
+        ...state,
+        circleLoading: false,
         membersInCircle: action.payload,
-        mapLoading: false,
-        errorMsg: '',
       };
     case 'MEMBER_OF_CIRCLE_FAIL':
       return {
-        userCoordinates: null,
-        membersInCircle: null,
-        mapLoading: false,
+        ...state,
         errorMsg: action.payload,
       };
     case 'MAP_INTIAL_SUCCESS':
       return {
+        ...state,
         userCoordinates: action.payload,
         mapLoading: false,
-        errorMsg: '',
       };
     default:
       return state;

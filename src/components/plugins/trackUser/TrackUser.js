@@ -1,16 +1,18 @@
 import React, {useState, useEffect, Alert} from 'react';
 import BottomSheet from 'reanimated-bottom-sheet';
-import {Container, View, Content, Footer, Text} from 'native-base';
+import {Container, View, Text} from 'native-base';
 import {useSelector, useDispatch} from 'react-redux';
+import * as TaskManager from 'expo-task-manager';
 import {Image} from 'react-native';
 import styles from './trackUserStyle';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import JwtKeyChain from '../../../utils/jwtKeyChain';
-import * as Location from 'expo-location';
+
 import {
   trackLocationInBackGround,
-  getLocation,
+  getInitialLocation,
   getMembersInformationsInCircle,
+  mapLoadSuccess,
 } from '../../../redux';
 
 const TrackUser = () => {
@@ -18,9 +20,9 @@ const TrackUser = () => {
    * Start of state declerations and fetch state from store
    */
   const bootstrapState = useSelector((state) => state.bootstrap);
-  // console.log(bootstrapState);
   const usersLocation = useSelector((state) => state.locationTrack);
   console.log(usersLocation);
+  // console.log(bootstrapState);
   const [mapStyle, setMapStyle] = useState({marginBottom: 1});
   const dispatch = useDispatch();
   /*
@@ -31,8 +33,8 @@ const TrackUser = () => {
    * Start of functions declerations
    */
   useEffect(() => {
-    // dispatch(getLocation);
-    // dispatch(trackLocationInBackGround);
+    dispatch(getInitialLocation);
+    dispatch(trackLocationInBackGround);
     fetchMembersInCircle();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -52,13 +54,35 @@ const TrackUser = () => {
   const fetchMembersInCircle = async () => {
     const token = await JwtKeyChain.read();
     const circleId = bootstrapState.circles[0].id;
-
     dispatch(getMembersInformationsInCircle(token, circleId));
   };
 
+  /*
+   * This Task Manager read `watchLocation` task from trackUserAction and update state when the application in background
+   * Details: https://docs.expo.io/versions/latest/sdk/task-manager/
+   */
+  TaskManager.defineTask('watchLocation', ({data, error}) => {
+    if (error) {
+      return;
+    }
+    if (data) {
+      const {locations} = data;
+      console.log(locations);
+      dispatch(
+        mapLoadSuccess({
+          latitude: locations[0].coords.latitude,
+          longitude: locations[0].coords.longitude,
+        }),
+      );
+    }
+  });
   const renderContent = () => (
     <View style={styles.panel}>
-      <Text style={styles.panelTitle}>Yalcin Tatar</Text>
+      {usersLocation.circleLoading === false && (
+        <Text style={styles.panelTitle}>
+          {usersLocation.membersInCircle[0].userFirstName}
+        </Text>
+      )}
       <Text style={styles.panelSubtitle}>40 miles away</Text>
       <View style={styles.panelButton}>
         <Text style={styles.panelButtonTitle}>Arsh </Text>
@@ -78,8 +102,11 @@ const TrackUser = () => {
 
   return (
     <Container style={{flex: 1}}>
-      {usersLocation.circleLoading === true && (
-        <Text>{usersLocation.membersInCircle[0].userFirstName}</Text>
+      {usersLocation.mapLoading === false && (
+        <Text>{usersLocation.userCoordinates.latitude}</Text>
+      )}
+      {usersLocation.mapLoading === false && (
+        <Text>{usersLocation.userCoordinates.longitude}</Text>
       )}
 
       <MapView

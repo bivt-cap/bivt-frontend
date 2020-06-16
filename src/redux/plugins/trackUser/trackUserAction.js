@@ -6,9 +6,8 @@
  */
 import {Platform} from 'react-native';
 import * as Location from 'expo-location';
-import * as TaskManager from 'expo-task-manager';
-import JwtKeyChain from '../../../utils/jwtKeyChain';
 import {bivtURL} from '../../apis/bivtApi';
+
 //Purpose of Action: Describe some changes that we want to make to the data inside of our application.
 export const mapLoadRequest = () => {
   return {
@@ -30,7 +29,7 @@ export const circleMemberFetchFail = (errorMessage) => {
 
 export const userWatchLocation = (userLocationDetails) => {
   return {
-    type: 'USER_LOCATION_TRACK',
+    type: 'USER_LOCATION_TRACK_SUCCESS',
     payload: userLocationDetails,
   };
 };
@@ -42,7 +41,7 @@ export const mapLoadSuccess = (userLocationDetails) => {
 };
 export const fetchMemberInCircleSuccess = (circleMembers) => {
   return {
-    type: 'GET_USER_INFORMATIONS_IN_SAME_GROUP',
+    type: 'GET_USERS_OF_CIRCLE_SUCCESS',
     payload: circleMembers,
   };
 };
@@ -59,7 +58,7 @@ export const trackLocationInBackGround = async () => {
   });
 };
 
-export const getLocation = async (dispatch) => {
+export const getInitialLocation = async (dispatch) => {
   let {status} = await Location.requestPermissionsAsync();
   if (status !== 'granted') {
     dispatch(mapLoadFail('Please give permission for accessing your location'));
@@ -76,27 +75,26 @@ export const getLocation = async (dispatch) => {
     );
   }
 };
-TaskManager.defineTask('watchLocation', ({data, error}) => {
-  if (error) {
-    // Error occurred - check `error.message` for more details.
-    return;
-  }
-  if (data) {
-    const {locations} = data;
-    console.log(locations);
-    return async (dispatch) => {
-      dispatch(
-        mapLoadSuccess({
-          latitude: locations[0].coords.latitude,
-          longitude: locations[0].coords.longitude,
-        }),
-      );
-      console.log(locations[0].coords.latitude);
-    };
+// TaskManager.defineTask('watchLocation', ({data, error}) => {
+//   if (error) {
+//     // Error occurred - check `error.message` for more details.
+//     return;
+//   }
+//   if (data) {
+//     const {locations} = data;
+//     console.log(locations);
+//     return (dispatch) => {
+//       dispatch(
+//         mapLoadSuccess({
+//           latitude: locations[0].coords.latitude,
+//           longitude: locations[0].coords.longitude,
+//         }),
+//       );
+//     };
 
-    // do something with the locations captured in the background
-  }
-});
+//     // do something with the locations captured in the background
+//   }
+// });
 export const getMembersInformationsInCircle = (token, _circleId) => {
   const localToken = 'bearer ' + token;
 
