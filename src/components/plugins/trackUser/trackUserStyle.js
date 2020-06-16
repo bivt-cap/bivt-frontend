@@ -8,18 +8,22 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
+    flex: 1,
+    position: 'relative',
     top: 0,
     left: 0,
     right: 0,
+    marginBottom: 0,
     bottom: 0,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
   map: {
-    width: '100%',
-    height: '90%',
-    zIndex: -1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 100,
   },
   panelContainer: {
     position: 'absolute',
@@ -73,9 +77,13 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   photo: {
-    width: '100%',
-    height: 225,
-    marginTop: 30,
+    width: 40,
+    height: 40,
+    borderRadius: 50 / 2,
+  },
+  textContent: {
+    fontSize: 21,
+    color: 'purple',
   },
 });
 export default styles;

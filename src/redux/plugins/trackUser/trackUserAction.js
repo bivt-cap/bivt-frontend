@@ -75,26 +75,6 @@ export const getInitialLocation = async (dispatch) => {
     );
   }
 };
-// TaskManager.defineTask('watchLocation', ({data, error}) => {
-//   if (error) {
-//     // Error occurred - check `error.message` for more details.
-//     return;
-//   }
-//   if (data) {
-//     const {locations} = data;
-//     console.log(locations);
-//     return (dispatch) => {
-//       dispatch(
-//         mapLoadSuccess({
-//           latitude: locations[0].coords.latitude,
-//           longitude: locations[0].coords.longitude,
-//         }),
-//       );
-//     };
-
-//     // do something with the locations captured in the background
-//   }
-// });
 export const getMembersInformationsInCircle = (token, _circleId) => {
   const localToken = 'bearer ' + token;
 
