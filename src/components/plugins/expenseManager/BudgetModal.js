@@ -26,14 +26,14 @@ import {
   DatePicker,
 } from 'native-base';
 
-//etc
-import moment from 'moment';
-
 //styles
 import {modalStyles} from './expenseManagerStyles';
 
 // Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
+
+//others
+import moment from 'moment';
 
 import {budgetModalValidation} from './budgetModalValidation';
 
@@ -101,9 +101,9 @@ const Budgetmodal = (props) => {
             const token = await JwtKeyChain.read();
             const circleId = bootstrapState.circles[0].id;
             const _budgetDetails = budgetDetails;
-            // dispatch(addBudget(_budgetDetails, circleId, token)).then(() => {
-            //   props.fetchBudgets();
-            // });
+            dispatch(addBudget(_budgetDetails, circleId, token)).then(() => {
+              props.fetchBudgets();
+            });
             resetBudgetState();
             resetErrorState();
             setAddBudgetmsg('...processing');

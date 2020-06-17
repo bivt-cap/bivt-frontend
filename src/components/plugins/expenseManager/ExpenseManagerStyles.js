@@ -26,7 +26,7 @@ const modalStyles = StyleSheet.create({
     borderRadius: 20,
     padding: 25,
     width: '90%',
-    height: '60%',
+    height: '90%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -49,7 +49,7 @@ const modalStyles = StyleSheet.create({
     textAlign: 'center',
   },
   modalText: {
-    marginBottom: 15,
+    marginBottom: 16,
     textAlign: 'center',
   },
   modalForm: {

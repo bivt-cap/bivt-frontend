@@ -12,7 +12,7 @@ import {Text, Alert} from 'react-native';
 
 //redux
 import {useSelector, useDispatch} from 'react-redux';
-import {getBills, removeBill} from '../../../redux';
+import {getBills, removeBill, getBudgets, removeBudget} from '../../../redux';
 
 //native base
 import {
@@ -23,6 +23,8 @@ import {
   Content,
   Fab,
   ListItem,
+  Card,
+  CardItem,
   Left,
   Body,
   Right,
@@ -57,6 +59,7 @@ const ExpenseManager = () => {
   const [spendingsModalVisible, setSpendingsModalVisible] = useState(false);
   const [budgetModalVisible, setBudgetModalVisible] = useState(false);
   let sumBreakDown = {};
+  let billAmountByDay = {};
   // ****************************************************//
   // ************ END OF STATES DECLARATIONS ***********//
   // **************************************************//
@@ -71,6 +74,8 @@ const ExpenseManager = () => {
     setBudgetModalVisible(false);
   };
 
+  // ************ BILLS ******************//
+
   //fetch bills from the DB
   const fetchBills = async () => {
     const token = await JwtKeyChain.read();
@@ -83,6 +88,7 @@ const ExpenseManager = () => {
     const now = moment();
     let sum = 0;
     return expenseManagerState.loadBillsResponseDetails.bills.map((bill) => {
+      billAmountByDay[moment(bill.billDate)] = bill.billAmount;
       if (moment(bill.billDate).isSame(now, interval)) {
         // eslint-disable-next-line radix
         sum = sum + parseInt(bill.billAmount);
@@ -156,10 +162,121 @@ const ExpenseManager = () => {
     );
   };
 
+  // ************ BUDGETS ******************//
+
+  //fetch budgets from the DB
+  const fetchBudgets = async () => {
+    const token = await JwtKeyChain.read();
+    const circleId = bootstrapState.circles[0].id;
+    dispatch(getBudgets(circleId, token));
+  };
+
+  //loads budgets on the screen
+  const loadBudgets = () => {
+    return expenseManagerState.loadBudgetsResponseDetails.budgets.map(
+      (budget) => {
+        return (
+          <Card key={budget.id}>
+            <CardItem>
+              <Left>
+                <Text>{budget.budgetName}</Text>
+              </Left>
+              <Body>
+                <Text>
+                  Start -{' '}
+                  {moment.utc(budget.budgetStartDate).format('YYYY-MM-DD')}
+                </Text>
+                <Text>
+                  End - {moment.utc(budget.budgetEndDate).format('YYYY-MM-DD')}
+                </Text>
+                <Text>
+                  Remaining amount is{' '}
+                  {calcRemainingBudget(
+                    moment.utc(budget.budgetStartDate).format('YYYY-MM-DD'),
+                    moment.utc(budget.budgetEndDate).format('YYYY-MM-DD'),
+                    budget.budgetAmount,
+                  )}
+                </Text>
+              </Body>
+              <Right>
+                <Text>${budget.budgetAmount}</Text>
+                <Icon
+                  active
+                  name="remove-circle-outline"
+                  onPress={() => {
+                    Alert.alert(
+                      'Warning',
+                      'Are you sure you want to delete this budget?',
+                      [
+                        {
+                          text: 'Cancel',
+                          onPress: () => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                        {text: 'OK', onPress: () => deleteBudget(budget.id)},
+                      ],
+                      {cancelable: false},
+                    );
+                  }}
+                />
+              </Right>
+            </CardItem>
+          </Card>
+        );
+      },
+    );
+  };
+
+  //Iterating over all the bills and checking if they fall under a budget
+  const calcRemainingBudget = (
+    budgetStartDate,
+    budgetEndDate,
+    budgetAmount,
+  ) => {
+    let totalSpending = 0;
+    console.log(budgetStartDate);
+    for (const date in billAmountByDay) {
+      if (
+        moment.utc(date).format('YYYY-MM-DD') <= budgetEndDate &&
+        moment.utc(date).format('YYYY-MM-DD') >= budgetStartDate
+      ) {
+        totalSpending = totalSpending + billAmountByDay[date];
+      }
+    }
+    return budgetAmount - totalSpending;
+  };
+
+  //delete budget
+  const deleteBudget = async (budgetId) => {
+    const token = await JwtKeyChain.read();
+    const circleId = bootstrapState.circles[0].id;
+    dispatch(removeBudget(budgetId, circleId, token)).then(
+      () => {
+        fetchBudgets();
+      },
+      (error) => {
+        Alert.alert(
+          'Error',
+          'There was a problem deleting the budget',
+          [
+            {
+              text: 'Ok',
+              style: 'cancel',
+            },
+          ],
+          {cancelable: false},
+        );
+      },
+    );
+  };
+
+  // ************ OTHERS ***********************//
+
   //Monitor switching tabs
   const handleChangeTab = (i) => {
     setActiveTab(i);
   };
+
   // ****************************************************//
   // ************ END OF ACTIONS ***********************//
   // **************************************************//
@@ -168,18 +285,27 @@ const ExpenseManager = () => {
   // ************ BEGINING OF EFFECTS ******************//
   // **************************************************//
 
-  //loads bils
+  //loads bills and budgets
   useEffect(() => {
-    fetchBills();
+    fetchBills()
+      .then(() => {
+        fetchBudgets();
+      })
+      .catch(() => {
+        //tying to fetch budgets anyways
+        fetchBudgets();
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //Alert on error
+  //Alert on error - Generic error handler
   useEffect(() => {
+    console.log(expenseManagerState);
     if (expenseManagerState.error) {
+      const err = expenseManagerState.error.toString();
       Alert.alert(
         'Error',
-        ...expenseManagerState.error,
+        err,
         [
           {
             text: 'Ok',
@@ -190,6 +316,7 @@ const ExpenseManager = () => {
       );
     }
   }, [expenseManagerState]);
+
   // ****************************************************//
   // ************ End OF EFFECTS ***********************//
   // **************************************************//
@@ -235,7 +362,11 @@ const ExpenseManager = () => {
                 </Tabs>
               </Tab>
               <Tab heading="Budget">
-                <Text>NA</Text>
+                {expenseManagerState.loadBudgetsResponseDetails === '' ? (
+                  <Budget data={<Text>NA</Text>} />
+                ) : (
+                  <Budget data={loadBudgets()} />
+                )}
               </Tab>
             </Tabs>
           </Row>
@@ -248,6 +379,7 @@ const ExpenseManager = () => {
         <BudgetModal
           budgetModalVisible={budgetModalVisible}
           closeModal={closeModal}
+          fetchBudgets={fetchBudgets}
         />
       </Content>
       <Fab

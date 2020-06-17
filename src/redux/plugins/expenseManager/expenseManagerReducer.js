@@ -3,6 +3,7 @@
  *
  * @version 0.0.1
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ * This code should be refactored to handle errors in a better way - arsh
  */
 
 import {
@@ -15,6 +16,12 @@ import {
   EXPENSE_MANAGER_ADD_BILL_FAILURE,
   EXPENSE_MANAGER_REMOVE_BILL_SUCCESS,
   EXPENSE_MANAGER_REMOVE_BILL_FAILURE,
+  EXPENSE_MANAGER_ADD_BUDGET_SUCCESS,
+  EXPENSE_MANAGER_ADD_BUDGET_FAILURE,
+  EXPENSE_MANAGER_LOAD_BUDGETS_SUCCESS,
+  EXPENSE_MANAGER_LOAD_BUDGETS_FAILURE,
+  EXPENSE_MANAGER_REMOVE_BUDGET_SUCCESS,
+  EXPENSE_MANAGER_REMOVE_BUDGET_FAILURE,
   EXPENSE_MANAGER_FAILURE,
 } from './expenseManagerTypes';
 
@@ -23,6 +30,10 @@ const choosePluginInitialState = {
   loadCategoriesResponseDetails: '',
   loadBillsResponseDetails: '',
   addBillResponseDetails: '',
+  removeBillResponseDetails: '',
+  addBudgetResponseDetails: '',
+  loadBudgetsResponseDetails: '',
+  removeBudgetResponseDetails: '',
   error: '',
 };
 
@@ -88,12 +99,52 @@ let expenseManagerReducer = (state = choosePluginInitialState, action) => {
         removeBillResponseDetails: '',
         error: action.payload,
       };
+    case EXPENSE_MANAGER_ADD_BUDGET_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        addBudgetResponseDetails: action.payload,
+        error: '',
+      };
+    case EXPENSE_MANAGER_ADD_BUDGET_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        addBudgetResponseDetails: '',
+        error: action.payload,
+      };
+    case EXPENSE_MANAGER_LOAD_BUDGETS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loadBudgetsResponseDetails: action.payload,
+        error: '',
+      };
+    case EXPENSE_MANAGER_LOAD_BUDGETS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        loadBudgetsResponseDetails: '',
+        error: action.payload,
+      };
+    case EXPENSE_MANAGER_REMOVE_BUDGET_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        removeBudgetResponseDetails: action.payload,
+        error: '',
+      };
+    case EXPENSE_MANAGER_REMOVE_BUDGET_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        removeBudgetResponseDetails: '',
+        error: action.payload,
+      };
     case EXPENSE_MANAGER_FAILURE:
       return {
+        ...state,
         loading: false,
-        loadCategoriesResponseDetails: '',
-        loadBillsResponseDetails: '',
-        addBillResponseDetails: '',
         error: action.payload,
       };
     default:
