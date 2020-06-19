@@ -1,32 +1,20 @@
 import React, {useState, useEffect, Alert} from 'react';
 import BottomSheet from 'reanimated-bottom-sheet';
-import {
-  Container,
-  View,
-  Text,
-  Header,
-  Content,
-  Left,
-  Thumbnail,
-  Card,
-  CardItem,
-  Icon,
-  Right,
-} from 'native-base';
-
+import {Container, View, Text} from 'native-base';
+import {AppState} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as TaskManager from 'expo-task-manager';
-import {Image} from 'react-native';
 import styles from './trackUserStyle';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {Marker, OverlayComponent} from 'react-native-maps';
 import JwtKeyChain from '../../../utils/jwtKeyChain';
-
+import GroupMemberModal from './Modal/GroupMemberModal';
 import {
   trackLocationInBackGround,
   getInitialLocation,
   getMembersInformationsInCircle,
   mapLoadSuccess,
+  postMemberLocationsToDB,
 } from '../../../redux';
 
 const TrackUser = () => {
@@ -69,6 +57,11 @@ const TrackUser = () => {
     const circleId = bootstrapState.circles[0].id;
     dispatch(getMembersInformationsInCircle(token, circleId));
   };
+  const postLocation = async (userCoord) => {
+    const token = await JwtKeyChain.read();
+
+    dispatch(postMemberLocationsToDB(token, userCoord));
+  };
 
   /*
    * This Task Manager read `watchLocation` task from trackUserAction and update state when the application in background
@@ -80,34 +73,28 @@ const TrackUser = () => {
     }
     if (data) {
       const {locations} = data;
-      console.log(locations);
+
       dispatch(
         mapLoadSuccess({
           latitude: locations[0].coords.latitude,
           longitude: locations[0].coords.longitude,
         }),
       );
+      postLocation(locations);
+      console.log(AppState.currentState);
+      if (AppState.currentState.match(/inactive|background/)) {
+        console.log(AppState.currentState);
+      }
     }
   });
   const renderGroupMember = () => {
     return usersLocation.membersInCircle.map((user) => {
       return (
-        <Card>
-          <CardItem style={{height: 60}}>
-            <Left>
-              <Thumbnail
-                style={styles.photo}
-                source={{uri: 'https://placeimg.com/140/140/any'}}
-              />
-            </Left>
-            <Text key={user.id} style={styles.textContent}>
-              {user.userFirstName}
-            </Text>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </CardItem>
-        </Card>
+        <GroupMemberModal
+          key={user.id}
+          userFirstName={user.userFirstName}
+          userLastName={user.userLastName}
+        />
       );
     });
   };

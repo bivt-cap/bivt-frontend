@@ -41,6 +41,11 @@ let trackUserReducer = (state = userLocationDetails, action) => {
         userCoordinates: action.payload,
         mapLoading: false,
       };
+    case 'POST_USER_LOCATION_SUCCESS':
+      return {
+        ...state,
+        userLocationLoading: true,
+      };
     default:
       return state;
   }

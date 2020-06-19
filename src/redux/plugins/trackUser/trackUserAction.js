@@ -4,7 +4,7 @@
  * @version 0.0.1
  * @author Yalcin Tatar (https://github.com/yalcinos)
  */
-import {Platform} from 'react-native';
+import {Platform, AppState} from 'react-native';
 import * as Location from 'expo-location';
 import {bivtURL} from '../../apis/bivtApi';
 
@@ -45,19 +45,32 @@ export const fetchMemberInCircleSuccess = (circleMembers) => {
     payload: circleMembers,
   };
 };
+export const postLocationToDBSuccess = () => {
+  return {
+    type: 'POST_USER_LOCATION_SUCCESS',
+  };
+};
+export const postLocationToDBFail = (errorMessage) => {
+  return {
+    type: 'POST_USER_LOCATION_FAIL',
+    payload: errorMessage,
+  };
+};
 export const trackLocationInBackGround = async () => {
   if (Platform.OS === 'android') {
+    console.log('ANDROOO');
+    await Location.startLocationUpdatesAsync('watchLocation', {
+      accuracy: Location.Accuracy.Balanced,
+      timeInterval: 3600000,
+    });
+  } else if (Platform.OS === 'ios') {
     await Location.startLocationUpdatesAsync('watchLocation', {
       accuracy: Location.Accuracy.High,
-      timeInterval: 10000,
+      distanceInterval: 20000,
     });
   }
-  await Location.startLocationUpdatesAsync('watchLocation', {
-    accuracy: Location.Accuracy.High,
-    distanceInterval: 1000,
-  });
 };
-
+// export const updateUserLocation
 export const getInitialLocation = async (dispatch) => {
   let {status} = await Location.requestPermissionsAsync();
   if (status !== 'granted') {
@@ -65,8 +78,6 @@ export const getInitialLocation = async (dispatch) => {
   }
   let location = await Location.getCurrentPositionAsync({});
   if (location !== null) {
-    console.log('aa');
-
     dispatch(
       mapLoadSuccess({
         latitude: location.coords.latitude,
@@ -75,9 +86,52 @@ export const getInitialLocation = async (dispatch) => {
     );
   }
 };
-export const getMembersInformationsInCircle = (token, _circleId) => {
+export const postMemberLocationsToDB = (token, coordinates) => {
   const localToken = 'bearer ' + token;
 
+  const headersInfo = {
+    'content-type': 'application/json',
+    authorization: localToken,
+  };
+  const config = {
+    headers: headersInfo,
+  };
+  const memberCoordinate = {
+    latitude: coordinates[0].coords.latitude,
+    longitude: coordinates[0].coords.longitude,
+  };
+  console.log(memberCoordinate);
+  return async (dispatch) => {
+    try {
+      const response = await bivtURL.post(
+        '/plugin/tracking/setPosition',
+        memberCoordinate,
+        config,
+      );
+
+      if (response.status === 200) {
+        dispatch(postLocationToDBSuccess);
+      } else {
+        dispatch(
+          postLocationToDBFail(
+            'Members could not fetched or you have no member in the circle.',
+          ),
+        );
+      }
+    } catch (error) {
+      const errorMsg = error.message;
+      console.log(errorMsg);
+      dispatch(
+        postLocationToDBFail(
+          'Members could not fetched or you have no member in the circle.',
+        ),
+      );
+    }
+  };
+};
+
+export const getMembersInformationsInCircle = (token, _circleId) => {
+  const localToken = 'bearer ' + token;
   const headersInfo = {
     'content-type': 'application/json',
     authorization: localToken,
