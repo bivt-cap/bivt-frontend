@@ -58,7 +58,6 @@ export const postLocationToDBFail = (errorMessage) => {
 };
 export const trackLocationInBackGround = async () => {
   if (Platform.OS === 'android') {
-    console.log('ANDROOO');
     await Location.startLocationUpdatesAsync('watchLocation', {
       accuracy: Location.Accuracy.Balanced,
       timeInterval: 3600000,
