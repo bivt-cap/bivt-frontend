@@ -1,7 +1,6 @@
 import React, {useState, useEffect, Alert} from 'react';
 import BottomSheet from 'reanimated-bottom-sheet';
 import {Container, View, Text} from 'native-base';
-import {AppState} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as TaskManager from 'expo-task-manager';
 import styles from './trackUserStyle';
@@ -10,11 +9,11 @@ import {Marker, OverlayComponent} from 'react-native-maps';
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 import GroupMemberModal from './Modal/GroupMemberModal';
 import {
-  trackLocationInBackGround,
   getInitialLocation,
   getMembersInformationsInCircle,
   mapLoadSuccess,
   postMemberLocationsToDB,
+  trackLocationInBackGround,
 } from '../../../redux';
 
 const TrackUser = () => {
@@ -57,36 +56,7 @@ const TrackUser = () => {
     const circleId = bootstrapState.circles[0].id;
     dispatch(getMembersInformationsInCircle(token, circleId));
   };
-  const postLocation = async (userCoord) => {
-    const token = await JwtKeyChain.read();
 
-    dispatch(postMemberLocationsToDB(token, userCoord));
-  };
-
-  /*
-   * This Task Manager read `watchLocation` task from trackUserAction and update state when the application in background
-   * Details: https://docs.expo.io/versions/latest/sdk/task-manager/
-   */
-  TaskManager.defineTask('watchLocation', ({data, error}) => {
-    if (error) {
-      return;
-    }
-    if (data) {
-      const {locations} = data;
-
-      dispatch(
-        mapLoadSuccess({
-          latitude: locations[0].coords.latitude,
-          longitude: locations[0].coords.longitude,
-        }),
-      );
-      postLocation(locations);
-      console.log(AppState.currentState);
-      if (AppState.currentState.match(/inactive|background/)) {
-        console.log(AppState.currentState);
-      }
-    }
-  });
   const renderGroupMember = () => {
     return usersLocation.membersInCircle.map((user) => {
       return (

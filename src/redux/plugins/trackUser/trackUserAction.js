@@ -4,7 +4,7 @@
  * @version 0.0.1
  * @author Yalcin Tatar (https://github.com/yalcinos)
  */
-import {Platform, AppState} from 'react-native';
+import {Platform} from 'react-native';
 import * as Location from 'expo-location';
 import {bivtURL} from '../../apis/bivtApi';
 
@@ -60,15 +60,17 @@ export const trackLocationInBackGround = async () => {
   if (Platform.OS === 'android') {
     await Location.startLocationUpdatesAsync('watchLocation', {
       accuracy: Location.Accuracy.Balanced,
-      timeInterval: 3600000,
+      timeInterval: 36000,
     });
   } else if (Platform.OS === 'ios') {
     await Location.startLocationUpdatesAsync('watchLocation', {
       accuracy: Location.Accuracy.High,
+      timeInterval: 1000 * 60 * 2,
       distanceInterval: 20000,
     });
   }
 };
+
 // export const updateUserLocation
 export const getInitialLocation = async (dispatch) => {
   let {status} = await Location.requestPermissionsAsync();
