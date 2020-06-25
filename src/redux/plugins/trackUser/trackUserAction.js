@@ -56,11 +56,24 @@ export const postLocationToDBFail = (errorMessage) => {
     payload: errorMessage,
   };
 };
+export const getLocationFromDBSuccess = (coordinates) => {
+  return {
+    type: 'GET_LOCATION_FROM_DB_SUCCESS',
+    payload: coordinates,
+  };
+};
+export const getLocationFromDBFail = (errorMessage) => {
+  return {
+    type: 'GET_LOCATION_FROM_DB_FAIL',
+    payload: errorMessage,
+  };
+};
+
 export const trackLocationInBackGround = async () => {
   if (Platform.OS === 'android') {
     await Location.startLocationUpdatesAsync('watchLocation', {
       accuracy: Location.Accuracy.Balanced,
-      timeInterval: 36000,
+      timeInterval: 10000,
     });
   } else if (Platform.OS === 'ios') {
     await Location.startLocationUpdatesAsync('watchLocation', {
@@ -101,7 +114,7 @@ export const postMemberLocationsToDB = (token, coordinates) => {
     latitude: coordinates[0].coords.latitude,
     longitude: coordinates[0].coords.longitude,
   };
-  console.log(memberCoordinate);
+  // console.log(memberCoordinate);
   return async (dispatch) => {
     try {
       const response = await bivtURL.post(
@@ -165,6 +178,37 @@ export const getMembersInformationsInCircle = (token, _circleId) => {
           'Members could not fetched or you have no member in the circle.',
         ),
       );
+    }
+  };
+};
+
+export const getLocationsFromDB = (token, _circleId) => {
+  const localToken = 'bearer ' + token;
+  const headersInfo = {
+    'content-type': 'application/json',
+    authorization: localToken,
+  };
+  const config = {
+    headers: headersInfo,
+    params: {
+      circleId: _circleId,
+    },
+  };
+  return async (dispatch) => {
+    try {
+      const response = await bivtURL.get(
+        '/plugin/tracking/getPositions',
+        config,
+      );
+
+      if (response.status === 200) {
+        dispatch(getLocationFromDBSuccess(response.data.data));
+      } else {
+        dispatch(getLocationFromDBFail('Location could not fetch from DB. '));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(getLocationFromDBFail(error));
     }
   };
 };

@@ -1,6 +1,7 @@
 const userLocationDetails = {
   mapLoading: true,
   circleLoading: true,
+  fetchCoordLoading: true,
   errorMsg: '',
 };
 
@@ -45,6 +46,17 @@ let trackUserReducer = (state = userLocationDetails, action) => {
       return {
         ...state,
         userLocationLoading: true,
+      };
+    case 'GET_LOCATION_FROM_DB_SUCCESS':
+      return {
+        ...state,
+        allCoordinatesinCircle: action.payload,
+        fetchCoordLoading: false,
+      };
+    case 'GET_LOCATION_FROM_DB_FAIL':
+      return {
+        ...state,
+        errorMsg: action.payload,
       };
     default:
       return state;

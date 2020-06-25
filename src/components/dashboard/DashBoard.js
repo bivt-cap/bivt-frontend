@@ -12,7 +12,7 @@ import {
 import {deleteJTWFromKeyChain, resetBootstrap} from '../../redux';
 import {GoogleSignin} from '@react-native-community/google-signin';
 import * as TaskManager from 'expo-task-manager';
-import {mapLoadSuccess, postMemberLocationsToDB} from '../../redux';
+import {postMemberLocationsToDB} from '../../redux';
 import JwtKeyChain from '../../utils/jwtKeyChain';
 import * as Location from 'expo-location';
 import {Platform} from 'react-native';
@@ -20,53 +20,31 @@ import {Platform} from 'react-native';
 const DashBoard = ({route, navigation}) => {
   // Dispatch - Redux hook
   const dispatch = useDispatch();
-
   // Stored State - Redux hook
   const bootstrapState = useSelector((state) => state.bootstrap);
   const userData = useSelector((state) => state.login);
   console.log(bootstrapState);
 
-  /*
-   * This Task Manager read `watchLocation` task from trackUserAction and update state when the application in background
-   * Details: https://docs.expo.io/versions/latest/sdk/task-manager/
-   */
-
-  TaskManager.defineTask('watchLocation', ({data, error}) => {
-    if (error) {
-      console.log('ERR');
-      return;
-    }
-    if (data) {
-      console.log('RUNNED tasks in background');
-
-      const {locations} = data;
-      console.log(data);
-      postLocation(locations);
-    }
-  });
-
   const trackLocationInBackGround = async () => {
     if (Platform.OS === 'android') {
+      console.log('sadasd');
       await Location.startLocationUpdatesAsync('watchLocation', {
         accuracy: Location.Accuracy.Balanced,
-        timeInterval: 36000,
+        timeInterval: 1000,
       });
     } else if (Platform.OS === 'ios') {
       await Location.startLocationUpdatesAsync('watchLocation', {
-        accuracy: Location.Accuracy.High,
-        timeInterval: 1000 * 60 * 2,
+        accuracy: Location.Accuracy.Balanced,
         distanceInterval: 20000,
       });
     }
   };
-
+  trackLocationInBackGround();
   const postLocation = async (userCoord) => {
     const token = await JwtKeyChain.read();
 
     dispatch(postMemberLocationsToDB(token, userCoord));
   };
-
-  trackLocationInBackGround();
 
   const handleChatButtonClick = async () => {
     navigation.navigate('Chat', {userInfo: bootstrapState.user});
@@ -104,6 +82,27 @@ const DashBoard = ({route, navigation}) => {
       console.error(error);
     }
   };
+
+  /*
+   * This Task Manager read `watchLocation` task from trackUserAction and update state when the application in background
+   * Details: https://docs.expo.io/versions/latest/sdk/task-manager/
+   */
+
+  if (!TaskManager.isTaskDefined('watchLocation')) {
+    TaskManager.defineTask('watchLocation', ({data, error}) => {
+      if (error) {
+        console.log('ERR');
+        return;
+      }
+      if (data) {
+        console.log('RUNNED tasks in background');
+
+        const {locations} = data;
+        console.log(data);
+        postLocation(locations);
+      }
+    });
+  }
 
   return (
     <Container>

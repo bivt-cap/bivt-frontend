@@ -13,12 +13,14 @@ import {
   Right,
 } from 'native-base';
 import styles from '../trackUserStyle';
+import {Alert} from 'react-native';
 
 const GroupMemberModal = (props) => {
-  const {userFirstName, userLastName} = props;
+  const {userFirstName, userLastName, focusMarker} = props;
+
   return (
     <Card>
-      <CardItem style={{height: 60}}>
+      <CardItem button onPress={focusMarker} style={{height: 60}}>
         <Left>
           <Thumbnail
             style={styles.photo}

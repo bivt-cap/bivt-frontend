@@ -1,19 +1,17 @@
-import React, {useState, useEffect, Alert} from 'react';
+import React, {useState, useEffect} from 'react';
 import BottomSheet from 'reanimated-bottom-sheet';
 import {Container, View, Text} from 'native-base';
 import {useSelector, useDispatch} from 'react-redux';
-import * as TaskManager from 'expo-task-manager';
+import {Alert} from 'react-native';
 import styles from './trackUserStyle';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {Marker, OverlayComponent} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 import GroupMemberModal from './Modal/GroupMemberModal';
 import {
   getInitialLocation,
   getMembersInformationsInCircle,
-  mapLoadSuccess,
-  postMemberLocationsToDB,
   trackLocationInBackGround,
+  getLocationsFromDB,
 } from '../../../redux';
 
 const TrackUser = () => {
@@ -37,6 +35,8 @@ const TrackUser = () => {
     dispatch(getInitialLocation);
     dispatch(trackLocationInBackGround);
     fetchMembersInCircle();
+    fetchAllCordinatesinCircle();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,24 +50,50 @@ const TrackUser = () => {
       </View>
     </View>
   );
+  const showMarkeronMap = () => {
+    return usersLocation.allCoordinatesinCircle.map((coord, index) => {
+      const latlang = {
+        latitude: coord.latitude,
+        longitude: coord.longitude,
+      };
+
+      return <Marker coordinate={latlang} key={index} pinColor={'purple'} />;
+    });
+  };
 
   const fetchMembersInCircle = async () => {
     const token = await JwtKeyChain.read();
     const circleId = bootstrapState.circles[0].id;
     dispatch(getMembersInformationsInCircle(token, circleId));
   };
+  const fetchAllCordinatesinCircle = async () => {
+    const token = await JwtKeyChain.read();
+    const circleId = bootstrapState.circles[0].id;
+    dispatch(getLocationsFromDB(token, circleId));
+  };
 
   const renderGroupMember = () => {
-    return usersLocation.membersInCircle.map((user) => {
+    return usersLocation.membersInCircle.map((user, index) => {
       return (
         <GroupMemberModal
           key={user.id}
           userFirstName={user.userFirstName}
           userLastName={user.userLastName}
+          focusMarker={() => {
+            usersLocation.allCoordinatesinCircle[index] === undefined
+              ? Alert.alert(
+                  'There is no currently sharable Location for this user!',
+                )
+              : animateToMarker(
+                  usersLocation.allCoordinatesinCircle[index].latitude,
+                  usersLocation.allCoordinatesinCircle[index].longitude,
+                );
+          }}
         />
       );
     });
   };
+
   const renderContent = () => (
     <View style={styles.panel}>
       {usersLocation.circleLoading === true ? (
@@ -77,6 +103,16 @@ const TrackUser = () => {
       )}
     </View>
   );
+
+  const animateToMarker = (lat, long) => {
+    return this.map.animateCamera({
+      center: {
+        latitude: lat,
+        longitude: long,
+      },
+      heading: 180,
+    });
+  };
   /*
    * End of functions declerations
    */
@@ -87,6 +123,9 @@ const TrackUser = () => {
         // <Text>{usersLocation.userCoordinates.longitude}</Text>
         <MapView
           style={[styles.map, {top: mapStyle.paddingTop}]}
+          ref={(map) => {
+            this.map = map;
+          }}
           initialRegion={{
             latitude: usersLocation.userCoordinates.latitude,
             longitude: usersLocation.userCoordinates.longitude,
@@ -98,8 +137,9 @@ const TrackUser = () => {
           showsUserLocation={true}
           showsMyLocationButton={true}
           zoomControlEnabled={true}
-          zoomEnabled
-        />
+          zoomEnabled>
+          {usersLocation.fetchCoordLoading === false && showMarkeronMap()}
+        </MapView>
       )}
 
       <BottomSheet
