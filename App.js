@@ -6,7 +6,7 @@ import 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 
 // React Navigation
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 // Native Splash Screen
@@ -51,6 +51,34 @@ const App = () => {
   if (bootstrapState.isLoading) {
     return <Bootstrap />;
   }
+
+  // Cutomize NavigationContainer Header Theme
+  //const ncTheme = {
+  //  ...DefaultTheme,
+  //  dark: false,
+  //  colors: {
+  //    ...DefaultTheme.colors,
+  //    primary: 'rgb(165,59,186)',
+  //    background: 'rgb(165,59,186)',
+  //    card: 'rgb(165,59,186)',
+  //    text: 'rgb(255,255,255)',
+  //    border: 'rgb(165,59,186)',
+  //  },
+  //};
+
+  //const ncScreenOptions = {
+  //  headerStyle: {
+  //    display: 'flex',
+  //    flexDirection: 'row',
+  //    justifyContent: 'center',
+  //  },
+  //  headerTitleStyle: {
+  //    fontFamily: 'Roboto',
+  //    fontSize: 24,
+  //    marginTop: 5,
+  //    alignSelf: 'center',
+  //  },
+  //};
 
   // Check if the user is Signed In
   return (
@@ -118,7 +146,13 @@ const App = () => {
             </>
           ) : (
             <>
-              <Stack.Screen name="SignUp" component={Signup} />
+              <Stack.Screen
+                name="SignUp"
+                component={Signup}
+                options={{
+                  headerShown: false,
+                }}
+              />
               <Stack.Screen
                 name="SignupFeedback"
                 component={SignupFeedback}
@@ -130,7 +164,7 @@ const App = () => {
                 name="Login"
                 component={Login}
                 options={{
-                  headerLeft: null,
+                  headerShown: false,
                 }}
               />
               <Stack.Screen

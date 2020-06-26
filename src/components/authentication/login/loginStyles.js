@@ -4,26 +4,35 @@
  * @version 0.0.1
  * @author Yalcin Tatar (https://github.com/yalcinos)
  */
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#C4E7F4',
-    position: 'absolute',
-    width: '100%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    padding: 10,
+  forgotPasswordBtn: {
+    marginBottom: 15,
+    flex: 1,
+    justifyContent: 'flex-end',
   },
-  form: {
-    marginTop: '50%',
+  forgotPasswordText: {
+    textTransform: 'capitalize',
+    textDecorationLine: 'underline',
   },
-  textContent: {
-    fontSize: 20,
-    color: 'red',
-  },
-  textCentered: {
+  Or: {
+    marginTop: 15,
     textAlign: 'center',
+  },
+  GoogleSigninButton: {
+    marginTop: 15,
+    width: Dimensions.get('window').width,
+    marginBottom: 15,
+  },
+  forgotResendBtn: {
+    marginBottom: 15,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  forgotResendText: {
+    textTransform: 'capitalize',
+    textDecorationLine: 'underline',
   },
 });
 
