@@ -82,12 +82,23 @@ const styles = StyleSheet.create({
     borderRadius: 50 / 2,
   },
   textContent: {
-    fontSize: 18,
+    fontSize: 20,
     color: 'purple',
   },
   locationDateSize: {
     fontSize: 13,
     color: 'gray',
   },
+  groupPaper: {
+    height: 80,
+  },
+  cardStyle: {
+    backgroundColor: 'purple',
+    borderColor: 'purple',
+    borderWidth: 1,
+    borderRadius: 1,
+    marginTop: 5,
+  },
+  viewStyle: {},
 });
 export default styles;

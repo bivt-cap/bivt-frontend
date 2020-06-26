@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import BottomSheet from 'reanimated-bottom-sheet';
 import {Container, View, Text} from 'native-base';
 import {useSelector, useDispatch} from 'react-redux';
-import {Alert} from 'react-native';
+import {Alert, Image} from 'react-native';
 import styles from './trackUserStyle';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import JwtKeyChain from '../../../utils/jwtKeyChain';
@@ -57,7 +57,14 @@ const TrackUser = () => {
         longitude: coord.longitude,
       };
 
-      return <Marker coordinate={latlang} key={index} pinColor={'purple'} />;
+      return (
+        <Marker coordinate={latlang} key={index} pinColor={'purple'}>
+          <Image
+            source={require('../../../assets/bee-1.png')}
+            style={{height: 70, width: 50}}
+          />
+        </Marker>
+      );
     });
   };
   const showLastUpdateInfo = (userId) => {
@@ -91,26 +98,28 @@ const TrackUser = () => {
   };
 
   const renderGroupMember = () => {
-    return usersLocation.membersInCircle.map((user, index) => {
-      return (
-        <GroupMemberModal
-          key={user.id}
-          userFirstName={user.userFirstName}
-          userLastName={user.userLastName}
-          lastUpdated={showLastUpdateInfo(user.extId)}
-          focusMarker={() => {
-            usersLocation.allCoordinatesinCircle[index] === undefined
-              ? Alert.alert(
-                  'There is no currently sharable Location for this user!',
-                )
-              : animateToMarker(
-                  usersLocation.allCoordinatesinCircle[index].latitude,
-                  usersLocation.allCoordinatesinCircle[index].longitude,
-                );
-          }}
-        />
-      );
-    });
+    if (usersLocation.circleLoading === false) {
+      return usersLocation.membersInCircle.map((user, index) => {
+        return (
+          <GroupMemberModal
+            key={user.id}
+            userFirstName={user.userFirstName}
+            userLastName={user.userLastName}
+            lastUpdated={showLastUpdateInfo(user.extId)}
+            focusMarker={() => {
+              usersLocation.allCoordinatesinCircle[index] === undefined
+                ? Alert.alert(
+                    'There is no currently sharable Location for this user!',
+                  )
+                : animateToMarker(
+                    usersLocation.allCoordinatesinCircle[index].latitude,
+                    usersLocation.allCoordinatesinCircle[index].longitude,
+                  );
+            }}
+          />
+        );
+      });
+    }
   };
 
   const renderContent = () => (
@@ -129,7 +138,6 @@ const TrackUser = () => {
         latitude: lat,
         longitude: long,
       },
-      heading: 180,
     });
   };
   /*

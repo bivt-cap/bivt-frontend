@@ -162,6 +162,7 @@ export const getMembersInformationsInCircle = (token, _circleId) => {
       const response = await bivtURL.get('/circle/getMemberOfACircle', config);
 
       if (response.status === 200) {
+        console.log(response);
         dispatch(fetchMemberInCircleSuccess(response.data.data));
       } else {
         dispatch(
@@ -171,8 +172,6 @@ export const getMembersInformationsInCircle = (token, _circleId) => {
         );
       }
     } catch (error) {
-      const errorMsg = error.message;
-      console.log(errorMsg);
       dispatch(
         circleMemberFetchFail(
           'Members could not fetched or you have no member in the circle.',

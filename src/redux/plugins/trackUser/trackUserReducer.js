@@ -2,6 +2,8 @@ const userLocationDetails = {
   mapLoading: true,
   circleLoading: true,
   fetchCoordLoading: true,
+  membersInCircle: [],
+  allCoordinatesinCircle: [],
   errorMsg: '',
 };
 
