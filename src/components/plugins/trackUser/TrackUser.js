@@ -60,6 +60,24 @@ const TrackUser = () => {
       return <Marker coordinate={latlang} key={index} pinColor={'purple'} />;
     });
   };
+  const showLastUpdateInfo = (userId) => {
+    if (usersLocation.circleLoading === false) {
+      return usersLocation.allCoordinatesinCircle.map((coord, index) => {
+        if (userId === coord.userExtId) {
+          const dateRegEx = '^[^T]*';
+          const timeRegEx = 'T(.*).000Z';
+          const filteredDate = coord.lastUpdatedOn.match(dateRegEx);
+          const filteredTime = coord.lastUpdatedOn.match(timeRegEx);
+
+          return (
+            <Text style={styles.locationDateSize}>
+              Last Update: {filteredDate[0]}, {filteredTime[1]}{' '}
+            </Text>
+          );
+        }
+      });
+    }
+  };
 
   const fetchMembersInCircle = async () => {
     const token = await JwtKeyChain.read();
@@ -79,6 +97,7 @@ const TrackUser = () => {
           key={user.id}
           userFirstName={user.userFirstName}
           userLastName={user.userLastName}
+          lastUpdated={showLastUpdateInfo(user.extId)}
           focusMarker={() => {
             usersLocation.allCoordinatesinCircle[index] === undefined
               ? Alert.alert(

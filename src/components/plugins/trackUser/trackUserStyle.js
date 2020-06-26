@@ -82,8 +82,12 @@ const styles = StyleSheet.create({
     borderRadius: 50 / 2,
   },
   textContent: {
-    fontSize: 21,
+    fontSize: 18,
     color: 'purple',
+  },
+  locationDateSize: {
+    fontSize: 13,
+    color: 'gray',
   },
 });
 export default styles;
