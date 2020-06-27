@@ -78,8 +78,8 @@ export const trackLocationInBackGround = async () => {
   } else if (Platform.OS === 'ios') {
     await Location.startLocationUpdatesAsync('watchLocation', {
       accuracy: Location.Accuracy.High,
-      timeInterval: 1000 * 60 * 2,
-      distanceInterval: 20000,
+      // timeInterval: 1000 * 60 * 2,
+      distanceInterval: 1000,
     });
   }
 };

@@ -30,12 +30,12 @@ const DashBoard = ({route, navigation}) => {
       console.log('sadasd');
       await Location.startLocationUpdatesAsync('watchLocation', {
         accuracy: Location.Accuracy.Balanced,
-        timeInterval: 1000,
+        timeInterval: 10000,
       });
     } else if (Platform.OS === 'ios') {
       await Location.startLocationUpdatesAsync('watchLocation', {
-        accuracy: Location.Accuracy.Balanced,
-        distanceInterval: 20000,
+        accuracy: Location.Accuracy.High,
+        distanceInterval: 1000,
       });
     }
   };
@@ -88,21 +88,19 @@ const DashBoard = ({route, navigation}) => {
    * Details: https://docs.expo.io/versions/latest/sdk/task-manager/
    */
 
-  if (!TaskManager.isTaskDefined('watchLocation')) {
-    TaskManager.defineTask('watchLocation', ({data, error}) => {
-      if (error) {
-        console.log('ERR');
-        return;
-      }
-      if (data) {
-        console.log('RUNNED tasks in background');
+  TaskManager.defineTask('watchLocation', ({data, error}) => {
+    if (error) {
+      console.log('ERR');
+      return;
+    }
+    if (data) {
+      console.log('RUNNED tasks in background');
 
-        const {locations} = data;
-        console.log(data);
-        postLocation(locations);
-      }
-    });
-  }
+      const {locations} = data;
+      console.log(data);
+      postLocation(locations);
+    }
+  });
 
   return (
     <Container>
