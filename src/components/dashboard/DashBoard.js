@@ -8,6 +8,8 @@ import {
   Card,
   CardItem,
   Body,
+  List,
+  ListItem,
 } from 'native-base';
 import {deleteJTWFromKeyChain, resetBootstrap} from '../../redux';
 import {GoogleSignin} from '@react-native-community/google-signin';
@@ -19,7 +21,7 @@ const DashBoard = ({route, navigation}) => {
   // Stored State - Redux hook
   const bootstrapState = useSelector((state) => state.bootstrap);
   const userData = useSelector((state) => state.login);
-  console.log(bootstrapState);
+  //console.log(bootstrapState);
 
   const handleChatButtonClick = async () => {
     navigation.navigate('Chat', {userInfo: bootstrapState.user});
@@ -89,6 +91,26 @@ const DashBoard = ({route, navigation}) => {
               <Text>Is Admin: {bootstrapState.circles[0].isAdmin}</Text>
               <Text>Is Owner: {bootstrapState.circles[0].isOwner}</Text>
               <Text>Joined On: {bootstrapState.circles[0].joinedOn}</Text>
+              <Text>Members:</Text>
+              <List>
+                {bootstrapState.circles[0].members.map((member) => {
+                  return (
+                    <ListItem>
+                      <Text>{member.userFirstName}</Text>
+                    </ListItem>
+                  );
+                })}
+              </List>
+              <Text>Plugins:</Text>
+              <List>
+                {bootstrapState.circles[0].plugins.map((pluginId) => {
+                  return (
+                    <ListItem>
+                      <Text>{pluginId}</Text>
+                    </ListItem>
+                  );
+                })}
+              </List>
             </Body>
           </CardItem>
         </Card>

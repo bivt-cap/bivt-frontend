@@ -6,7 +6,7 @@ import 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 
 // React Navigation
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 // Native Splash Screen
@@ -34,6 +34,7 @@ import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManag
 import Chat from './src/components/plugins/chat/Chat';
 import TrackUser from './src/components/plugins/trackUser/TrackUser';
 
+// Navigator
 const Stack = createStackNavigator();
 
 // Main
