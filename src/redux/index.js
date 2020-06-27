@@ -13,3 +13,5 @@ export * from './plugins/chat/chatAction';
 export * from './managePlugin/choosePlugin/choosePluginAction';
 //Family Track Plugins
 export * from './plugins/trackUser/trackUserAction';
+//Expense Manager plugin
+export * from './plugins/expenseManager/expenseManagerAction';

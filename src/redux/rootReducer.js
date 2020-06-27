@@ -6,6 +6,7 @@ import createCirlceReducer from './circle/createCircle/createCirlceReducer';
 import inviteToCirlceReducer from './circle/inviteToCircle/inviteToCirlceReducer';
 import choosePluginReducer from './managePlugin/choosePlugin/choosePluginReducer';
 import userLocationTrack from './plugins/trackUser/trackUserReducer';
+import expenseManagerReducer from './plugins/expenseManager/expenseManagerReducer';
 const rootReducer = combineReducers({
   bootstrap: bootstrapReducer,
   signup: signupReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   inviteToCircle: inviteToCirlceReducer,
   locationTrack: userLocationTrack,
   choosePlugin: choosePluginReducer,
+  expenseManager: expenseManagerReducer,
 });
 
 export default rootReducer;

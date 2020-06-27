@@ -114,6 +114,14 @@ const App = () => {
                   title: 'Tracking Plugin',
                 }}
               />
+              <Stack.Screen
+                name="ExpenseManager"
+                component={ExpenseManager}
+                options={{
+                  title: 'Manage your expenses',
+                  headerLeft: null,
+                }}
+              />
             </>
           ) : (
             <>

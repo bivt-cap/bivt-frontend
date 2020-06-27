@@ -1,60 +1,28 @@
+/**
+ * This component is responsible to load data in spending tabs
+ *
+ * @version 0.0.1
+ * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ */
+//react
 import React from 'react';
-import {
-  Container,
-  Header,
-  Content,
-  Button,
-  ListItem,
-  Text,
-  Icon,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
 
-const Spendings = () => {
+//native base
+import {Container, Content, ListItem, Body, Right, Text} from 'native-base';
+
+const Spendings = (props) => {
   return (
     <Container>
       <Content>
-        <ListItem icon>
-          <Left>
-            <Button style={{backgroundColor: '#FF9501'}}>
-              <Icon active name="book" />
-            </Button>
-          </Left>
+        <ListItem itemDivider>
           <Body>
-            <Text>Bought books</Text>
+            <Text>Total</Text>
           </Body>
           <Right>
-            <Text>$100</Text>
+            <Text>${props.sum}</Text>
           </Right>
         </ListItem>
-        <ListItem icon>
-          <Left>
-            <Button style={{backgroundColor: '#007AFF'}}>
-              <Icon active name="build" />
-            </Button>
-          </Left>
-          <Body>
-            <Text>Car repair</Text>
-          </Body>
-          <Right>
-            <Text>$80</Text>
-          </Right>
-        </ListItem>
-        <ListItem icon>
-          <Left>
-            <Button style={{backgroundColor: '#007AFF'}}>
-              <Icon active name="beer" />
-            </Button>
-          </Left>
-          <Body>
-            <Text>Lunch with Yalcin</Text>
-          </Body>
-          <Right>
-            <Text>$30</Text>
-          </Right>
-        </ListItem>
+        {props.data}
       </Content>
     </Container>
   );

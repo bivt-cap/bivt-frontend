@@ -56,6 +56,9 @@ const DashBoard = ({route, navigation}) => {
   const handleTrackUserButton = async () => {
     navigation.navigate('TrackUser', {userInfo: bootstrapState.user});
   };
+  const handleExpensesButton = async () => {
+    navigation.navigate('ExpenseManager', {userInfo: bootstrapState.user});
+  };
   const handleLogoutButtonClick = async () => {
     try {
       //If user authenticate with google oAuth
@@ -144,6 +147,9 @@ const DashBoard = ({route, navigation}) => {
         </Button>
         <Button onPress={handleTrackUserButton}>
           <Text> Track User </Text>
+        </Button>
+        <Button onPress={handleExpensesButton}>
+          <Text> Expenses Plugin </Text>
         </Button>
       </Content>
     </Container>
