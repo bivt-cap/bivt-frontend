@@ -36,7 +36,7 @@ import {Row, Grid} from 'react-native-easy-grid';
 import moment from 'moment';
 
 //styles
-import {expenseManagerStyles} from './expenseManagerStyles';
+import {expenseManagerStyles} from './ExpenseManagerStyles';
 
 //Components
 import Spendingsmodal from './SpendingsModal';

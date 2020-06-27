@@ -27,7 +27,7 @@ import {
 } from 'native-base';
 
 //styles
-import {modalStyles} from './expenseManagerStyles';
+import {modalStyles} from './ExpenseManagerStyles';
 
 // Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
