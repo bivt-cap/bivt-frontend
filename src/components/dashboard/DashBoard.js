@@ -5,10 +5,18 @@ import React from 'react';
 import {StyleSheet, Image} from 'react-native';
 
 // Native Base
-import {Container, Content, Body} from 'native-base';
+import {Container, Content, Body, Platform} from 'native-base';
 
 // Redux
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {postMemberLocationsToDB} from '../../redux';
+
+// Expo
+import * as TaskManager from 'expo-task-manager';
+import * as Location from 'expo-location';
+
+// Token Key Chain
+import JwtKeyChain from '../../utils/jwtKeyChain';
 
 // Layout
 import PluginButton from '../layout/pluginButton/PluginButton';
@@ -32,6 +40,9 @@ const dashboardStyles = StyleSheet.create({
 });
 
 const DashBoard = ({route, navigation}) => {
+  // Dispatch - Redux hook
+  const dispatch = useDispatch();
+
   // Stored State - Redux hook
   const bootstrapState = useSelector((state) => state.bootstrap);
 
@@ -63,6 +74,51 @@ const DashBoard = ({route, navigation}) => {
         break;
     }
   };
+
+  // Tracking user
+  const trackLocationInBackGround = async () => {
+    if (Platform.OS === 'android') {
+      console.log('sadasd');
+      await Location.startLocationUpdatesAsync('watchLocation', {
+        accuracy: Location.Accuracy.Balanced,
+        timeInterval: 10000,
+      });
+    } else if (Platform.OS === 'ios') {
+      await Location.startLocationUpdatesAsync('watchLocation', {
+        accuracy: Location.Accuracy.High,
+        distanceInterval: 1000,
+      });
+    }
+  };
+
+  // Start tracking the user location
+  trackLocationInBackGround();
+
+  // Post user Location
+  const postLocation = async (userCoord) => {
+    const token = await JwtKeyChain.read();
+
+    dispatch(postMemberLocationsToDB(token, userCoord));
+  };
+
+  /*
+   * This Task Manager read `watchLocation` task from trackUserAction and update state when the application in background
+   * Details: https://docs.expo.io/versions/latest/sdk/task-manager/
+   */
+
+  TaskManager.defineTask('watchLocation', ({data, error}) => {
+    if (error) {
+      console.log('ERR');
+      return;
+    }
+    if (data) {
+      console.log('RUNNED tasks in background');
+
+      const {locations} = data;
+      console.log(data);
+      postLocation(locations);
+    }
+  });
 
   // Set the navigation title
   navigation.setOptions({title: bootstrapState.circles[0].name});
