@@ -85,11 +85,13 @@ const ExpenseManager = () => {
 
   //loads bills on the screen
   const loadBills = (interval) => {
-    const now = moment();
+    const now = moment.utc(new Date()).format('YYYY-MM-DD');
     let sum = 0;
     return expenseManagerState.loadBillsResponseDetails.bills.map((bill) => {
       billAmountByDay[moment(bill.billDate)] = bill.billAmount;
-      if (moment(bill.billDate).isSame(now, interval)) {
+      let _billDate = moment.utc(bill.billDate).format('YYYY-MM-DD');
+
+      if (moment(_billDate).isSame(now, interval)) {
         // eslint-disable-next-line radix
         sum = sum + parseInt(bill.billAmount);
         sumBreakDown[interval] = sum;
@@ -234,7 +236,6 @@ const ExpenseManager = () => {
     budgetAmount,
   ) => {
     let totalSpending = 0;
-    console.log(budgetStartDate);
     for (const date in billAmountByDay) {
       if (
         moment.utc(date).format('YYYY-MM-DD') <= budgetEndDate &&
@@ -300,7 +301,6 @@ const ExpenseManager = () => {
 
   //Alert on error - Generic error handler
   useEffect(() => {
-    console.log(expenseManagerState);
     if (expenseManagerState.error) {
       const err = expenseManagerState.error.toString();
       Alert.alert(
