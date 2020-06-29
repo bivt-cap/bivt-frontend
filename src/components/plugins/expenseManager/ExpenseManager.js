@@ -243,7 +243,8 @@ const ExpenseManager = () => {
   ) => {
     let totalSpending = 0;
     remainingAmount = 0;
-    for (const date in billAmountByDay) {
+    console.log(billAmountByDay);
+    for (const date of Object.keys(billAmountByDay)) {
       if (
         moment.utc(date).format('YYYY-MM-DD') <= budgetEndDate &&
         moment.utc(date).format('YYYY-MM-DD') >= budgetStartDate
