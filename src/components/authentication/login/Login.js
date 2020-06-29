@@ -5,22 +5,20 @@
  * @author Yalcin Tatar (https://github.com/yalcinos)
  */
 
+// React
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Alert} from 'react-native';
+
+// React native
+import {ActivityIndicator, Alert, Dimensions} from 'react-native';
+
+// Redux
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  loginUser,
-  googleSignIn,
-  checkGoogleSession,
-  checkLocalSession,
-  resetBootstrap,
-} from '../../../redux';
+import {loginUser, googleSignIn, resetBootstrap} from '../../../redux';
 import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from 'react-native-dotenv';
 import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-community/google-signin';
-import styles from './loginStyles';
 
 import {
   Container,
@@ -31,8 +29,16 @@ import {
   Input,
   Form,
   Text,
+  Toast,
+  Right,
 } from 'native-base';
 import {loginFormValidation} from './loginFormValidation';
+
+// Styles
+import styles from './loginStyles';
+
+// Custom Layout
+import HeaderWithLogo from '../../layout/headerWithLogo/HeaderWithLogo';
 
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
@@ -149,23 +155,32 @@ const Login = ({navigation}) => {
   // ************ END OF EVENT HANDLERS *********//
   // ************************************************//
 
+  if (loginError.email.error || loginError.password.error) {
+    const erroMsg = `Error: 
+    ${loginError.email.message}
+    ${loginError.password.message}`;
+
+    Toast.show({
+      text: erroMsg.trim(),
+      buttonText: 'OK',
+    });
+  }
+
   return (
     <Container>
-      <Content style={{padding: 15}}>
+      <HeaderWithLogo title="Log In" />
+      <Content>
         <Form>
-          <Item>
+          <Label>Email</Label>
+          <Item regular error={loginError.email.error}>
             <Input
               placeholder="Email"
               autoCapitalize="none"
               onChangeText={(val) => handleLoginInputChanges('email', val)}
             />
-            {loginError.email.error && (
-              <Label style={styles.textFieldError}>
-                {loginError.email.message}
-              </Label>
-            )}
           </Item>
-          <Item last>
+          <Label>Password</Label>
+          <Item regular error={loginError.email.error} last>
             <Input
               placeholder="Password"
               secureTextEntry
@@ -173,16 +188,15 @@ const Login = ({navigation}) => {
                 handleLoginInputChanges('password', value)
               }
             />
-            {loginError.password.error && (
-              <Label style={styles.textFieldError}>
-                {loginError.password.message}
-              </Label>
-            )}
           </Item>
           <Button
-            block
-            style={{marginTop: 20}}
-            onPress={handleLoginButtonClick}>
+            transparent
+            dark
+            onPress={handleForgotButtonClick}
+            style={styles.forgotPasswordBtn}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </Button>
+          <Button block onPress={handleLoginButtonClick}>
             {userData.loading === true ? (
               (console.log(userData),
               (<ActivityIndicator size="small" color="#00ff00" />))
@@ -192,27 +206,30 @@ const Login = ({navigation}) => {
           </Button>
         </Form>
 
-        <Text style={{marginTop: 15, textAlign: 'center'}}>Or</Text>
+        <Text style={styles.Or}>Or</Text>
 
         <GoogleSigninButton
-          style={{width: 192, height: 48, marginTop: 15}}
+          style={styles.GoogleSigninButton}
           size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
+          color={GoogleSigninButton.Color.Light}
           onPress={handleGoogleButtonClick}
         />
 
-        <Button transparent onPress={handleForgotButtonClick}>
-          <Text>Forgot Password</Text>
+        <Button
+          transparent
+          dark
+          onPress={handleSugnUpButtonClick}
+          style={styles.forgotResendBtn}>
+          <Text style={styles.forgotResendText}>New Member? Register Now</Text>
         </Button>
 
-        <Button full light info onPress={handleSugnUpButtonClick}>
-          <Text>Sign Up</Text>
+        <Button
+          transparent
+          dark
+          onPress={handleResendValidationEmailButtonClick}
+          style={styles.forgotResendBtn}>
+          <Text style={styles.forgotResendText}>Resend Validation Email</Text>
         </Button>
-
-        <Button transparent onPress={handleResendValidationEmailButtonClick}>
-          <Text>Resend Validation Email</Text>
-        </Button>
-
         {userData.isLoggedin === 'True' || userData.googleisLoggedin === 'True'
           ? checkisLoggedIn()
           : userData.error !== '' && userData.errorStatus === 'True'

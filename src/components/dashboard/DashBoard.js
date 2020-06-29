@@ -1,30 +1,81 @@
-import React, {useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {
-  Container,
-  Content,
-  Text,
-  Button,
-  Card,
-  CardItem,
-  Body,
-} from 'native-base';
-import {deleteJTWFromKeyChain, resetBootstrap} from '../../redux';
-import {GoogleSignin} from '@react-native-community/google-signin';
-import * as TaskManager from 'expo-task-manager';
+// React
+import React from 'react';
+
+// React Native
+import {StyleSheet, Image} from 'react-native';
+
+// Native Base
+import {Container, Content, Body, Platform} from 'native-base';
+
+// Redux
+import {useDispatch, useSelector} from 'react-redux';
 import {postMemberLocationsToDB} from '../../redux';
-import JwtKeyChain from '../../utils/jwtKeyChain';
+
+// Expo
+import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
-import {Platform} from 'react-native';
+
+// Token Key Chain
+import JwtKeyChain from '../../utils/jwtKeyChain';
+
+// Layout
+import PluginButton from '../layout/pluginButton/PluginButton';
+import FooterBase from '../layout/footerBase/FooterBase';
+
+// Style
+const dashboardStyles = StyleSheet.create({
+  container: {backgroundColor: '#F7F7F7'},
+  image: {
+    height: 200,
+    marginBottom: 20,
+  },
+  body: {
+    flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+});
 
 const DashBoard = ({route, navigation}) => {
   // Dispatch - Redux hook
   const dispatch = useDispatch();
+
   // Stored State - Redux hook
   const bootstrapState = useSelector((state) => state.bootstrap);
-  const userData = useSelector((state) => state.login);
-  console.log(bootstrapState);
 
+  // Handle PluginClick
+  const handlePluginClick = async (pluginId) => {
+    switch (pluginId) {
+      case 1: // Calendar
+        navigation.navigate('Calendar', {userInfo: bootstrapState.user});
+        break;
+      case 2: // To-do List
+        navigation.navigate('TodoList', {userInfo: bootstrapState.user});
+        break;
+      case 3: // Grocery List
+        navigation.navigate('GroceryList', {userInfo: bootstrapState.user});
+        break;
+      case 4: // Tracking
+        navigation.navigate('TrackUser', {userInfo: bootstrapState.user});
+        break;
+      case 5: // Polling
+        navigation.navigate('Polling', {userInfo: bootstrapState.user});
+        break;
+      case 6: // Messages
+        navigation.navigate('Chat', {userInfo: bootstrapState.user});
+        break;
+      case 7: // Expenses
+        navigation.navigate('ExpenseManager', {userInfo: bootstrapState.user});
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Tracking user
   const trackLocationInBackGround = async () => {
     if (Platform.OS === 'android') {
       console.log('sadasd');
@@ -39,51 +90,15 @@ const DashBoard = ({route, navigation}) => {
       });
     }
   };
+
+  // Start tracking the user location
   trackLocationInBackGround();
+
+  // Post user Location
   const postLocation = async (userCoord) => {
     const token = await JwtKeyChain.read();
 
     dispatch(postMemberLocationsToDB(token, userCoord));
-  };
-
-  const handleChatButtonClick = async () => {
-    navigation.navigate('Chat', {userInfo: bootstrapState.user});
-  };
-
-  const handleTodoListButtonClick = async () => {
-    navigation.navigate('TodoList', {userInfo: bootstrapState.user});
-  };
-  const handleTrackUserButton = async () => {
-    navigation.navigate('TrackUser', {userInfo: bootstrapState.user});
-  };
-  const handleExpensesButton = async () => {
-    navigation.navigate('ExpenseManager', {userInfo: bootstrapState.user});
-  };
-  const handleLogoutButtonClick = async () => {
-    try {
-      //If user authenticate with google oAuth
-      if (userData.googleisLoggedin === 'True') {
-        await GoogleSignin.revokeAccess();
-        await GoogleSignin.signOut();
-        userData.googleisLoggedin = 'False';
-        //navigation.navigate('Login');
-        //console.log(userData);
-        //If user authenticate with local sign in.
-      } else if (userData.isLoggedin === 'True') {
-        //deleteJTWFromKeyChain();
-        //if (deleteJTWFromKeyChain()) {
-        userData.isLoggedin = 'False';
-        userData.loginDetails = '';
-        //console.log(userData);
-        //navigation.navigate('Login');
-        //}
-      }
-      deleteJTWFromKeyChain();
-      dispatch(resetBootstrap());
-      navigation.navigate('Bootstrap');
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   /*
@@ -105,9 +120,34 @@ const DashBoard = ({route, navigation}) => {
     }
   });
 
+  // Set the navigation title
+  navigation.setOptions({title: bootstrapState.circles[0].name});
+
+  // Render the screen
   return (
-    <Container>
-      <Content padder>
+    <Container style={dashboardStyles.container}>
+      <Image
+        source={require('../../assets/images/plugins/Rommate2.png')}
+        style={dashboardStyles.image}
+      />
+      <Content>
+        <Body style={dashboardStyles.body}>
+          {bootstrapState.circles[0].plugins.map((pluginId) => {
+            return (
+              <PluginButton
+                pluginId={pluginId}
+                eventHandler={() => handlePluginClick(pluginId)}
+              />
+            );
+          })}
+        </Body>
+      </Content>
+      <FooterBase navigation />
+    </Container>
+  );
+};
+
+/*
         <Card>
           <CardItem header bordered>
             <Text>User</Text>
@@ -133,6 +173,22 @@ const DashBoard = ({route, navigation}) => {
               <Text>Is Admin: {bootstrapState.circles[0].isAdmin}</Text>
               <Text>Is Owner: {bootstrapState.circles[0].isOwner}</Text>
               <Text>Joined On: {bootstrapState.circles[0].joinedOn}</Text>
+              <Text>Members:</Text>
+              <List>
+                {bootstrapState.circles[0].members.map((member) => {
+                  return (
+                    <ListItem>
+                      <Text>{member.userFirstName}</Text>
+                    </ListItem>
+                  );
+                })}
+              </List>
+              <Text>Plugins:</Text>
+              <List>
+                {bootstrapState.circles[0].plugins.map((pluginId) => {
+                  return <PluginButton pluginId={pluginId} />;
+                })}
+              </List>
             </Body>
           </CardItem>
         </Card>
@@ -151,9 +207,6 @@ const DashBoard = ({route, navigation}) => {
         <Button onPress={handleExpensesButton}>
           <Text> Expenses Plugin </Text>
         </Button>
-      </Content>
-    </Container>
-  );
-};
+*/
 
 export default DashBoard;
