@@ -13,7 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SplashScreen from 'react-native-splash-screen';
 
 // Native Base
-import {Root} from 'native-base';
+import {Root, Button} from 'native-base';
 
 // Screens
 import Bootstrap from './src/components/authentication/bootstrap/Bootstrap';
@@ -104,15 +104,14 @@ const App = () => {
                 name="Chat"
                 component={Chat}
                 options={{
-                  headerLeft: null,
+                  title: 'Chat Plugin',
                 }}
               />
               <Stack.Screen
                 name="TrackUser"
                 component={TrackUser}
                 options={{
-                  title: 'Maps',
-                  headerLeft: null,
+                  title: 'Tracking Plugin',
                 }}
               />
               <Stack.Screen
