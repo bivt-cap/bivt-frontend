@@ -58,6 +58,8 @@ const ExpenseManager = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [spendingsModalVisible, setSpendingsModalVisible] = useState(false);
   const [budgetModalVisible, setBudgetModalVisible] = useState(false);
+  //const [budgetRemainingAmount, setBudgetRemainingAmount] = useState({});
+  let budgetRemainingAmount = {};
   let sumBreakDown = {};
   let billAmountByDay = {};
   // ****************************************************//
@@ -197,7 +199,9 @@ const ExpenseManager = () => {
                     moment.utc(budget.budgetStartDate).format('YYYY-MM-DD'),
                     moment.utc(budget.budgetEndDate).format('YYYY-MM-DD'),
                     budget.budgetAmount,
+                    budget.id,
                   )}
+                  {budgetRemainingAmount[budget.id]}
                 </Text>
               </Body>
               <Right>
@@ -230,12 +234,15 @@ const ExpenseManager = () => {
   };
 
   //Iterating over all the bills and checking if they fall under a budget
+  let remainingAmount = 0;
   const calcRemainingBudget = (
     budgetStartDate,
     budgetEndDate,
     budgetAmount,
+    budgetID,
   ) => {
     let totalSpending = 0;
+    remainingAmount = 0;
     for (const date in billAmountByDay) {
       if (
         moment.utc(date).format('YYYY-MM-DD') <= budgetEndDate &&
@@ -244,7 +251,15 @@ const ExpenseManager = () => {
         totalSpending = totalSpending + billAmountByDay[date];
       }
     }
-    return budgetAmount - totalSpending;
+    remainingAmount = budgetAmount - totalSpending;
+    if (remainingAmount) {
+      budgetRemainingAmount = {
+        ...budgetRemainingAmount,
+        [budgetID]: remainingAmount,
+      };
+      //console.log(budgetRemainingAmount);
+    }
+    //return budgetAmount - totalSpending;
   };
 
   //delete budget
