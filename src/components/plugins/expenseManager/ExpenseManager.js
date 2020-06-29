@@ -95,7 +95,7 @@ const ExpenseManager = () => {
 
       if (moment(_billDate).isSame(now, interval)) {
         // eslint-disable-next-line radix
-        sum = sum + parseInt(bill.billAmount);
+        sum = sum + parseFloat(bill.billAmount);
         sumBreakDown[interval] = sum;
         return (
           <ListItem icon key={bill.id}>
@@ -243,7 +243,6 @@ const ExpenseManager = () => {
   ) => {
     let totalSpending = 0;
     remainingAmount = 0;
-    console.log(billAmountByDay);
     for (const date of Object.keys(billAmountByDay)) {
       if (
         moment.utc(date).format('YYYY-MM-DD') <= budgetEndDate &&
@@ -256,9 +255,8 @@ const ExpenseManager = () => {
     if (remainingAmount) {
       budgetRemainingAmount = {
         ...budgetRemainingAmount,
-        [budgetID]: remainingAmount,
+        [budgetID]: remainingAmount.toFixed(2),
       };
-      //console.log(budgetRemainingAmount);
     }
     //return budgetAmount - totalSpending;
   };
