@@ -8,6 +8,19 @@
 import {StyleSheet} from 'react-native';
 
 const signupStyles = StyleSheet.create({
+  headerLeft: {
+    flex: 1,
+  },
+  headerBody: {
+    flex: 1,
+    backgroundColor: 'red',
+  },
+  headerBodytitle: {
+    alignSelf: 'center',
+  },
+  headerright: {
+    flex: 1,
+  },
   signupForm: {
     marginTop: '10%',
   },

@@ -98,12 +98,52 @@ export const getCirclesUserIsPartOf = (token) => {
       .get('/circle/byUser', {
         headers: {Authorization: `Bearer ${token}`},
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.status === 200) {
           const circles = response.data.data.circles;
           if (circles) {
-            const inCircle = circles.find((circle) => circle.joinedAt !== null);
+            // load all member and Plugins in all groups
+            for (let i = 0; i < circles.length; i++) {
+              // Load all member in the user group
+              const members = await bivtURL
+                .get('/circle/getMemberOfACircle', {
+                  headers: {Authorization: `Bearer ${token}`},
+                  params: {circleId: circles[i].id},
+                })
+                .then((responseMembers) => {
+                  if (responseMembers.status === 200) {
+                    return responseMembers.data.data.map((member) => {
+                      return {...member};
+                    });
+                  }
+                })
+                .catch((error) => {});
+
+              // Load all plugins in the user group
+              const plugins = await bivtURL
+                .get('/plugin/getPluginOnACircle', {
+                  headers: {Authorization: `Bearer ${token}`},
+                  params: {circleId: circles[i].id},
+                })
+                .then((responsePlugins) => {
+                  if (responsePlugins.status === 200) {
+                    return responsePlugins.data.data.map((pluginId) => {
+                      return pluginId;
+                    });
+                  }
+                })
+                .catch((error) => {});
+
+              // Update the object
+              circles[i] = {
+                ...circles[i],
+                members,
+                plugins,
+              };
+            }
+
             // User belongs to a Circle?
+            const inCircle = circles.find((circle) => circle.joinedAt !== null);
             if (inCircle !== null) {
               dispatch(userBelongsToaCircle(circles));
             } else {

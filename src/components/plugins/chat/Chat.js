@@ -9,7 +9,7 @@ import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
 import {Platform} from 'react-native';
-import {Spinner, Icon, Button} from 'native-base';
+import {Spinner, Icon, Button, Container} from 'native-base';
 import {uploadImage} from './uploadImage';
 import Fire from './Fire';
 import ImagePicker from 'react-native-image-picker';
@@ -119,15 +119,17 @@ const Chat = ({route}) => {
     );
   };
   return !message.isLoading ? (
-    <GiftedChat
-      messages={message.messages}
-      onSend={Fire.shared.sendMessages}
-      renderSend={renderSend}
-      renderInputToolbar={renderInputToolbar}
-      renderActions={renderCameraButton}
-      renderUsernameOnMessage={true}
-      user={user()}
-    />
+    <Container>
+      <GiftedChat
+        messages={message.messages}
+        onSend={Fire.shared.sendMessages}
+        renderSend={renderSend}
+        renderInputToolbar={renderInputToolbar}
+        renderActions={renderCameraButton}
+        renderUsernameOnMessage={true}
+        user={user()}
+      />
+    </Container>
   ) : (
     <Spinner color="blue" />
   );

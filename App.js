@@ -6,14 +6,14 @@ import 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 
 // React Navigation
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 // Native Splash Screen
 import SplashScreen from 'react-native-splash-screen';
 
 // Native Base
-import {Root, Button} from 'native-base';
+import {Root} from 'native-base';
 
 // Screens
 import Bootstrap from './src/components/authentication/bootstrap/Bootstrap';
@@ -33,7 +33,11 @@ import ChoosePlugins from './src/components/managePlugin/choosePlugin/ChoosePlug
 import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManager';
 import Chat from './src/components/plugins/chat/Chat';
 import TrackUser from './src/components/plugins/trackUser/TrackUser';
+import Calendar from './src/components/plugins/calendar/Calendar';
+import GroceryList from './src/components/plugins/groceryList/GroceryList';
+import Polling from './src/components/plugins/polling/Polling';
 
+// Navigator
 const Stack = createStackNavigator();
 
 // Main
@@ -55,8 +59,29 @@ const App = () => {
   // Check if the user is Signed In
   return (
     <Root>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName={bootstrapState.initialRouteName}>
+      <NavigationContainer
+        theme={{
+          ...DefaultTheme,
+          dark: false,
+          colors: {
+            ...DefaultTheme.colors,
+            primary: 'rgb(165,59,186)',
+            background: 'rgb(165,59,186)',
+            card: 'rgb(165,59,186)',
+            text: 'rgb(255,255,255)',
+            border: 'rgb(165,59,186)',
+          },
+        }}>
+        <Stack.Navigator
+          initialRouteName={bootstrapState.initialRouteName}
+          screenOptions={{
+            headerTitleStyle: {
+              fontFamily: 'Roboto',
+              fontSize: 24,
+              marginTop: 5,
+            },
+            headerTitleAlign: 'center',
+          }}>
           {bootstrapState.isSignedIn ? (
             <>
               <Stack.Screen
@@ -90,42 +115,68 @@ const App = () => {
                 options={{
                   title: 'DashBoard',
                   headerLeft: null,
+                  headerRight: null,
                 }}
+              />
+              <Stack.Screen
+                name="Calendar"
+                options={{
+                  title: 'Calendar',
+                }}
+                component={Calendar}
               />
               <Stack.Screen
                 name="TodoList"
                 options={{
-                  title: 'Todo List',
-                  headerLeft: null,
+                  title: 'To-do List',
                 }}
                 component={TodoList}
               />
               <Stack.Screen
-                name="Chat"
-                component={Chat}
+                name="GroceryList"
                 options={{
-                  title: 'Chat Plugin',
+                  title: 'Grocery List',
                 }}
+                component={GroceryList}
               />
               <Stack.Screen
                 name="TrackUser"
                 component={TrackUser}
                 options={{
-                  title: 'Tracking Plugin',
+                  title: 'Tracking',
+                }}
+              />
+              <Stack.Screen
+                name="Polling"
+                component={Polling}
+                options={{
+                  title: 'Polling',
+                }}
+              />
+              <Stack.Screen
+                name="Chat"
+                component={Chat}
+                options={{
+                  title: 'Messages',
                 }}
               />
               <Stack.Screen
                 name="ExpenseManager"
                 component={ExpenseManager}
                 options={{
-                  title: 'Manage your expenses',
-                  headerLeft: null,
+                  title: 'Expenses',
                 }}
               />
             </>
           ) : (
             <>
-              <Stack.Screen name="SignUp" component={Signup} />
+              <Stack.Screen
+                name="SignUp"
+                component={Signup}
+                options={{
+                  headerShown: false,
+                }}
+              />
               <Stack.Screen
                 name="SignupFeedback"
                 component={SignupFeedback}
@@ -137,7 +188,7 @@ const App = () => {
                 name="Login"
                 component={Login}
                 options={{
-                  headerLeft: null,
+                  headerShown: false,
                 }}
               />
               <Stack.Screen

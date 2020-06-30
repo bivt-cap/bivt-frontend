@@ -9,7 +9,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import {signupUser} from '../../../redux';
 import {
   Container,
-  Header,
   Content,
   Form,
   Item,
@@ -17,9 +16,12 @@ import {
   Label,
   Button,
   Text,
+  Toast,
 } from 'native-base';
-import signupStyles from './signupStyles';
 import {signupFormValidation} from './signupFormValidation';
+
+// Custom Layout
+import HeaderWithLogo from '../../layout/headerWithLogo/HeaderWithLogo';
 
 const Signup = ({navigation}) => {
   const dispatch = useDispatch();
@@ -105,76 +107,75 @@ const Signup = ({navigation}) => {
     }
   }, [signupStatus, navigation]);
 
+  if (
+    signupError.eMail.error ||
+    signupError.password.error ||
+    signupError.coPassword.error ||
+    signupError.firstName.error ||
+    signupError.lastName.error
+  ) {
+    const erroMsg = `Error: 
+    ${signupError.eMail.message}
+    ${signupError.eMail.message} 
+    ${signupError.password.message} 
+    ${signupError.coPassword.message} 
+    ${signupError.firstName.message} 
+    ${signupError.lastName.message} `;
+
+    Toast.show({
+      text: erroMsg.trim(),
+      buttonText: 'OK',
+    });
+  }
+
   return (
-    <Container style={signupStyles.signupContainer}>
+    <Container>
+      <HeaderWithLogo title="Register" />
       <Content>
-        <Form style={signupStyles.signupForm}>
-          <Item stackedLabel>
-            <Label>First Name*</Label>
-            {signupError.firstName.error && (
-              <Label style={signupStyles.textFieldError}>
-                {signupError.firstName.message}
-              </Label>
-            )}
-            <Input
-              onChangeText={(val) => handleSignupInputChange('firstName', val)}
-            />
-          </Item>
-          <Item stackedLabel>
-            <Label>Last Name*</Label>
-            {signupError.lastName.error && (
-              <Label style={signupStyles.textFieldError}>
-                {signupError.lastName.message}
-              </Label>
-            )}
-            <Input
-              onChangeText={(val) => handleSignupInputChange('lastName', val)}
-            />
-          </Item>
-          <Item stackedLabel>
-            <Label>Email*</Label>
-            {signupError.eMail.error && (
-              <Label style={signupStyles.textFieldError}>
-                {signupError.eMail.message}
-              </Label>
-            )}
+        <Form>
+          <Label>Email</Label>
+          <Item regular error={signupError.eMail.error}>
             <Input
               autoCompleteType={'email'}
+              placeholder="Email"
               onChangeText={(val) => handleSignupInputChange('eMail', val)}
             />
           </Item>
-          <Item stackedLabel>
-            <Label>Password*</Label>
-            {signupError.password.error && (
-              <Label style={signupStyles.textFieldError}>
-                {signupError.password.message}
-              </Label>
-            )}
+          <Label>Password</Label>
+          <Item regular error={signupError.password.error}>
             <Input
               secureTextEntry={true}
               autoCompleteType={'password'}
+              placeholder="Password"
               onChangeText={(val) => handleSignupInputChange('password', val)}
             />
           </Item>
-          <Item stackedLabel>
-            <Label>Confirm Password*</Label>
-            {signupError.coPassword.error && (
-              <Label style={signupStyles.textFieldError}>
-                {signupError.coPassword.message}
-              </Label>
-            )}
+          <Label>Confirm Password</Label>
+          <Item regular error={signupError.coPassword.error}>
             <Input
               secureTextEntry={true}
               autoCompleteType={'password'}
+              placeholder="Password"
               onChangeText={(val) => handleSignupInputChange('coPassword', val)}
             />
           </Item>
+          <Label>First Name</Label>
+          <Item regular error={signupError.firstName.error}>
+            <Input
+              placeholder="First Name"
+              onChangeText={(val) => handleSignupInputChange('firstName', val)}
+            />
+          </Item>
+          <Label>Last Name</Label>
+          <Item regular error={signupError.lastName.error} last>
+            <Input
+              placeholder="Last Name"
+              onChangeText={(val) => handleSignupInputChange('lastName', val)}
+            />
+          </Item>
         </Form>
-        <Button
-          full
-          style={signupStyles.signupButton}
-          onPress={submitSignupForm}>
-          <Text>Signup</Text>
+        <Button full onPress={submitSignupForm}>
+          <Text>Submit</Text>
         </Button>
         {signupStatus.loading ? (
           <Text>...loading</Text>
