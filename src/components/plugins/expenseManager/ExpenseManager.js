@@ -244,8 +244,8 @@ const ExpenseManager = () => {
     remainingAmount = 0;
     for (const date of Object.keys(billAmountByDay)) {
       if (
-        moment.utc(date).format('YYYY-MM-DD') <= budgetEndDate &&
-        moment.utc(date).format('YYYY-MM-DD') >= budgetStartDate
+        moment(date).format('YYYY-MM-DD') <= budgetEndDate &&
+        moment(date).format('YYYY-MM-DD') >= budgetStartDate
       ) {
         totalSpending = totalSpending + billAmountByDay[date];
       }
@@ -256,7 +256,7 @@ const ExpenseManager = () => {
       ...budgetRemainingAmount,
       [budgetID]: remainingAmount.toFixed(2),
     };
-    console.log(budgetRemainingAmount);
+    //console.log(budgetRemainingAmount);
     //return budgetAmount - totalSpending;
   };
 
