@@ -195,8 +195,8 @@ const ExpenseManager = () => {
                 <Text>
                   Remaining amount is{' '}
                   {calcRemainingBudget(
-                    moment.utc(budget.budgetStartDate).format('YYYY-MM-DD'),
-                    moment.utc(budget.budgetEndDate).format('YYYY-MM-DD'),
+                    moment(budget.budgetStartDate).format('YYYY-MM-DD'),
+                    moment(budget.budgetEndDate).format('YYYY-MM-DD'),
                     budget.budgetAmount,
                     budget.id,
                   )}
