@@ -58,7 +58,6 @@ const ExpenseManager = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [spendingsModalVisible, setSpendingsModalVisible] = useState(false);
   const [budgetModalVisible, setBudgetModalVisible] = useState(false);
-  //const [budgetRemainingAmount, setBudgetRemainingAmount] = useState({});
   let budgetRemainingAmount = {};
   let sumBreakDown = {};
   let billAmountByDay = {};
@@ -252,12 +251,12 @@ const ExpenseManager = () => {
       }
     }
     remainingAmount = budgetAmount - totalSpending;
-    if (remainingAmount) {
-      budgetRemainingAmount = {
-        ...budgetRemainingAmount,
-        [budgetID]: remainingAmount.toFixed(2),
-      };
-    }
+
+    budgetRemainingAmount = {
+      ...budgetRemainingAmount,
+      [budgetID]: remainingAmount.toFixed(2),
+    };
+    console.log(budgetRemainingAmount);
     //return budgetAmount - totalSpending;
   };
 
@@ -330,6 +329,10 @@ const ExpenseManager = () => {
       );
     }
   }, [expenseManagerState]);
+
+  useEffect(() => {
+    console.log(budgetRemainingAmount);
+  }, [budgetRemainingAmount]);
 
   // ****************************************************//
   // ************ End OF EFFECTS ***********************//
