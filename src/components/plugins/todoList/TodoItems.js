@@ -8,9 +8,7 @@ const TodoItems = (props) => (
   <Item style={styles.listWrapper}>
     <View style={styles.swipecontainer}>
       <View style={styles.standalone}>
-        <SwipeRow
-          // leftOpenValue={75}
-          rightOpenValue={-90}>
+        <SwipeRow leftOpenValue={75} rightOpenValue={-90}>
           <View style={styles.standaloneRowBack}>
             <Button
               transparent

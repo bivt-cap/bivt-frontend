@@ -168,7 +168,7 @@ export const getTodoList = (circleId, token) => {
         throw 'Something went wrong!';
       }
     } catch (err) {
-      console.log('Get err' + err.response.data);
+      //console.log('Get err' + err.response.data);
       if (err.response.status === 401) {
         dispatch(todoGetFailure('Error - you are not authorised to do it!'));
       } else if (err.response.data.status.errors) {
@@ -185,7 +185,7 @@ export const getTodoList = (circleId, token) => {
 };
 
 // Del a todo
-export const delTodo = (todoId, _circleId, token) => {
+export const delTodo = (todoId, circleId, token) => {
   const config = {
     headers: {Authorization: `Bearer ${token}`},
   };
@@ -195,13 +195,12 @@ export const delTodo = (todoId, _circleId, token) => {
       let url = '/plugin/todo/remove?id=' + todoId;
       const response = await bivtURL.delete(url, config);
       if (response.status === 200) {
-        //const todoAddSuccessResponse = response.data;
         dispatch(todoDelSuccess('Deleted..'));
       } else {
         throw 'Something went wrong!';
       }
     } catch (err) {
-      console.log(err.response.data);
+      //console.log(err.response.data);
       if (err.response.status === 401) {
         dispatch(todoDelFailure('Error - you are not authorised to do it!'));
       } else if (err.response.data.status.errors) {
@@ -218,8 +217,9 @@ export const delTodo = (todoId, _circleId, token) => {
 };
 
 // Check a todo
-export const checkTodo = (todoId, _circleId, token) => {
-  const todoDetails = {
+// This API is acting weird - it needs both query and body param
+export const checkTodo = (todoId, circleId, token) => {
+  const param = {
     id: todoId,
   };
   const config = {
@@ -228,28 +228,59 @@ export const checkTodo = (todoId, _circleId, token) => {
   return async (dispatch) => {
     dispatch(todoRequest);
     try {
-      const response = await bivtURL.put(
-        '/plugin/todo/markAsDone',
-        todoDetails,
-        config,
-      );
+      let url = '/plugin/todo/markAsDone?id=' + todoId;
+      const response = await bivtURL.put(url, param, config);
       if (response.status === 200) {
-        //const todoAddSuccessResponse = response.data;
-        dispatch(todoAddSuccess('saved..'));
+        dispatch(todoCheckSuccess('Checked succefully...'));
       } else {
         throw 'Something went wrong!';
       }
     } catch (err) {
       if (err.response.status === 401) {
-        dispatch(todoAddFailure('Error - you are not authorised to do it!'));
+        dispatch(todoCheckFailure('Error - you are not authorised to do it!'));
       } else if (err.response.data.status.errors) {
         dispatch(
-          todoAddFailure(
+          todoCheckFailure(
             'Error - ' + err.response.data.status.errors.toString(),
           ),
         );
       } else {
-        dispatch(todoAddFailure('Error - try again later!'));
+        dispatch(todoCheckFailure('Error - try again later!'));
+      }
+    }
+  };
+};
+
+// Edit a todo
+export const editTodo = (todoId, todoDesc, circleId, token) => {
+  const param = {
+    id: todoId,
+    description: todoDesc,
+  };
+  const config = {
+    headers: {Authorization: `Bearer ${token}`},
+  };
+  return async (dispatch) => {
+    dispatch(todoRequest);
+    try {
+      let url = '/plugin/todo/update?id=' + todoId;
+      const response = await bivtURL.put(url, param, config);
+      if (response.status === 200) {
+        dispatch(todoEditSuccess('Edited succefully...'));
+      } else {
+        throw 'Something went wrong!';
+      }
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch(todoEditFailure('Error - you are not authorised to do it!'));
+      } else if (err.response.data.status.errors) {
+        dispatch(
+          todoEditFailure(
+            'Error - ' + err.response.data.status.errors.toString(),
+          ),
+        );
+      } else {
+        dispatch(todoEditFailure('Error - try again later!'));
       }
     }
   };

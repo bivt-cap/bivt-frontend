@@ -4,7 +4,7 @@ import AddTodo from './AddTodo';
 import EditTodo from './EditTodo';
 
 //react native
-import {Text, Alert} from 'react-native';
+import {Alert} from 'react-native';
 
 //native base
 import {Toast} from 'native-base';
@@ -13,7 +13,13 @@ import {Container, Content} from 'native-base';
 
 //redux
 import {useSelector, useDispatch} from 'react-redux';
-import {addTodo, getTodoList, delTodo} from '../../../redux';
+import {
+  addTodo,
+  getTodoList,
+  delTodo,
+  checkTodo,
+  editTodo,
+} from '../../../redux';
 
 //Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
@@ -31,14 +37,25 @@ const TodoList = () => {
   const [currentTodo, setCurrentTodo] = useState(initialTodo);
   const [editing, setEditing] = useState(false);
 
+  // ****************************************************//
+  // ***************** BEGINING OF ADD ******************//
+  // **************************************************//
   const handleAdd = async (todo) => {
     //call redux to add
-    const token = await JwtKeyChain.read();
     const circleId = bootstrapState.circles[0].id;
+    const token = await JwtKeyChain.read();
     dispatch(addTodo(todo.text, circleId, token)).then(() => {
       getTodos();
     });
   };
+
+  // ****************************************************//
+  // ********************* END OF ADD *******************//
+  // **************************************************//
+
+  // ****************************************************//
+  // ************ BEGINING OF DELETE ******************//
+  // **************************************************//
 
   const handleDelete = (id) => {
     Alert.alert(
@@ -64,26 +81,48 @@ const TodoList = () => {
     });
   };
 
-  const handleChecked = (id) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === id) {
-          todo.checked = !todo.checked;
-        }
-        return todo;
-      }),
-    );
-  };
+  // ****************************************************//
+  // ****************** END OF DELETE ******************//
+  // **************************************************//
 
-  const handleEdit = (id, updatedTodo) => {
-    setEditing(false);
-    setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)));
+  // ****************************************************//
+  // ************ BEGINING OF CHECKED ******************//
+  // **************************************************//
+  const handleChecked = async (id) => {
+    const circleId = bootstrapState.circles[0].id;
+    const token = await JwtKeyChain.read();
+    dispatch(checkTodo(id, circleId, token)).then(() => {
+      getTodos();
+    });
+  };
+  // ****************************************************//
+  // ***************** END OF CHECKED ******************//
+  // **************************************************//
+
+  // ****************************************************//
+  // ************ BEGINING OF EDIT ******************//
+  // **************************************************//
+
+  const handleEdit = async (id, updatedTodo) => {
+    const circleId = bootstrapState.circles[0].id;
+    const token = await JwtKeyChain.read();
+    dispatch(editTodo(id, updatedTodo.text, circleId, token)).then(() => {
+      getTodos();
+    });
   };
 
   const editTodoRow = (todo) => {
     setEditing(true);
     setCurrentTodo({id: todo.id, text: todo.text});
   };
+
+  // ****************************************************//
+  // ************ BEGINING OF EDIT ******************//
+  // **************************************************//
+
+  // ****************************************************//
+  // ***************** BEGINING OF GET ******************//
+  // **************************************************//
 
   const getTodos = async () => {
     const circleId = bootstrapState.circles[0].id;
@@ -109,6 +148,10 @@ const TodoList = () => {
     }
   };
   // ****************************************************//
+  // ********************** END OF GET ******************//
+  // **************************************************//
+
+  // ****************************************************//
   // ************ BEGINING OF EFFECTS ******************//
   // **************************************************//
 
@@ -125,7 +168,7 @@ const TodoList = () => {
 
   //processing notification
   useEffect(() => {
-    console.log(todoListState);
+    //console.log(todoListState);
     if (todoListState.loading) {
       Toast.show({
         text: 'Processing....',
@@ -146,8 +189,23 @@ const TodoList = () => {
         text: todoListState.delTodoResponse,
         buttonText: 'Okay',
       });
+    } else if (todoListState.checkTodoResponse) {
+      Toast.show({
+        text: todoListState.checkTodoResponse,
+        buttonText: 'Okay',
+      });
+    } else if (todoListState.editTodoResponse) {
+      Toast.show({
+        text: todoListState.editTodoResponse,
+        buttonText: 'Okay',
+      });
     }
-  }, [todoListState.addTodoResponse, todoListState.delTodoResponse]);
+  }, [
+    todoListState.addTodoResponse,
+    todoListState.delTodoResponse,
+    todoListState.checkTodoResponse,
+    todoListState.editTodoResponse,
+  ]);
 
   // Error Handling
   useEffect(() => {
@@ -166,11 +224,23 @@ const TodoList = () => {
         text: todoListState.delTodoError,
         buttonText: 'Okay',
       });
+    } else if (todoListState.checkTodoError) {
+      Toast.show({
+        text: todoListState.checkTodoError,
+        buttonText: 'Okay',
+      });
+    } else if (todoListState.editTodoError) {
+      Toast.show({
+        text: todoListState.editTodoError,
+        buttonText: 'Okay',
+      });
     }
   }, [
     todoListState.addTodoError,
     todoListState.getTodoError,
     todoListState.delTodoError,
+    todoListState.checkTodoError,
+    todoListState.editTodoError,
   ]);
 
   // ****************************************************//
@@ -194,6 +264,7 @@ const TodoList = () => {
           {todos.map((list) => (
             <TodoItems
               id={list.id}
+              key={list.id}
               text={list.text}
               checked={list.checked}
               setChecked={() => handleChecked(list.id)}
@@ -223,3 +294,9 @@ export default TodoList;
 // code source https://github.com/taniarascia/react-hooks
 // https://medium.com/@hartaniyassir/build-a-todo-app-in-react-native-using-hooks-9953f1066d67
 // https://github.com/jemise111/react-native-swipe-list-view
+
+import {YellowBox} from 'react-native';
+
+YellowBox.ignoreWarnings([
+  'Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+]);

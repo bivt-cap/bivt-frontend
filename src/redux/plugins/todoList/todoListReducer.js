@@ -33,10 +33,10 @@ const todoListState = {
   getTodoError: null,
   delTodoResponse: null,
   delTodoError: null,
-  checkTodoSucess: null,
-  checkTodoFailue: null,
-  editTodoSuccess: null,
-  editTodoFailure: null,
+  checkTodoResponse: null,
+  checkTodoError: null,
+  editTodoResponse: null,
+  editTodoError: null,
 };
 
 const todoListReducer = (state = todoListState, action) => {
@@ -63,10 +63,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_ADD_FAILURE:
       return {
@@ -78,10 +78,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_GET_SUCCESS:
       return {
@@ -93,10 +93,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_GET_FAILURE:
       return {
@@ -108,10 +108,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: action.payload,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_DEL_SUCCESS:
       return {
@@ -123,10 +123,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: action.payload,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_DEL_FAILURE:
       return {
@@ -137,11 +137,11 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoResponse: null,
         getTodoError: null,
         delTodoResponse: null,
-        delTodoError: action.paylod,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        delTodoError: action.payload,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_CHECK_SUCCESS:
       return {
@@ -153,10 +153,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: action.payload,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        checkTodoResponse: action.payload,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_CHECK_FAILURE:
       return {
@@ -168,10 +168,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: action.paylod,
-        editTodoSuccess: null,
-        editTodoFailure: null,
+        checkTodoResponse: null,
+        checkTodoError: action.payload,
+        editTodoResponse: null,
+        editTodoError: null,
       };
     case TODO_EDIT_SUCCESS:
       return {
@@ -183,10 +183,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: action.paylod,
-        editTodoFailure: null,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: action.payload,
+        editTodoError: null,
       };
     case TODO_EDIT_FAILURE:
       return {
@@ -198,10 +198,10 @@ const todoListReducer = (state = todoListState, action) => {
         getTodoError: null,
         delTodoResponse: null,
         delTodoError: null,
-        checkTodoSucess: null,
-        checkTodoFailue: null,
-        editTodoSuccess: null,
-        editTodoFailure: action.paylod,
+        checkTodoResponse: null,
+        checkTodoError: null,
+        editTodoResponse: null,
+        editTodoError: action.payload,
       };
     default:
       return state;
