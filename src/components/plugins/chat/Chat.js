@@ -8,7 +8,7 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
-import {Platform} from 'react-native';
+import {Platform, Text} from 'react-native';
 import {Spinner, Icon, Button, Container} from 'native-base';
 import {uploadImage} from './uploadImage';
 import Fire from './Fire';
@@ -16,6 +16,9 @@ import ImagePicker from 'react-native-image-picker';
 
 const Chat = ({route}) => {
   const {userInfo} = route.params;
+  // Stored State - Redux hook
+  const bootstrapState = useSelector((state) => state.bootstrap);
+  let groupName = bootstrapState.circles[0].name;
 
   // ******************************************************//
   // ************ BEGININ OF STATES DECLARATIONS *********//
@@ -26,14 +29,19 @@ const Chat = ({route}) => {
   });
   const [image, setImage] = useState();
 
+  const welcomeMessage = {
+    text: 'Welcome to Kovan Application',
+    user: 'Kovan',
+  };
   useEffect(() => {
-    Fire.shared.getMessageHistory((msg) =>
+    Fire.shared.getMessageHistory((msg) => {
       setMessage((prevstate) => ({
         ...prevstate,
         messages: GiftedChat.append(prevstate.messages, msg),
         isLoading: false,
-      })),
-    );
+        isWelcomeMessage: false,
+      }));
+    });
 
     return () => {
       console.log('...unmounting');
@@ -41,6 +49,17 @@ const Chat = ({route}) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  setTimeout(() => {
+    if (message.messages.length === 0) {
+      setMessage((prevstate) => ({
+        ...prevstate,
+        isWelcomeMessage: true,
+        isLoading: false,
+        welcomeMessage: GiftedChat.append(prevstate.messages, welcomeMessage),
+      }));
+    }
+  }, 1000);
 
   const user = () => {
     return {
@@ -111,6 +130,7 @@ const Chat = ({route}) => {
       />
     );
   };
+
   const renderCameraButton = () => {
     return (
       <Button transparent onPress={getImage}>
@@ -118,10 +138,22 @@ const Chat = ({route}) => {
       </Button>
     );
   };
-  return !message.isLoading ? (
+  return !message.isLoading && !message.isWelcomeMessage ? (
     <Container>
       <GiftedChat
         messages={message.messages}
+        onSend={Fire.shared.sendMessages}
+        renderSend={renderSend}
+        renderInputToolbar={renderInputToolbar}
+        renderActions={renderCameraButton}
+        renderUsernameOnMessage={true}
+        user={user()}
+      />
+    </Container>
+  ) : !message.isLoading && message.isWelcomeMessage ? (
+    <Container>
+      <GiftedChat
+        messages={message.welcomeMessage}
         onSend={Fire.shared.sendMessages}
         renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}

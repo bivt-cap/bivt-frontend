@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import store from '../../../redux/store';
 import {
   API_KEY,
   AUTH_DOMAIN,
@@ -9,10 +10,12 @@ import {
   APP_ID,
   MEASUREMENT_ID,
 } from 'react-native-dotenv';
+
 class Fire {
   constructor() {
     this.initializeFireBaseConfig();
   }
+
   initializeFireBaseConfig = () =>
     firebase.initializeApp({
       apiKey: API_KEY,
@@ -25,15 +28,18 @@ class Fire {
       measurementId: MEASUREMENT_ID,
     });
 
-  //Function: Create a reference in our db where the all messages will be stored.
-  get fireBaseTable() {
-    return firebase.database().ref('messages/');
+  fireBaseTable() {
+    const mainState = store.getState();
+    let groupName = mainState.bootstrap.circles[0].name;
+    return firebase.database().ref(`messages-${groupName}/`);
   }
+
   //Function: Get the last 20 messages from firebase
-  getMessageHistory = (callback) =>
-    this.fireBaseTable
+  getMessageHistory = (callback) => {
+    this.fireBaseTable()
       .limitToLast(20)
       .on('child_added', (snapshot) => callback(this.parse(snapshot)));
+  };
 
   // Function: Format snapshot value that comes from DB for Gifted Chat.
   parse = (snapshot) => {
@@ -70,6 +76,7 @@ class Fire {
       this.saveMessages(message);
     }
   };
+
   sendImages = (messages, userInfo) => {
     console.log(messages);
 
@@ -81,9 +88,11 @@ class Fire {
     };
     this.saveMessages(message);
   };
+
   //Function: Push messages to DB
-  saveMessages = (message) => this.fireBaseTable.push(message);
+  saveMessages = (message) => this.fireBaseTable().push(message);
 }
 
 Fire.shared = new Fire();
+
 export default Fire;
