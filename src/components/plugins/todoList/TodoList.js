@@ -7,7 +7,7 @@ import {StyleSheet, ScrollView} from 'react-native';
 
 export default function todoList() {
   const defaultTodo = [
-    {id: 1, text: 'Study React-Native'},
+    {id: 1, text: 'Study React Native'},
     {id: 2, text: 'Grocery Shopping'},
   ];
 
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   content: {
-    padding: 20,
+    // padding: 20,
   },
 });
 

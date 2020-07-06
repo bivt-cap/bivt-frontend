@@ -10,7 +10,7 @@ const TodoItems = (props) => (
       <View style={styles.standalone}>
         <SwipeRow
           // leftOpenValue={75}
-          rightOpenValue={-90}>
+          rightOpenValue={-85}>
           <View style={styles.standaloneRowBack}>
             <Button
               transparent
@@ -20,16 +20,14 @@ const TodoItems = (props) => (
               onPress={() => {
                 props.editTodoRow(props);
               }}>
-              <Text>Edit</Text>
+              <Text style={styles.btnText}>Edit</Text>
             </Button>
             <Button
-              transparent
-              light
               style={{marginLeft: 'auto'}}
               onPress={props.delete}
               // eslint-disable-next-line react/jsx-no-duplicate-props
               style={styles.deleteBtn}>
-              <Text>Delete</Text>
+              <Text style={styles.btnText}>Delete</Text>
             </Button>
           </View>
           <View style={styles.standaloneRowFront}>
@@ -79,8 +77,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   standalone: {
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 2,
+    paddingBottom: 2,
   },
   standaloneRowFront: {
     backgroundColor: '#FFF',
@@ -99,13 +97,18 @@ const styles = StyleSheet.create({
   },
   editBtn: {
     textAlign: 'center',
-    backgroundColor: '#378FFF',
+    backgroundColor: '#FFF',
     color: '#FFF',
   },
   deleteBtn: {
     textAlign: 'center',
-    backgroundColor: '#333',
-    color: '#FFF',
+    backgroundColor: '#848484',
+    borderRadius: 3,
+    height:10,
+  },
+  btnText: {
+    color:'#FFF',
+    textTransform: 'capitalize',
   },
   backTextWhite: {
     color: '#FFF',
