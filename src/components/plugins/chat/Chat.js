@@ -32,7 +32,7 @@ const Chat = ({route}) => {
 
   const welcomeMessage = {
     _id: 1,
-    text: 'Chat with your friends, share photos with high quality!',
+    text: 'Chat with your friends, share photos with high quality🚀🚀🚀',
     user: {
       _id: 'kovan-team',
       name: 'Kovan Team',
