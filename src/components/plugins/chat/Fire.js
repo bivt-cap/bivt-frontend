@@ -14,8 +14,25 @@ import {
 class Fire {
   constructor() {
     this.initializeFireBaseConfig();
+    this.checkUserAuth();
   }
 
+  checkUserAuth = () => {
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+  };
+  onAuthStateChanged = (user) => {
+    if (!user) {
+      try {
+        // 4.
+        firebase.auth().signInAnonymously();
+        return true;
+      } catch ({message}) {
+        console.log(message);
+      }
+    } else {
+      return true;
+    }
+  };
   initializeFireBaseConfig = () =>
     firebase.initializeApp({
       apiKey: API_KEY,
@@ -29,16 +46,25 @@ class Fire {
     });
 
   fireBaseTable() {
-    const mainState = store.getState();
-    let groupName = mainState.bootstrap.circles[0].name;
-    return firebase.database().ref(`messages-${groupName}/`);
+    try {
+      const mainState = store.getState();
+      let groupName = mainState.bootstrap.circles[0].name;
+      return firebase.database().ref(`messages-${groupName}/`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //Function: Get the last 20 messages from firebase
   getMessageHistory = (callback) => {
     this.fireBaseTable()
       .limitToLast(20)
-      .on('child_added', (snapshot) => callback(this.parse(snapshot)));
+      .on('child_added', (snapshot) =>
+        callback(this.parse(snapshot), function (error) {
+          console.log('ERR', error);
+          return false;
+        }),
+      );
   };
 
   // Function: Format snapshot value that comes from DB for Gifted Chat.
@@ -54,6 +80,7 @@ class Fire {
       user,
       image,
     };
+    console.log(message);
     return message;
   };
 

@@ -5,7 +5,7 @@
  * @author Yalcin Tatar (https://github.com/yalcinos)
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
 import {Platform, Text} from 'react-native';
@@ -27,39 +27,43 @@ const Chat = ({route}) => {
     messages: [],
     isLoading: true,
   });
+  console.log(message);
   const [image, setImage] = useState();
 
   const welcomeMessage = {
-    text: 'Welcome to Kovan Application',
-    user: 'Kovan',
+    _id: 1,
+    text: 'Chat with your friends, share photos with high quality!',
+    user: {
+      _id: 'kovan-team',
+      name: 'Kovan Team',
+      avatar: require('../../../assets/bee-1.png'),
+    },
   };
-  useEffect(() => {
-    Fire.shared.getMessageHistory((msg) => {
+  const getMessages = useCallback(async () => {
+    await Fire.shared.getMessageHistory((msg) => {
       setMessage((prevstate) => ({
         ...prevstate,
+        isWelcomeMessage: false,
         messages: GiftedChat.append(prevstate.messages, msg),
         isLoading: false,
-        isWelcomeMessage: false,
       }));
     });
+  }, []);
 
+  useEffect(() => {
+    getMessages();
+    setMessage((prevstate) => ({
+      ...prevstate,
+      isWelcomeMessage: false,
+      messages: GiftedChat.append(prevstate.messages, welcomeMessage),
+      isLoading: false,
+    }));
     return () => {
       console.log('...unmounting');
       Fire.shared.disConnectFromFireBase();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  setTimeout(() => {
-    if (message.messages.length === 0) {
-      setMessage((prevstate) => ({
-        ...prevstate,
-        isWelcomeMessage: true,
-        isLoading: false,
-        welcomeMessage: GiftedChat.append(prevstate.messages, welcomeMessage),
-      }));
-    }
-  }, 1000);
+  }, [getMessages]);
 
   const user = () => {
     return {
@@ -150,10 +154,10 @@ const Chat = ({route}) => {
         user={user()}
       />
     </Container>
-  ) : !message.isLoading && message.isWelcomeMessage ? (
+  ) : message.isWelcomeMessage ? (
     <Container>
       <GiftedChat
-        messages={message.welcomeMessage}
+        messages={message.messages}
         onSend={Fire.shared.sendMessages}
         renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
