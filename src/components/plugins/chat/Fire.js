@@ -85,7 +85,7 @@ class Fire {
   };
 
   disConnectFromFireBase() {
-    this.ref.off();
+    this.fireBaseTable().off();
   }
 
   get timestamp() {
