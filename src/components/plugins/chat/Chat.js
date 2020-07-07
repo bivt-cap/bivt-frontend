@@ -27,7 +27,7 @@ const Chat = ({route}) => {
     messages: [],
     isLoading: true,
   });
-  console.log(message);
+  // console.log(message);
   const [image, setImage] = useState();
 
   const welcomeMessage = {
@@ -39,6 +39,7 @@ const Chat = ({route}) => {
       avatar: require('../../../assets/bee-1.png'),
     },
   };
+
   const getMessages = useCallback(async () => {
     await Fire.shared.getMessageHistory((msg) => {
       setMessage((prevstate) => ({
@@ -51,19 +52,31 @@ const Chat = ({route}) => {
   }, []);
 
   useEffect(() => {
-    getMessages();
-    setMessage((prevstate) => ({
-      ...prevstate,
-      isWelcomeMessage: false,
-      messages: GiftedChat.append(prevstate.messages, welcomeMessage),
-      isLoading: false,
-    }));
+    // getMessages();
+
+    Fire.shared.getMessageHistory((msg) => {
+      setMessage((prevstate) => ({
+        isWelcomeMessage: false,
+        messages: GiftedChat.append(prevstate.messages, msg),
+        isLoading: false,
+      }));
+    });
+
+    if (message.messages.length === 0) {
+      setMessage((prevstate) => ({
+        isWelcomeMessage: true,
+        messages: GiftedChat.append(prevstate.messages, welcomeMessage),
+        isLoading: false,
+      }));
+    }
+
+    //Unmount function
     return () => {
       console.log('...unmounting');
       Fire.shared.disConnectFromFireBase();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getMessages]);
+  }, []);
 
   const user = () => {
     return {
@@ -72,7 +85,6 @@ const Chat = ({route}) => {
     };
   };
 
-  // More info on all the options is below in the API Reference... just some common use cases shown here
   const options = {
     title: 'Upload An Image',
     storageOptions: {
@@ -81,10 +93,6 @@ const Chat = ({route}) => {
     },
   };
 
-  /**
-   * The first arg is the options object for customization (it can also be null or omitted for default options),
-   * The second arg is the callback which sends object: response (more info in the API Reference)
-   */
   const getImage = async () => {
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
