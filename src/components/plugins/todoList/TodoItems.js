@@ -4,13 +4,16 @@ import {Item, Text, View, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
 import {SwipeRow} from 'react-native-swipe-list-view';
 
+
 const TodoItems = (props) => (
+
   <Item style={styles.listWrapper}>
     <View style={styles.swipecontainer}>
       <View style={styles.standalone}>
-        <SwipeRow
-          // leftOpenValue={75}
-          rightOpenValue={-85}>
+
+        <SwipeRow 
+        leftOpenValue={75} 
+        rightOpenValue={-90}>
           <View style={styles.standaloneRowBack}>
             <Button
               transparent
@@ -48,12 +51,14 @@ const TodoItems = (props) => (
             </View>
           </View>
         </SwipeRow>
+        
       </View>
     </View>
   </Item>
 );
-export default TodoItems;
 
+
+export default TodoItems;
 const styles = StyleSheet.create({
   listWrapper: {
     width: '100%',
@@ -97,8 +102,9 @@ const styles = StyleSheet.create({
   },
   editBtn: {
     textAlign: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#848484',
     color: '#FFF',
+    height:10,
   },
   deleteBtn: {
     textAlign: 'center',

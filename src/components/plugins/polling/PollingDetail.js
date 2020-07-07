@@ -26,7 +26,7 @@ const PollingDetail = ({route, navigation}) => {
             <TouchableOpacity style={PollingStyle.optionBtnWrap} >
               <Button 
                 transparent dark rounded 
-                style={PollingStyle.optionsBtnOn}>
+                style={PollingStyle.optionsBtn}>
                 <Text style={{textTransform:'capitalize'}}>{btn1}</Text>
               </Button>
             </TouchableOpacity>

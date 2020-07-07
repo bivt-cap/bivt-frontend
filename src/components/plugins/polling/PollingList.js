@@ -29,7 +29,7 @@ const pollingList = ({navigation}) => {
             answer: [
                 { name: 'Study', value: 1 },
                 { name: 'Picnic', value: 1 },
-                { name: 'Take a nap', value: 1 }
+                { name: 'Shopping', value: 1 }
             ]
         },
     ];

@@ -20,22 +20,6 @@ const AddPolling = ({route, navigation}) => {
 
 const [polling, setPolling] = useState(initialPolling);
 
-// const handleChange = (name, content) => {
-//   setPolling((prevState) => {
-//     if (name === "qst") {
-//       return {
-//         ...prevState,
-//         [name]: content,
-//       };
-//     } else {
-//       return {
-//         ...prevState,
-//         answer: [ ...prevState.answer, { [name]: content, value: 0 } ],
-//       };
-//     }
-//   });
-// };
-
 
 const handleChange = (name, content) => {
   setPolling((prevState) => {
