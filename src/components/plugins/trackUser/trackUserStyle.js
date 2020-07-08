@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     right: 0,
   },
   panel: {
-    height: 600,
     padding: 20,
     backgroundColor: '#f7f5eee8',
   },
