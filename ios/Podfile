@@ -84,6 +84,8 @@ target 'BivtFrontEnd' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
   
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'BivtFrontEndTests' do
     inherit! :complete
     # Pods for testing
