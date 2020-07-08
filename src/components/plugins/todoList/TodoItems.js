@@ -4,11 +4,16 @@ import {Item, Text, View, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
 import {SwipeRow} from 'react-native-swipe-list-view';
 
+
 const TodoItems = (props) => (
+
   <Item style={styles.listWrapper}>
     <View style={styles.swipecontainer}>
       <View style={styles.standalone}>
-        <SwipeRow leftOpenValue={75} rightOpenValue={-90}>
+
+        <SwipeRow 
+        leftOpenValue={75} 
+        rightOpenValue={-90}>
           <View style={styles.standaloneRowBack}>
             <Button
               transparent
@@ -18,16 +23,14 @@ const TodoItems = (props) => (
               onPress={() => {
                 props.editTodoRow(props);
               }}>
-              <Text>Edit</Text>
+              <Text style={styles.btnText}>Edit</Text>
             </Button>
             <Button
-              transparent
-              light
               style={{marginLeft: 'auto'}}
               onPress={props.delete}
               // eslint-disable-next-line react/jsx-no-duplicate-props
               style={styles.deleteBtn}>
-              <Text>Delete</Text>
+              <Text style={styles.btnText}>Delete</Text>
             </Button>
           </View>
           <View style={styles.standaloneRowFront}>
@@ -48,12 +51,14 @@ const TodoItems = (props) => (
             </View>
           </View>
         </SwipeRow>
+        
       </View>
     </View>
   </Item>
 );
-export default TodoItems;
 
+
+export default TodoItems;
 const styles = StyleSheet.create({
   listWrapper: {
     width: '100%',
@@ -77,8 +82,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   standalone: {
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 2,
+    paddingBottom: 2,
   },
   standaloneRowFront: {
     backgroundColor: '#FFF',
@@ -97,13 +102,19 @@ const styles = StyleSheet.create({
   },
   editBtn: {
     textAlign: 'center',
-    backgroundColor: '#378FFF',
+    backgroundColor: '#848484',
     color: '#FFF',
+    height:10,
   },
   deleteBtn: {
     textAlign: 'center',
-    backgroundColor: '#333',
-    color: '#FFF',
+    backgroundColor: '#848484',
+    borderRadius: 3,
+    height:10,
+  },
+  btnText: {
+    color:'#FFF',
+    textTransform: 'capitalize',
   },
   backTextWhite: {
     color: '#FFF',

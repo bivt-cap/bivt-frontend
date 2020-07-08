@@ -12,16 +12,22 @@ const AddTodo = (props) => {
 
   return (
     <Form style={styles.formStyle}>
+      <Text style={styles.title}>Add item</Text>
       <Item style={styles.formBox}>
         <Input
           style={styles.textInput}
-          placeholder={'Add a New List'}
+          placeholder={'Item'}
           onChangeText={(text) => handleInput('text', text)}
           value={todo.text}
           // onChange={handleInput}
-          // onSubmitEditing={props.add}
-        />
-        <Button
+          onSubmitEditing={() => {
+            if (!todo.text) return;
+
+            props.handleAdd(todo);
+            setTodo(initialTodo);
+          }}>
+          </Input>
+        {/* <Button
           transparent
           light
           onPress={(e) => {
@@ -32,7 +38,7 @@ const AddTodo = (props) => {
             setTodo(initialTodo);
           }}>
           <Text>Add</Text>
-        </Button>
+        </Button> */}
       </Item>
     </Form>
   );
@@ -48,6 +54,18 @@ const styles = StyleSheet.create({
   formBox: {
     display: 'flex',
   },
+  title: {
+    marginTop:10,
+  },
+  textInput: {
+    borderWidth:1,
+    borderColor:'#969696',
+    height:55,
+    paddingLeft: 20,
+    marginBottom: 25,
+    marginTop: 10,
+    borderRadius: 5,
+  }
 });
 
 // code source https://github.com/taniarascia/react-hooks

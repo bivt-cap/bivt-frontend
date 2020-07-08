@@ -34,6 +34,7 @@ const EditTodo = (props) => {
           transparent
           light
           onPress={() => {
+            props.setEditing(false);
             props.handleEdit(todo.id, todo);
             console.log(todo);
           }}>

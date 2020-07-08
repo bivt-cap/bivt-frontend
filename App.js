@@ -35,7 +35,10 @@ import Chat from './src/components/plugins/chat/Chat';
 import TrackUser from './src/components/plugins/trackUser/TrackUser';
 import Calendar from './src/components/plugins/calendar/Calendar';
 import GroceryList from './src/components/plugins/groceryList/GroceryList';
-import Polling from './src/components/plugins/polling/Polling';
+import PollingList from './src/components/plugins/polling/PollingList';
+import AddPolling from './src/components/plugins/polling/AddPolling';
+import PollingDetail from './src/components/plugins/polling/PollingDetail';
+import PollingGraph from './src/components/plugins/polling/PollingGraph';
 
 // Navigator
 const Stack = createStackNavigator();
@@ -148,10 +151,32 @@ const App = () => {
               />
               <Stack.Screen
                 name="Polling"
-                component={Polling}
+                component={PollingList}
                 options={{
-                  title: 'Polling',
+                  title: 'Polling Questions',
                 }}
+              />
+              <Stack.Screen
+                name="AddPolling"
+                options={{
+                  title: 'New Question',
+                }}
+                component={AddPolling}
+              />
+              <Stack.Screen
+                name="PollingDetail"
+                options={{
+                  title: 'Answer',
+                }}
+                component={PollingDetail}
+              />
+              <Stack.Screen
+                name="PollingGraph"
+                options={{
+                  title: 'Answer',
+                  headerLeft: null,
+                }}
+                component={PollingGraph}
               />
               <Stack.Screen
                 name="Chat"
