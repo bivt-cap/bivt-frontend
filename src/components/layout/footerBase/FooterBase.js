@@ -9,7 +9,7 @@
 import React from 'react';
 
 // React Native
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, Image, TouchableHighlight} from 'react-native';
 
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -21,40 +21,21 @@ import {Footer, FooterTab, Button, Icon} from 'native-base';
 
 // Style
 const footerBaseStyles = StyleSheet.create({
-  touchableOpacity: {
-    width: Dimensions.get('window').width / 2 - 20,
-  },
-  cardItem: {
-    flex: 1,
-    flexDirection: 'column',
-    padding: 16,
-  },
-  text: {
-    textAlign: 'left',
-    width: '100%',
-  },
+  footer: {},
   icon: {
-    fontSize: 30,
-    width: 50,
-    height: 50,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    color: '#fff',
-    borderWidth: 1,
-    borderRadius: 50,
-    marginTop: 20,
-    marginBottom: 20,
+    fontSize: 50,
   },
-  iconNotFree: {
-    fontSize: 30,
-    width: 30,
-    height: 30,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    color: '#E3E360',
-    position: 'absolute',
-    top: 0,
-    right: 10,
+  iconDisabled: {
+    color: '#B5B5B5',
+  },
+  buttonAdd: {
+    position: 'relative',
+    marginTop: -15,
+  },
+  iconAdd: {
+    padding: 28,
+    color: '#FFF',
+    backgroundColor: '#CA60E3',
   },
 });
 
@@ -86,18 +67,50 @@ const FooterBase = (props) => {
     }
   };
 
+  const getSettingsButnStyle = () => {
+    // Se tem uma acao para executar
+    if (props.handleSettings) {
+      return {
+        ...footerBaseStyles.icon,
+      };
+    } else {
+      return {
+        ...footerBaseStyles.icon,
+        ...footerBaseStyles.iconDisabled,
+      };
+    }
+  };
+
   return (
-    <Footer>
+    <Footer style={footerBaseStyles.footer}>
       <FooterTab>
         <Button>
-          <Icon ios="ios-apps" android="md-apps" />
+          <Icon
+            ios="ios-apps"
+            android="md-apps"
+            style={footerBaseStyles.icon}
+          />
         </Button>
-        <Button>
-          <Icon ios="ios-cog" android="md-cog" />
+        {props.handleAdd ? (
+          <Button onPress={() => props.handleAdd()}>
+            <Icon
+              ios="ios-add-circle"
+              android="md-add-circle"
+              style={footerBaseStyles.icon}
+            />
+          </Button>
+        ) : null}
+        <Button
+          onPress={() =>
+            props.handleSettings ? props.handleSettings() : null
+          }>
+          <Icon ios="ios-cog" android="md-cog" style={getSettingsButnStyle()} />
         </Button>
-        <Button onPress={() => handleLogoutButtonClick()}>
-          <Icon ios="ios-exit" android="md-exit" />
-        </Button>
+        {props.showExit ? (
+          <Button onPress={() => handleLogoutButtonClick()}>
+            <Icon ios="ios-exit" android="md-exit" />
+          </Button>
+        ) : null}
       </FooterTab>
     </Footer>
   );

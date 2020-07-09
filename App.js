@@ -7,13 +7,13 @@ import {useSelector} from 'react-redux';
 
 // React Navigation
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 
 // Native Splash Screen
 import SplashScreen from 'react-native-splash-screen';
 
 // Native Base
-import {Root} from 'native-base';
+import {Root, Button, Icon, Text} from 'native-base';
 
 // Screens
 import Bootstrap from './src/components/authentication/bootstrap/Bootstrap';
@@ -33,7 +33,8 @@ import ChoosePlugins from './src/components/managePlugin/choosePlugin/ChoosePlug
 import ExpenseManager from './src/components/plugins/expenseManager/ExpenseManager';
 import Chat from './src/components/plugins/chat/Chat';
 import TrackUser from './src/components/plugins/trackUser/TrackUser';
-import Calendar from './src/components/plugins/calendar/Calendar';
+import CalendarEvent from './src/components/plugins/calendarEvent/CalendarEvent';
+import CalendarEventForm from './src/components/plugins/calendarEvent/CalendarEventForm';
 import GroceryList from './src/components/plugins/groceryList/GroceryList';
 import Polling from './src/components/plugins/polling/Polling';
 
@@ -120,10 +121,24 @@ const App = () => {
               />
               <Stack.Screen
                 name="Calendar"
-                options={{
+                options={({navigation, route}) => ({
                   title: 'Calendar',
+                  headerLeft: (props) => (
+                    <HeaderBackButton
+                      {...props}
+                      onPress={() => navigation.navigate('DashBoard')}
+                    />
+                  ),
+                  headerRight: null,
+                })}
+                component={CalendarEvent}
+              />
+              <Stack.Screen
+                name="CalendarEventForm"
+                options={{
+                  title: 'Create an Event',
                 }}
-                component={Calendar}
+                component={CalendarEventForm}
               />
               <Stack.Screen
                 name="TodoList"

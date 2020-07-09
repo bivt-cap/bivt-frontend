@@ -142,7 +142,7 @@ const DashBoard = ({route, navigation}) => {
           })}
         </Body>
       </Content>
-      <FooterBase navigation />
+      <FooterBase navigation showExit />
     </Container>
   );
 };

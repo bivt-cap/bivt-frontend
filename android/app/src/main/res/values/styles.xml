@@ -1,6 +1,4 @@
-
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -13,6 +11,10 @@
         <item name="android:windowLightStatusBar">false</item>
         <!-- Add the following line to set the default background color for all the app. -->
         <item name="android:windowBackground">@color/app_bg</item>
+
+        <!-- Add color to the Date Picker and Time Picker Modal -->
+        <item name="android:datePickerDialogTheme">@style/DialogDateTimePicker.Theme</item>
+        <item name="android:timePickerDialogTheme">@style/DialogDateTimePicker.Theme</item>
     </style>
 
     <!-- Adds the splash screen definition -->
@@ -20,5 +22,9 @@
         <item name="android:statusBarColor">@color/splashscreen_bg</item>
         <item name="android:background">@drawable/background_splash</item>
     </style>
-
+    
+    <!-- Adds the Date Time Picker definition -->
+    <style name="DialogDateTimePicker.Theme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#CA60E3</item>
+    </style>
 </resources>

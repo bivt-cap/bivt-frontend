@@ -15,3 +15,5 @@ export * from './managePlugin/choosePlugin/choosePluginAction';
 export * from './plugins/trackUser/trackUserAction';
 //Expense Manager plugin
 export * from './plugins/expenseManager/expenseManagerAction';
+//Calendar Plugin
+export * from './plugins/calendar/calendarAction';
