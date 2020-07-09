@@ -8,6 +8,8 @@ import choosePluginReducer from './managePlugin/choosePlugin/choosePluginReducer
 import userLocationTrack from './plugins/trackUser/trackUserReducer';
 import expenseManagerReducer from './plugins/expenseManager/expenseManagerReducer';
 import todoListReducer from './plugins/todoList/todoListReducer';
+import pollingReducer from './plugins/polling/pollingReducer';
+
 const rootReducer = combineReducers({
   bootstrap: bootstrapReducer,
   signup: signupReducer,
@@ -19,6 +21,7 @@ const rootReducer = combineReducers({
   choosePlugin: choosePluginReducer,
   expenseManager: expenseManagerReducer,
   todoList: todoListReducer,
+  pollInfo: pollingReducer,
 });
 
 export default rootReducer;

@@ -17,3 +17,5 @@ export * from './plugins/trackUser/trackUserAction';
 export * from './plugins/expenseManager/expenseManagerAction';
 //Todo List Plugin
 export * from './plugins/todoList/todoListAction';
+//Polling Plugin
+export * from './plugins/polling/pollingAction';
