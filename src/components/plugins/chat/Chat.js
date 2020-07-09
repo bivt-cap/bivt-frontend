@@ -5,10 +5,10 @@
  * @author Yalcin Tatar (https://github.com/yalcinos)
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
-import {Platform} from 'react-native';
+import {Platform, Text} from 'react-native';
 import {Spinner, Icon, Button, Container} from 'native-base';
 import {uploadImage} from './uploadImage';
 import Fire from './Fire';
@@ -16,6 +16,9 @@ import ImagePicker from 'react-native-image-picker';
 
 const Chat = ({route}) => {
   const {userInfo} = route.params;
+  // Stored State - Redux hook
+  const bootstrapState = useSelector((state) => state.bootstrap);
+  let groupName = bootstrapState.circles[0].name;
 
   // ******************************************************//
   // ************ BEGININ OF STATES DECLARATIONS *********//
@@ -24,17 +27,50 @@ const Chat = ({route}) => {
     messages: [],
     isLoading: true,
   });
+  // console.log(message);
   const [image, setImage] = useState();
 
-  useEffect(() => {
-    Fire.shared.getMessageHistory((msg) =>
+  const welcomeMessage = {
+    _id: 1,
+    text: 'Chat with your friends, share photos with high quality🚀🚀🚀',
+    user: {
+      _id: 'kovan-team',
+      name: 'Kovan Team',
+      avatar: require('../../../assets/bee-1.png'),
+    },
+  };
+
+  const getMessages = useCallback(async () => {
+    await Fire.shared.getMessageHistory((msg) => {
       setMessage((prevstate) => ({
         ...prevstate,
+        isWelcomeMessage: false,
         messages: GiftedChat.append(prevstate.messages, msg),
         isLoading: false,
-      })),
-    );
+      }));
+    });
+  }, []);
 
+  useEffect(() => {
+    // getMessages();
+
+    Fire.shared.getMessageHistory((msg) => {
+      setMessage((prevstate) => ({
+        isWelcomeMessage: false,
+        messages: GiftedChat.append(prevstate.messages, msg),
+        isLoading: false,
+      }));
+    });
+
+    if (message.messages.length === 0) {
+      setMessage((prevstate) => ({
+        isWelcomeMessage: true,
+        messages: GiftedChat.append(prevstate.messages, welcomeMessage),
+        isLoading: false,
+      }));
+    }
+
+    //Unmount function
     return () => {
       console.log('...unmounting');
       Fire.shared.disConnectFromFireBase();
@@ -49,7 +85,6 @@ const Chat = ({route}) => {
     };
   };
 
-  // More info on all the options is below in the API Reference... just some common use cases shown here
   const options = {
     title: 'Upload An Image',
     storageOptions: {
@@ -58,10 +93,6 @@ const Chat = ({route}) => {
     },
   };
 
-  /**
-   * The first arg is the options object for customization (it can also be null or omitted for default options),
-   * The second arg is the callback which sends object: response (more info in the API Reference)
-   */
   const getImage = async () => {
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
@@ -111,6 +142,7 @@ const Chat = ({route}) => {
       />
     );
   };
+
   const renderCameraButton = () => {
     return (
       <Button transparent onPress={getImage}>
@@ -118,7 +150,19 @@ const Chat = ({route}) => {
       </Button>
     );
   };
-  return !message.isLoading ? (
+  return !message.isLoading && !message.isWelcomeMessage ? (
+    <Container>
+      <GiftedChat
+        messages={message.messages}
+        onSend={Fire.shared.sendMessages}
+        renderSend={renderSend}
+        renderInputToolbar={renderInputToolbar}
+        renderActions={renderCameraButton}
+        renderUsernameOnMessage={true}
+        user={user()}
+      />
+    </Container>
+  ) : message.isWelcomeMessage ? (
     <Container>
       <GiftedChat
         messages={message.messages}

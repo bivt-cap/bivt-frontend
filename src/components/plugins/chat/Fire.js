@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import store from '../../../redux/store';
 import {
   API_KEY,
   AUTH_DOMAIN,
@@ -9,10 +10,29 @@ import {
   APP_ID,
   MEASUREMENT_ID,
 } from 'react-native-dotenv';
+
 class Fire {
   constructor() {
     this.initializeFireBaseConfig();
+    this.checkUserAuth();
   }
+
+  checkUserAuth = () => {
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+  };
+  onAuthStateChanged = (user) => {
+    if (!user) {
+      try {
+        // 4.
+        firebase.auth().signInAnonymously();
+        return true;
+      } catch ({message}) {
+        console.log(message);
+      }
+    } else {
+      return true;
+    }
+  };
   initializeFireBaseConfig = () =>
     firebase.initializeApp({
       apiKey: API_KEY,
@@ -25,15 +45,27 @@ class Fire {
       measurementId: MEASUREMENT_ID,
     });
 
-  //Function: Create a reference in our db where the all messages will be stored.
-  get fireBaseTable() {
-    return firebase.database().ref('messages/');
+  fireBaseTable() {
+    try {
+      const mainState = store.getState();
+      let groupName = mainState.bootstrap.circles[0].name;
+      return firebase.database().ref(`messages-${groupName}/`);
+    } catch (error) {
+      console.log(error);
+    }
   }
+
   //Function: Get the last 20 messages from firebase
-  getMessageHistory = (callback) =>
-    this.fireBaseTable
+  getMessageHistory = (callback) => {
+    this.fireBaseTable()
       .limitToLast(20)
-      .on('child_added', (snapshot) => callback(this.parse(snapshot)));
+      .on('child_added', (snapshot) =>
+        callback(this.parse(snapshot), function (error) {
+          console.log('ERR', error);
+          return false;
+        }),
+      );
+  };
 
   // Function: Format snapshot value that comes from DB for Gifted Chat.
   parse = (snapshot) => {
@@ -48,11 +80,12 @@ class Fire {
       user,
       image,
     };
+    console.log(message);
     return message;
   };
 
   disConnectFromFireBase() {
-    this.ref.off();
+    this.fireBaseTable().off();
   }
 
   get timestamp() {
@@ -70,6 +103,7 @@ class Fire {
       this.saveMessages(message);
     }
   };
+
   sendImages = (messages, userInfo) => {
     console.log(messages);
 
@@ -81,9 +115,11 @@ class Fire {
     };
     this.saveMessages(message);
   };
+
   //Function: Push messages to DB
-  saveMessages = (message) => this.fireBaseTable.push(message);
+  saveMessages = (message) => this.fireBaseTable().push(message);
 }
 
 Fire.shared = new Fire();
+
 export default Fire;

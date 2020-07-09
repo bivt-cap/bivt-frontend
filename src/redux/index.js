@@ -13,7 +13,9 @@ export * from './plugins/chat/chatAction';
 export * from './managePlugin/choosePlugin/choosePluginAction';
 //Family Track Plugins
 export * from './plugins/trackUser/trackUserAction';
-//Expense Manager plugin
+//Expense Manager Plugin
 export * from './plugins/expenseManager/expenseManagerAction';
 //Calendar Plugin
 export * from './plugins/calendar/calendarAction';
+//Todo List Plugin
+export * from './plugins/todoList/todoListAction';
