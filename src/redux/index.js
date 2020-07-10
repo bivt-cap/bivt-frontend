@@ -15,5 +15,7 @@ export * from './managePlugin/choosePlugin/choosePluginAction';
 export * from './plugins/trackUser/trackUserAction';
 //Expense Manager Plugin
 export * from './plugins/expenseManager/expenseManagerAction';
+//Calendar Plugin
+export * from './plugins/calendar/calendarAction';
 //Todo List Plugin
 export * from './plugins/todoList/todoListAction';
