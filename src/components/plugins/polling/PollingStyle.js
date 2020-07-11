@@ -2,35 +2,34 @@ import {StyleSheet} from 'react-native';
 
 const PollingStyle = StyleSheet.create({
   //PollingList.js
-  container : {
+  container: {
     flex: 1,
     justifyContent: 'flex-start',
     backgroundColor: '#fff',
   },
-  Content : {
+  Content: {},
+  newBtn: {
+    textAlign: 'center',
   },
-  newBtn : {
-      textAlign: 'center',
+  graphWrap: {
+    backgroundColor: '#fff',
   },
-  graphWrap : {
-      backgroundColor: '#fff',
-  },
-  title : {
-      fontSize: 30,
-      paddingTop: 20,
-      paddingBottom: 10,
-      textAlign:'center',
+  title: {
+    fontSize: 30,
+    paddingTop: 20,
+    paddingBottom: 10,
+    textAlign: 'center',
   },
   addBtnWrap: {
-      width: '100%',
-      position: 'absolute',
-      left: 0,
-      bottom: 30,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    bottom: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   addBtnPst: {
-    textAlign:'center'
+    textAlign: 'center',
   },
   //PollingItem.js
   cardStyle: {
@@ -38,7 +37,7 @@ const PollingStyle = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     borderColor: '#F1F1F1',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -49,8 +48,8 @@ const PollingStyle = StyleSheet.create({
     marginBottom: 10,
   },
   pollingItem: {
-      paddingTop: 5,
-      paddingBottom: 5
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   title: {
     fontWeight: 'bold',
@@ -78,7 +77,7 @@ const PollingStyle = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     borderColor: '#F1F1F1',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -102,18 +101,34 @@ const PollingStyle = StyleSheet.create({
     left: 0,
     bottom: 0,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   submitBtn: {
     width: '100%',
-    marginTop: 20, 
-    backgroundColor: '#A53BBA', 
+    marginTop: 20,
+    backgroundColor: '#A53BBA',
+    height: 55,
+    borderRadius: 6,
+  },
+  addOptionBtn: {
+    width: '30%',
+    marginTop: 20,
+    marginLeft: '70%',
+    backgroundColor: '#A53B',
+    height: 55,
+    borderRadius: 6,
+  },
+  seeResultBtn: {
+    width: '30%',
+    marginTop: 20,
+    marginLeft: '35%',
+    backgroundColor: 'skyblue',
     height: 55,
     borderRadius: 6,
   },
   btnText: {
     width: '100%',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   //AddPolling.js
   inputStyle: {
@@ -122,14 +137,14 @@ const PollingStyle = StyleSheet.create({
   },
   //PollingGraph
   graphFont: {
-    fontSize: 15
+    fontSize: 15,
   },
   graphWrap: {
-    borderWidth: 1, 
-    borderRadius: 4, 
+    borderWidth: 1,
+    borderRadius: 4,
     borderColor: '#F1B7FD',
     marginBottom: 10,
-  }
+  },
 });
 
 export default PollingStyle;
