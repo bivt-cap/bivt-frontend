@@ -15,14 +15,19 @@ const EditTodo = (props) => {
 
   return (
     <Form style={styles.formStyle}>
+      <Text style={styles.title}>Edit item</Text>
       <Item style={styles.formBox}>
         <Input
           style={styles.textInput}
           // onChangeText={handleInput}
           onChangeText={(text) => handleInput('text', text)}
           value={todo.text}
-        />
+          onSubmitEditing={() => {
+            props.setEditing(false);
+            props.handleEdit(todo.id, todo);
+          }} />
         <Button
+          style={styles.cancelBtn}
           transparent
           light
           onPress={() => {
@@ -30,7 +35,7 @@ const EditTodo = (props) => {
           }}>
           <Text>Cancel</Text>
         </Button>
-        <Button
+        {/* <Button
           transparent
           light
           onPress={() => {
@@ -39,7 +44,7 @@ const EditTodo = (props) => {
             console.log(todo);
           }}>
           <Text>Edit</Text>
-        </Button>
+        </Button> */}
       </Item>
     </Form>
   );
@@ -54,7 +59,25 @@ const styles = StyleSheet.create({
   },
   formBox: {
     display: 'flex',
+    position:'relative',
   },
+  title: {
+    marginTop:10,
+  },
+  textInput: {
+    borderWidth:1,
+    borderColor:'#969696',
+    height:55,
+    paddingLeft: 20,
+    marginBottom: 25,
+    marginTop: 10,
+    borderRadius: 5,
+  },
+  cancelBtn : {
+    position:'absolute',
+    right:5,
+    top:15,
+  }
 });
 
 // code source https://github.com/taniarascia/react-hooks

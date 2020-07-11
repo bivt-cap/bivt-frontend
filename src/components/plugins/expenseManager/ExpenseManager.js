@@ -343,8 +343,8 @@ const ExpenseManager = () => {
 
   return (
     <>
-    <Container> 
-      <Content>
+    <Container style={expenseManagerStyles.container}>
+      <Content style={expenseManagerStyles.content}>
         <Grid>
           <Row size={100}>
 

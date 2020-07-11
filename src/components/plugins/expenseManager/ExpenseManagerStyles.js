@@ -17,12 +17,30 @@ const expenseManagerStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  container: {
+    position:"relative",
+    top: 0,
+    left: 0,
+    padding:0,
+    margin:0,
+    borderTopWidth: 1,
+    borderTopColor: '#EBADEB',
+  },
+  content: {
+    position: 'absolute',
+    top: -15,
+    left: -15,
+    right: -15,
+    padding:0,
+  },
   addExpenseButton: {
     textAlign:'center'
   },
   listTop: {
     paddingTop: 18,
     paddingBottom: 18,
+    marginLeft: 15,
+    marginRight: 15,
     marginBottom: 40,
     borderBottomColor:'#E1E1E1',
     borderBottomWidth: 1,
@@ -35,8 +53,6 @@ const expenseManagerStyles = StyleSheet.create({
   },
   tabStyle: {
     backgroundColor: '#FFFFFF',
-    borderTopColor:'#A53BBA',
-    borderTopWidth: 1,
     borderBottomColor:'#A53BBA',
     borderBottomWidth: 1,
     height: 55,
