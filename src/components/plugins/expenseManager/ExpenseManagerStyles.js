@@ -9,10 +9,72 @@ import {StyleSheet} from 'react-native';
 
 //Main Styles
 const expenseManagerStyles = StyleSheet.create({
+  addExpenseButtonWrap: {
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    bottom: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   addExpenseButton: {
-    backgroundColor: 'red',
+    textAlign:'center'
+  },
+  listTop: {
+    paddingTop: 18,
+    paddingBottom: 18,
+    marginBottom: 40,
+    borderBottomColor:'#E1E1E1',
+    borderBottomWidth: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  listItem: {
+    borderBottomColor:'#E1E1E1',
+    borderBottomWidth: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  tabStyle: {
+    backgroundColor: '#FFFFFF',
+    borderTopColor:'#A53BBA',
+    borderTopWidth: 1,
+    borderBottomColor:'#A53BBA',
+    borderBottomWidth: 1,
+    height: 55,
+  },
+  textStyle: {
+    fontWeight:'bold',
+    color: '#666',
+  },
+  activeTabStyle: {
+    backgroundColor: '#A53BBA',
+    height: 55,
+  },
+  activeTextStyle: {
+    fontWeight:'bold',
+    color: '#FFF'
+  },
+  tabBarUnderlineStyle: {
+    backgroundColor:'transparent'
+  },
+  tabStyle2: {
+    backgroundColor: '#FFFFFF',
+    borderTopColor:'#F1B7FD',
+    borderTopWidth: 1,
+    borderBottomColor:'#F1B7FD',
+    borderBottomWidth: 1,
+  },
+  textStyle2: {
+    color: '#666',
+  },
+  activeTabStyle2: {
+    backgroundColor: '#F1B7FD',
+    borderTopColor: '#F1B7FD',
+  },
+  activeTextStyle2: {
+    color: '#333'
   },
 });
+
 
 //spendings modal styles
 const modalStyles = StyleSheet.create({
