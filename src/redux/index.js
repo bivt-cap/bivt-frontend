@@ -19,3 +19,5 @@ export * from './plugins/expenseManager/expenseManagerAction';
 export * from './plugins/calendar/calendarAction';
 //Todo List Plugin
 export * from './plugins/todoList/todoListAction';
+//Polling Plugin
+export * from './plugins/polling/pollingAction';
