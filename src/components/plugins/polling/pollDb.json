@@ -1,0 +1,22 @@
+{
+  "0": {
+    "id": 1,
+    "qst": "Will you go to Harry's Party?",
+    "answer": [
+      {"name": "Yes", "value": 3},
+      {"name": "No", "value": 2},
+      {"name": "Maybe", "value": 1}
+    ],
+    "enabled": false
+  },
+  "1": {
+    "id": 2,
+    "qst": "What are going to do this weekend?",
+    "answer": [
+      {"name": "Study", "value": 1},
+      {"name": "Picnic", "value": 2},
+      {"name": "Shopping", "value": 1}
+    ],
+    "enabled": false
+  }
+}

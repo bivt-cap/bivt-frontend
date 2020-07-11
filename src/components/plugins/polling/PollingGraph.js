@@ -1,11 +1,12 @@
 /* eslint-disable radix */
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import PollingStyle from './PollingStyle';
 import {Svg, G, Rect, Path, Text as Svgtext} from 'react-native-svg';
 import {Container, Content, View, Button, Text} from 'native-base';
 
 const PollingGraph = ({route, navigation}) => {
   const {qstValue, btn1, btn2, btn3, value1, value2, value3} = route.params;
+
   const BarGroups = () => {
     let valTotal =
       (parseInt(value1) ? parseInt(value1) : 1) +

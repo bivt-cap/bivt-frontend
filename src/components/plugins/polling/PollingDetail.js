@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PollingStyle from './PollingStyle';
 import {TouchableOpacity} from 'react-native';
 import {Container, Content, Text, View, Button, Icon} from 'native-base';
 
 const PollingDetail = ({route, navigation}) => {
-  const {
+  let {
     qstValue,
     qstid,
     enabled,
@@ -16,6 +16,11 @@ const PollingDetail = ({route, navigation}) => {
     value3,
     handleAddVote,
   } = route.params;
+
+  console.log(value1, value2, value3);
+  const [valueA, setValueA] = useState(value1);
+  const [valueB, setValueB] = useState(value2);
+  const [valueC, setValueC] = useState(value3);
   const [checked, setChecked] = useState({
     first: false,
     second: false,
@@ -29,6 +34,13 @@ const PollingDetail = ({route, navigation}) => {
       third: false,
       [option]: true,
     });
+    if (option === 'first') {
+      setValueA(++value1);
+    } else if (option === 'second') {
+      setValueB(++value2);
+    } else {
+      setValueC(++value3);
+    }
     handleAddVote(qId, option);
   };
 
@@ -86,22 +98,25 @@ const PollingDetail = ({route, navigation}) => {
               </Button>
             </TouchableOpacity>
             {!enabled && (
-              <Button
-                style={PollingStyle.seeResultBtn}
-                disabled={enabled}
-                onPress={() => {
-                  navigation.navigate('PollingGraph', {
-                    qstValue: qstValue,
-                    btn1: btn1,
-                    btn2: btn2,
-                    btn3: btn3,
-                    value1: value1,
-                    value2: value2,
-                    value3: value3,
-                  });
-                }}>
-                <Text style={PollingStyle.btnText}>See Results</Text>
-              </Button>
+              <>
+                <Button
+                  style={PollingStyle.seeResultBtn}
+                  disabled={enabled}
+                  onPress={() => {
+                    navigation.navigate('PollingGraph', {
+                      qstValue: qstValue,
+                      btn1: btn1,
+                      btn2: btn2,
+                      btn3: btn3,
+                      value1: value1,
+                      value2: value2,
+                      value3: value3,
+                    });
+                  }}>
+                  <Text style={PollingStyle.btnText}>See Results</Text>
+                </Button>
+                <Text>Poll Completed</Text>
+              </>
             )}
           </View>
         </Content>
@@ -119,9 +134,9 @@ const PollingDetail = ({route, navigation}) => {
                 btn1: btn1,
                 btn2: btn2,
                 btn3: btn3,
-                value1: value1,
-                value2: value2,
-                value3: value3,
+                value1: valueA,
+                value2: valueB,
+                value3: valueC,
               });
             }}>
             <Text style={PollingStyle.btnText}>Submit</Text>

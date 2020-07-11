@@ -7,30 +7,10 @@ import {Container, Content, View} from 'native-base';
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 import {getActivePollList} from '../../../redux';
 import HexagonBtn from '../../../utils/HexagonBtn';
+import AsyncStorage from '@react-native-community/async-storage';
+import pollData from './pollDb';
 
 const PollingList = ({navigation}) => {
-  const defaultPolling = [
-    {
-      id: 1,
-      qst: "Will you go to Harry's Party?",
-      answer: [
-        {name: 'Yes', value: 3},
-        {name: 'No', value: 2},
-        {name: 'Maybe', value: 1},
-      ],
-      enabled: false,
-    },
-    {
-      id: 2,
-      qst: 'What are going to do this weekend?',
-      answer: [
-        {name: 'Study', value: 1},
-        {name: 'Picnic', value: 1},
-        {name: 'Shopping', value: 1},
-      ],
-      enabled: false,
-    },
-  ];
   /*
    * Start of state declerations and fetch state from store
    */
@@ -38,7 +18,7 @@ const PollingList = ({navigation}) => {
   //const poolingList = useSelector((state) => state.pollInfo);
   //console.log(poolingList);
   //console.log(bootstrapState);
-  const [pollings, setPollings] = useState(defaultPolling);
+  const [pollings, setPollings] = useState(Object.values(pollData));
   const dispatch = useDispatch();
 
   const fetchActivePooling = async () => {
@@ -48,17 +28,38 @@ const PollingList = ({navigation}) => {
 
     dispatch(getActivePollList(token, circleId));
   };
+
   useEffect(() => {
-    console.log('pollings effect ->', pollings);
-    //fetchActivePooling();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log('All polls', pollings);
+
+    // const saveToAsync = async () => {
+    //   const jsonValue = JSON.stringify(pollings);
+    //   await AsyncStorage.setItem('storage_Key', jsonValue);
+    // };
+    // saveToAsync();
+    // //fetchActivePooling();
+
+    // const getData = async () => {
+    //   try {
+    //     const value = await AsyncStorage.getItem('storage_Key');
+    //     if (value !== null) {
+    //       var obj = JSON.parse(value);
+    //       console.log(obj);
+    //       // setPollings(obj);
+    //     }
+    //   } catch (e) {
+    //     // error reading value
+    //   }
+    // };
+    // getData();
   }, [pollings]);
 
   const handleAddNewPoll = (poll) => {
-    console.log('poll -->', poll);
+    //console.log('poll -->', poll);
     poll.id = pollings.length + 1;
+    console.log('newPoll', poll);
     setPollings([...pollings, poll]);
-    console.log(pollings);
+    //console.log(pollings);
   };
 
   const handleAddVote = (qId, option) => {
@@ -130,6 +131,7 @@ const PollingList = ({navigation}) => {
                     return n.value;
                   }),
                 handleAddVote: handleAddVote,
+                pollings: {pollings},
               });
             }}>
             <PollingItems
