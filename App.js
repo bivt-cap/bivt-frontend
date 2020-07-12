@@ -69,7 +69,7 @@ const App = () => {
           dark: false,
           colors: {
             ...DefaultTheme.colors,
-            primary: 'rgb(165,59,186)',
+            primary: 'rgb(255,255,255)',
             background: 'rgb(165,59,186)',
             card: 'rgb(165,59,186)',
             text: 'rgb(255,255,255)',

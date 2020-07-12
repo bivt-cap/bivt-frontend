@@ -7,9 +7,15 @@
 
 import React, {useEffect, useState, useCallback} from 'react';
 import {useSelector} from 'react-redux';
-import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
+import {
+  GiftedChat,
+  InputToolbar,
+  Send,
+  Bubble,
+  Time,
+} from 'react-native-gifted-chat';
 import {Platform, Text} from 'react-native';
-import {Spinner, Icon, Button, Container} from 'native-base';
+import {Spinner, Icon, Button, Container, View} from 'native-base';
 import {uploadImage} from './uploadImage';
 import Fire from './Fire';
 import ImagePicker from 'react-native-image-picker';
@@ -127,7 +133,10 @@ const Chat = ({route}) => {
   const renderSend = (props) => {
     return (
       <Send {...props}>
-        <Icon name="md-send" style={{color: 'blue', marginRight: 10}} />
+        <Icon
+          name="md-send"
+          style={{color: 'purple', marginRight: 10, marginBottom: 20}}
+        />
       </Send>
     );
   };
@@ -150,15 +159,51 @@ const Chat = ({route}) => {
       </Button>
     );
   };
+  const renderBubble = (props) => {
+    return (
+      <View>
+        <Bubble
+          {...props}
+          textStyle={{
+            right: {
+              color: 'black',
+            },
+            left: {
+              color: 'black',
+            },
+          }}
+          wrapperStyle={{
+            right: {
+              backgroundColor: 'rgb(248,222, 255)',
+            },
+          }}
+        />
+      </View>
+    );
+  };
+  const renderTime = (props) => {
+    return (
+      <Time
+        {...props}
+        timeTextStyle={{
+          right: {
+            color: '#848484',
+          },
+        }}
+      />
+    );
+  };
   return !message.isLoading && !message.isWelcomeMessage ? (
     <Container>
       <GiftedChat
         messages={message.messages}
         onSend={Fire.shared.sendMessages}
         renderSend={renderSend}
+        renderTime={renderTime}
         renderInputToolbar={renderInputToolbar}
         renderActions={renderCameraButton}
         renderUsernameOnMessage={true}
+        renderBubble={renderBubble}
         user={user()}
       />
     </Container>
@@ -168,6 +213,7 @@ const Chat = ({route}) => {
         messages={message.messages}
         onSend={Fire.shared.sendMessages}
         renderSend={renderSend}
+        renderTime={renderTime}
         renderInputToolbar={renderInputToolbar}
         renderActions={renderCameraButton}
         renderUsernameOnMessage={true}
