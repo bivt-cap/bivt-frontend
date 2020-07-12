@@ -89,6 +89,57 @@ const expenseManagerStyles = StyleSheet.create({
   activeTextStyle2: {
     color: '#333'
   },
+  cardStyle: {
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#E9E9E9',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2.22,
+    elevation: 4,
+  },
+  //Budget
+  cardBody: {
+    position:'relative',
+  },
+  deleteIcon: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    zIndex: 99,
+    opacity: 0.2,
+  },
+  budget: {
+    paddingTop: 10,
+    paddingBottom: 16,
+    borderBottomColor:'#EEE',
+    borderBottomWidth: 1,
+  },
+  name: {
+    fontSize: 20,
+    marginLeft: -12,
+  },
+  amount: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: "#A53BBA",
+    paddingRight: 5,
+  },
+  remaining: {
+    paddingTop: 12,
+    paddingLeft: 5,
+    paddingBottom: 3,
+    fontSize: 16,
+  },
+  date: {
+    color: '#555',
+    paddingLeft: 5
+  }
 });
 
 
@@ -138,9 +189,18 @@ const modalStyles = StyleSheet.create({
   actionButtonsContainer: {
     marginTop: '5%',
   },
-  actionButton: {
+  addButton: {
     marginTop: '2%',
+    backgroundColor: '#A54BBA',
+    borderColor: '#A54BBA',
+    borderRadius: 3,
   },
+  closeButton: {
+    marginTop: '2%',
+    backgroundColor: '#B5B5B5',
+    borderColor: '#B5B5B5',
+    borderRadius: 3,
+  }, 
   textFieldError: {
     color: 'red',
     fontSize: 14,
@@ -151,7 +211,7 @@ const modalStyles = StyleSheet.create({
   pickerWidth: {
     width: '100%',
   },
-  datePickerTextStyle: {color: 'green'},
+  datePickerTextStyle: {color: '#A54BBA'},
   datePickerplaceHolderTextStyle: {color: '#d3d3d3'},
 });
 

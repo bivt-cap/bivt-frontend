@@ -182,54 +182,68 @@ const ExpenseManager = () => {
     return expenseManagerState.loadBudgetsResponseDetails.budgets.map(
       (budget) => {
         return (
-          <Card key={budget.id}>
+
+          <Card key={budget.id} style={expenseManagerStyles.cardStyle}>
             <CardItem>
-              <Left>
-                <Text>{budget.budgetName}</Text>
-              </Left>
-              <Body>
-                <Text>
-                  Start -{' '}
-                  {moment.utc(budget.budgetStartDate).format('YYYY-MM-DD')}
-                </Text>
-                <Text>
-                  End - {moment.utc(budget.budgetEndDate).format('YYYY-MM-DD')}
-                </Text>
-                <Text>
-                  Remaining amount is{' '}
-                  {calcRemainingBudget(
-                    moment(budget.budgetStartDate).format('YYYY-MM-DD'),
-                    moment(budget.budgetEndDate).format('YYYY-MM-DD'),
-                    budget.budgetAmount,
-                    budget.id,
-                  )}
-                  {budgetRemainingAmount[budget.id]}
-                </Text>
+
+              <Body style={expenseManagerStyles.cardBody}>
+                <View style={expenseManagerStyles.deleteIcon}>
+                  <Icon
+                    active
+                    name="remove-circle-outline"
+                    style={{fontSize:20}}
+                    onPress={() => {
+                      Alert.alert(
+                        'Warning',
+                        'Are you sure you want to delete this budget?',
+                        [
+                          {
+                            text: 'Cancel',
+                            onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                          },
+                          {text: 'OK', onPress: () => deleteBudget(budget.id)},
+                        ],
+                        {cancelable: false},
+                      );
+                    }}
+                  />
+                </View>
+
+                <CardItem style={expenseManagerStyles.budget}>
+                  <Left>
+                    <Text style={expenseManagerStyles.name}>{budget.budgetName}</Text>
+                  </Left>
+                  <Right>
+                    <Text style={expenseManagerStyles.amount}>${budget.budgetAmount}</Text>
+                  </Right>
+                </CardItem>
+
+                <View>
+                  <Text style={expenseManagerStyles.remaining}>
+                    Remaining amount is $
+                    {calcRemainingBudget(
+                      moment(budget.budgetStartDate).format('YYYY-MM-DD'),
+                      moment(budget.budgetEndDate).format('YYYY-MM-DD'),
+                      budget.budgetAmount,
+                      budget.id,
+                    )}
+                    {budgetRemainingAmount[budget.id]}
+                  </Text>
+                </View>
+
+                <View>
+                  <Text style={expenseManagerStyles.date}>
+                    Start -{' '}
+                    {moment.utc(budget.budgetStartDate).format('YYYY-MM-DD')} {' '}
+                    End - {moment.utc(budget.budgetEndDate).format('YYYY-MM-DD')}
+                  </Text>
+                </View>
+
               </Body>
-              <Right>
-                <Text>${budget.budgetAmount}</Text>
-                <Icon
-                  active
-                  name="remove-circle-outline"
-                  onPress={() => {
-                    Alert.alert(
-                      'Warning',
-                      'Are you sure you want to delete this budget?',
-                      [
-                        {
-                          text: 'Cancel',
-                          onPress: () => console.log('Cancel Pressed'),
-                          style: 'cancel',
-                        },
-                        {text: 'OK', onPress: () => deleteBudget(budget.id)},
-                      ],
-                      {cancelable: false},
-                    );
-                  }}
-                />
-              </Right>
             </CardItem>
           </Card>
+
         );
       },
     );

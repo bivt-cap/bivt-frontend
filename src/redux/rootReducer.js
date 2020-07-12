@@ -7,7 +7,9 @@ import inviteToCirlceReducer from './circle/inviteToCircle/inviteToCirlceReducer
 import choosePluginReducer from './managePlugin/choosePlugin/choosePluginReducer';
 import userLocationTrack from './plugins/trackUser/trackUserReducer';
 import expenseManagerReducer from './plugins/expenseManager/expenseManagerReducer';
+import calendarReducer from './plugins/calendar/calendarReducer';
 import todoListReducer from './plugins/todoList/todoListReducer';
+
 const rootReducer = combineReducers({
   bootstrap: bootstrapReducer,
   signup: signupReducer,
@@ -18,6 +20,7 @@ const rootReducer = combineReducers({
   locationTrack: userLocationTrack,
   choosePlugin: choosePluginReducer,
   expenseManager: expenseManagerReducer,
+  calendarReducer: calendarReducer,
   todoList: todoListReducer,
 });
 
