@@ -6,7 +6,14 @@
  */
 
 // Types
-import {EVENT_ERROR, EVENT_INSERT, EVENT_GET_LIST} from './calendarTypes';
+import {
+  EVENT_ERROR,
+  EVENT_INSERT,
+  EVENT_GET_LIST,
+  EVENT_GET_MEMBERS,
+  EVENT_CLEAN_MEMBERS,
+  EVENT_UPDATE,
+} from './calendarTypes';
 
 // Initial State
 const calendarInitialState = {
@@ -35,7 +42,18 @@ const calendarReducer = (state = calendarInitialState, action) => {
         ...state,
         isLoading: false,
         eventId: action.payload,
+        members: null,
+        photos: null,
       };
+    case EVENT_UPDATE: {
+      return {
+        ...state,
+        isLoading: false,
+        eventId: action.payload,
+        members: null,
+        photos: null,
+      };
+    }
     case EVENT_GET_LIST:
       return {
         ...state,
@@ -46,6 +64,19 @@ const calendarReducer = (state = calendarInitialState, action) => {
         eventId: null,
         members: null,
         photos: null,
+      };
+    case EVENT_GET_MEMBERS:
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        error: null,
+        members: action.payload,
+      };
+    case EVENT_CLEAN_MEMBERS:
+      return {
+        ...state,
+        members: null,
       };
   }
 

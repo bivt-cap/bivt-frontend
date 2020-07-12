@@ -9,12 +9,9 @@
 // React and React Native
 import React, {useEffect, useState} from 'react';
 
-// React Native
-import {TouchableOpacity} from 'react-native';
-
 // Reux
 import {useDispatch, useSelector} from 'react-redux';
-import {loadEvents} from '../../../redux';
+import {loadEvents, cleanEventMembers} from '../../../redux';
 
 // Moment
 import moment from 'moment';
@@ -23,13 +20,16 @@ import moment from 'moment';
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 
 // Native Base
-import {Container, Content, List, ListItem, Text, Button} from 'native-base';
+import {Container, Content} from 'native-base';
 
 // Calendar
 import {Calendar} from 'react-native-calendars';
 
 // Layout
 import FooterBase from '../../layout/footerBase/FooterBase';
+
+// Componentes
+import CalendarEventList from './CalendarEventList';
 
 // Style
 import {calendarBaseStyles} from './calendarStyle';
@@ -149,10 +149,15 @@ const CalendarEvent = ({route, navigation}) => {
    * Add a new Event
    **************************************************/
   const handleAddButtonClick = () => {
+    // Clean list of member previous load for an event
+    dispatch(cleanEventMembers());
+
+    // Load Form
     navigation.navigate('CalendarEventForm', {
-      title: null,
-      datetime: null,
-      note: null,
+      title: '',
+      time: '',
+      day: '',
+      note: '',
       id: null,
     });
   };
@@ -160,10 +165,15 @@ const CalendarEvent = ({route, navigation}) => {
   /**************************************************
    * Add a new Event
    **************************************************/
-  const handleShowEventButtonClick = (title, datetime, note, id) => {
-    navigation.navigate('CalendarEventForm', {
+  const handleShowEventButtonClick = (title, time, day, note, id) => {
+    // Clean list of member previous load for an event
+    dispatch(cleanEventMembers());
+
+    // Load View
+    navigation.navigate('CalendarEventView', {
       title,
-      datetime,
+      time,
+      day,
       note,
       id,
     });
@@ -173,7 +183,6 @@ const CalendarEvent = ({route, navigation}) => {
    * Calendar Events
    **************************************************/
   const handleMonthChange = (month) => {
-    console.log('handleMonthChange');
     // Show the loading information
     setcalendaDetails((prevState) => {
       return {
@@ -207,7 +216,7 @@ const CalendarEvent = ({route, navigation}) => {
         style={calendarBaseStyles.calendar}
       />
       <Content style={calendarBaseStyles.content}>
-        <CalendarEvents
+        <CalendarEventList
           events={calendaDetails.events}
           handleShowEvent={handleShowEventButtonClick}
         />
@@ -215,60 +224,6 @@ const CalendarEvent = ({route, navigation}) => {
       <FooterBase navigation={navigation} handleAdd={handleAddButtonClick} />
     </Container>
   );
-};
-
-const CalendarEvents = (props, navigation) => {
-  if (props.events !== null) {
-    return (
-      <List style={calendarBaseStyles.list}>
-        {Object.keys(props.events)
-          .sort((a, b) => moment(a, 'YYYY-MM-DD').diff(moment(b, 'YYYY-MM-DD')))
-          .map((key) => {
-            return (
-              <>
-                <ListItem itemDivider style={calendarBaseStyles.listItemHeader}>
-                  <Text>
-                    {moment(`${key}`, 'YYYY-MM-DD').format('dddd DD MMMM')}
-                  </Text>
-                </ListItem>
-                {props.events[key]
-                  .sort((a, b) => moment(a.startOn).diff(moment(b.startOn)))
-                  .map((e) => {
-                    return (
-                      <ListItem
-                        style={{
-                          paddingBottom: 0,
-                          paddingLeft: 0,
-                          paddingRight: 0,
-                          paddingTop: 0,
-                          marginBottom: 10,
-                        }}>
-                        <Button
-                          bordered
-                          block
-                          onPress={() =>
-                            props.handleShowButtonClick({
-                              title: e.title,
-                              datetime: moment(e.startOn).toDate(),
-                              note: e.note,
-                              id: e.id,
-                            })
-                          }
-                          style={{width: '100%'}}>
-                          <Text>{e.title}</Text>
-                          <Text>{moment(e.startOn).format('HH:mm A')}</Text>
-                        </Button>
-                      </ListItem>
-                    );
-                  })}
-              </>
-            );
-          })}
-      </List>
-    );
-  } else {
-    return null;
-  }
 };
 
 // Export
