@@ -196,7 +196,7 @@ const Login = ({navigation}) => {
           </Button>
           <Button block onPress={handleLoginButtonClick}>
             {userData.loading === true ? (
-              (<ActivityIndicator size="small" color="#00ff00" />))
+              <ActivityIndicator size="small" color="#00ff00" />
             ) : (
               <Text>Sign in</Text>
             )}
