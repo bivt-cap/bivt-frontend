@@ -9,6 +9,7 @@ import userLocationTrack from './plugins/trackUser/trackUserReducer';
 import expenseManagerReducer from './plugins/expenseManager/expenseManagerReducer';
 import calendarReducer from './plugins/calendar/calendarReducer';
 import todoListReducer from './plugins/todoList/todoListReducer';
+import pollingReducer from './plugins/polling/pollingReducer';
 
 const rootReducer = combineReducers({
   bootstrap: bootstrapReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   expenseManager: expenseManagerReducer,
   calendarReducer: calendarReducer,
   todoList: todoListReducer,
+  pollInfo: pollingReducer,
 });
 
 export default rootReducer;
