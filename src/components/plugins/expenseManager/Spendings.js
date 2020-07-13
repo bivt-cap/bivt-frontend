@@ -8,13 +8,15 @@
 import React from 'react';
 
 //native base
-import {Container, Content, ListItem, Body, Right, Text} from 'native-base';
+import {Container, Content, ListItem, Body, Right, Text, View} from 'native-base';
+
+//styles
+import {expenseManagerStyles} from './ExpenseManagerStyles';
 
 const Spendings = (props) => {
   return (
-    <Container>
-      <Content>
-        <ListItem itemDivider>
+      <>
+        <ListItem itemDivider style={expenseManagerStyles.listTop}>
           <Body>
             <Text>Total</Text>
           </Body>
@@ -22,9 +24,9 @@ const Spendings = (props) => {
             <Text>${props.sum}</Text>
           </Right>
         </ListItem>
+
         {props.data}
-      </Content>
-    </Container>
+      </>
   );
 };
 
