@@ -56,7 +56,6 @@ const ResendValidationEmail = ({navigation}) => {
           errorMsg = Array.isArray(error.response.data.status.errors)
             ? error.response.data.status.errors.join(', ')
             : error.response.data.status.errors;
-          console.log(error.response.data);
         }
         Toast.show({
           text: errorMsg,

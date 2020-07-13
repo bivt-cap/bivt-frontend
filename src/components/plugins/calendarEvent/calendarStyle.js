@@ -92,25 +92,17 @@ const calendarBaseStyles = StyleSheet.create({
     borderTopWidth: 1,
   },
   listItem: {
-    borderWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#CA60E3',
-    marginRight: 30,
-    marginLeft: 30,
+    paddingBottom: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingTop: 0,
     marginBottom: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'space-between',
   },
-  listItemText: {
-    color: '#CA60E3',
-  },
+  listItemButton: {width: '100%'},
 });
 
+// Form
+const viewBaseStyles = StyleSheet.create({});
+
 // Export
-export {formBaseStyles, calendarBaseStyles};
+export {formBaseStyles, calendarBaseStyles, viewBaseStyles};

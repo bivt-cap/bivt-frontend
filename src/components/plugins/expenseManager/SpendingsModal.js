@@ -265,16 +265,16 @@ const Spendingsmodal = (props) => {
                   bordered
                   block
                   success
-                  style={modalStyles.actionButton}>
-                  <Text>Add</Text>
+                  style={modalStyles.addButton}>
+                  <Text style={{color:'white'}}>Add</Text>
                 </Button>
                 <Button
                   onPress={closeModal}
                   bordered
                   block
                   warning
-                  style={modalStyles.actionButton}>
-                  <Text>Close</Text>
+                  style={modalStyles.closeButton}>
+                  <Text style={{color:'white'}}>Close</Text>
                 </Button>
                 {billDetailsError.billName.error && (
                   <Label style={modalStyles.textFieldError}>

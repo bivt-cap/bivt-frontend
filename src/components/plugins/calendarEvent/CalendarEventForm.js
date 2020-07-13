@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * This component handles the Resend of the Validation Email
  *
@@ -9,15 +10,10 @@ import React, {useState, useEffect} from 'react';
 
 // Reux
 import {useDispatch, useSelector} from 'react-redux';
-import {createEvent} from '../../../redux';
+import {createEvent, loadEventMembers, updateEvent} from '../../../redux';
 
 // React Native
-import {
-  TouchableOpacity,
-  Platform,
-  View,
-  Image as ImageReactNative,
-} from 'react-native';
+import {TouchableOpacity, Platform, View} from 'react-native';
 
 // Native Base
 import {
@@ -38,7 +34,6 @@ import {
   Body,
   H1,
   Toast,
-  Image,
 } from 'native-base';
 
 // Date and Time picker
@@ -62,17 +57,13 @@ import JwtKeyChain from '../../../utils/jwtKeyChain';
 // Layout
 import FooterBase from '../../layout/footerBase/FooterBase';
 import LoadingBig from '../../layout/loadingBig/LoadingBig';
+import LoadingSmall from '../../layout/loadingSmall/loadingSmall';
 
 // Style
 import {formBaseStyles} from './calendarStyle';
 
 // Screen
 const CalendarEventForm = ({route, navigation}) => {
-  // param from rout
-  const {title, datetime, note, id} = route.params;
-
-  console.log({title, datetime, note, id});
-
   // Dispatch - Redux hook
   const dispatch = useDispatch();
 
@@ -86,11 +77,12 @@ const CalendarEventForm = ({route, navigation}) => {
   // State
   const [eventDetails, setEventDetails] = useState({
     title: '',
-    participants: [],
+    participants: null,
     time: moment().format('HH:mm'),
     day: moment().format('dddd, DD MMMM, YYYY'),
     note: '',
     photos: [],
+    id: null,
   });
 
   // Form State
@@ -192,9 +184,10 @@ const CalendarEventForm = ({route, navigation}) => {
     const member = members.find((m) => m.id === memberId);
 
     // Check if this member already exist in the list
-    const participantIndex = eventDetails.participants
-      .map((m) => m.id)
-      .indexOf(memberId);
+    const participantIndex =
+      eventDetails.participants !== null
+        ? eventDetails.participants.map((m) => m.id).indexOf(memberId)
+        : -1;
 
     if (participantIndex !== -1) {
       // Remove
@@ -209,10 +202,17 @@ const CalendarEventForm = ({route, navigation}) => {
     } else {
       // Add
       setEventDetails((prevState) => {
-        return {
-          ...prevState,
-          participants: [...prevState.participants, {...member}],
-        };
+        if (prevState.participants !== null) {
+          return {
+            ...prevState,
+            participants: [...prevState.participants, {...member}],
+          };
+        } else {
+          return {
+            ...prevState,
+            participants: [{...member}],
+          };
+        }
       });
     }
   };
@@ -220,91 +220,93 @@ const CalendarEventForm = ({route, navigation}) => {
   /**************************************************
    * Image Modal
    **************************************************/
-  const getImage = async () => {
-    ImagePicker.showImagePicker(
-      {
-        title: 'Choose An Image',
-        storageOptions: {
-          skipBackup: true,
-          path: 'images',
-        },
-      },
-      (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-        } else {
-          // const source = {uri: response.uri};
-          let path = response.uri;
-          if (Platform.OS === 'ios') {
-            path = '~' + path.substring(path.indexOf('/Documents'));
-          }
-          if (!response.fileName) {
-            response.fileName = path.split('/').pop();
-          }
+  //const getImage = async () => {
+  //  ImagePicker.showImagePicker(
+  //    {
+  //      title: 'Choose An Image',
+  //      storageOptions: {
+  //        skipBackup: true,
+  //        path: 'images',
+  //      },
+  //    },
+  //    (response) => {
+  //      if (response.didCancel) {
+  //        console.log('User cancelled image picker');
+  //      } else if (response.error) {
+  //        console.log('ImagePicker Error: ', response.error);
+  //      } else if (response.customButton) {
+  //        console.log('User tapped custom button: ', response.customButton);
+  //      } else {
+  //        // const source = {uri: response.uri};
+  //        let path = response.uri;
+  //        if (Platform.OS === 'ios') {
+  //          path = '~' + path.substring(path.indexOf('/Documents'));
+  //        }
+  //        if (!response.fileName) {
+  //          response.fileName = path.split('/').pop();
+  //        }
+  //
+  //        console.log(response.uri);
+  //
+  //        ImageReactNative.getSize(
+  //          response.uri,
+  //          (w, h) => {
+  //            console.log('===============>');
+  //            console.log(w);
+  //            console.log(h);
+  //
+  //            const ratio = Math.min(640 / w, 480 / h);
+  //            const nW = w * ratio;
+  //            const nH = h * ratio;
+  //
+  //            console.log('===============>');
+  //            console.log(nW);
+  //            console.log(nH);
+  //
+  //            ImageResizer.createResizedImage(response.uri, nW, nH, 'JPEG', 70)
+  //              .then((resizeResponse) => {
+  //                console.log(resizeResponse);
+  //                setEventDetails((prevState) => {
+  //                  return {
+  //                    ...prevState,
+  //                    photos: [
+  //                      ...prevState.photos,
+  //                      {
+  //                        uri: resizeResponse.uri,
+  //                        fileName: resizeResponse.fileName,
+  //                      },
+  //                    ],
+  //                  };
+  //                });
+  //                // response.uri is the URI of the new image that can now be displayed, uploaded...
+  //                // response.path is the path of the new image
+  //                // response.name is the name of the new image with the extension
+  //                // response.size is the size of the new image
+  //              })
+  //              .catch((err) => {
+  //                // Oops, something went wrong. Check that the filename is correct and
+  //                // inspect err to get more details.
+  //                console.log(err);
+  //              });
+  //          },
+  //          (error) => {
+  //            console.log(error);
+  //          },
+  //        );
+  //      }
+  //    },
+  //  );
+  //};
 
-          ImageReactNative.getSize(
-            response.uri,
-            (w, h) => {
-              console.log('===============>');
-              console.log(w);
-              console.log(h);
-
-              const ratio = Math.min(640 / w, 480 / h);
-              const nW = w * ratio;
-              const nH = h * ratio;
-
-              console.log('===============>');
-              console.log(nW);
-              console.log(nH);
-
-              ImageResizer.createResizedImage(response.uri, nW, nH, 'JPEG', 70)
-                .then((resizeResponse) => {
-                  console.log(resizeResponse);
-                  setEventDetails((prevState) => {
-                    return {
-                      ...prevState,
-                      photos: [
-                        ...prevState.photos,
-                        {
-                          uri: resizeResponse.uri,
-                          fileName: resizeResponse.fileName,
-                        },
-                      ],
-                    };
-                  });
-                  // response.uri is the URI of the new image that can now be displayed, uploaded...
-                  // response.path is the path of the new image
-                  // response.name is the name of the new image with the extension
-                  // response.size is the size of the new image
-                })
-                .catch((err) => {
-                  // Oops, something went wrong. Check that the filename is correct and
-                  // inspect err to get more details.
-                  console.log(err);
-                });
-            },
-            (error) => {
-              console.log(error);
-            },
-          );
-        }
-      },
-    );
-  };
-
-  const removeImage = (rIndex) => {
-    // Remove
-    setEventDetails((prevState) => {
-      return {
-        ...prevState,
-        photos: [...prevState.photos.filter((m, index) => index !== rIndex)],
-      };
-    });
-  };
+  //const removeImage = (rIndex) => {
+  //  // Remove
+  //  setEventDetails((prevState) => {
+  //    return {
+  //      ...prevState,
+  //      photos: [...prevState.photos.filter((m, index) => index !== rIndex)],
+  //    };
+  //  });
+  //};
 
   /**************************************************
    * Submit Screen
@@ -347,22 +349,95 @@ const CalendarEventForm = ({route, navigation}) => {
       ).toDate();
 
       // Execute the save action
-      dispatch(
-        createEvent(
-          token,
-          bootstrapState.circles[0].id,
-          eventDetails.title,
-          moment(eventDate).format('YYYY-MM-DD HH:mm:ss'),
-          moment(eventDate).format('YYYY-MM-DD HH:mm:ss'),
-          eventDetails.note,
-          eventDetails.participants.map((p) => {
-            return p.id;
-          }),
-          eventDetails.photos,
-        ),
-      );
+      if (eventDetails.id === null) {
+        // Insert
+        dispatch(
+          createEvent(
+            token,
+            bootstrapState.circles[0].id,
+            eventDetails.title,
+            moment(eventDate).format('YYYY-MM-DD HH:mm:ss'),
+            moment(eventDate).format('YYYY-MM-DD HH:mm:ss'),
+            eventDetails.note,
+            eventDetails.participants !== null &&
+              eventDetails.participants.length > 0
+              ? eventDetails.participants.map((p) => {
+                  return p.id;
+                })
+              : null,
+            eventDetails.photos != null && eventDetails.photos.length > 0
+              ? eventDetails.photos.map((p) => {
+                  return p.uri;
+                })
+              : null,
+          ),
+        );
+      } else {
+        // Update
+        dispatch(
+          updateEvent(
+            token,
+            bootstrapState.circles[0].id,
+            eventDetails.id,
+            eventDetails.title,
+            moment(eventDate).format('YYYY-MM-DD HH:mm:ss'),
+            moment(eventDate).format('YYYY-MM-DD HH:mm:ss'),
+            eventDetails.note,
+            eventDetails.participants !== null &&
+              eventDetails.participants.length > 0
+              ? eventDetails.participants.map((p) => {
+                  return p.id;
+                })
+              : null,
+            eventDetails.photos != null && eventDetails.photos.length > 0
+              ? eventDetails.photos.map((p) => {
+                  return p.uri;
+                })
+              : null,
+          ),
+        );
+      }
     }
   };
+
+  /**
+   * Loading Data
+   */
+  useEffect(() => {
+    // Load Members
+    const loadMembers = async (id) => {
+      // Read the token from the Key Chain
+      const token = await JwtKeyChain.read();
+
+      // Load the Events List
+      dispatch(loadEventMembers(token, bootstrapState.circles[0].id, id));
+    };
+
+    // param from rout
+    const {title, time, day, note, id} = route.params;
+
+    // If has an ID is a Edit
+    if (id) {
+      // Set the navigation title
+      navigation.setOptions({title: title});
+
+      // Show the loading information
+      setEventDetails((prevState) => {
+        return {
+          ...prevState,
+          title,
+          participants: [],
+          time,
+          day,
+          note,
+          id,
+        };
+      });
+
+      // Load partipants list
+      loadMembers(id);
+    }
+  }, []);
 
   /**
    * Check if an error has occour or the insert was a complet success
@@ -397,6 +472,13 @@ const CalendarEventForm = ({route, navigation}) => {
 
       // Event was saved
       navigation.navigate('Calendar');
+    } else if (calendarState.members !== null) {
+      setEventDetails((prevState) => {
+        return {
+          ...prevState,
+          participants: calendarState.members,
+        };
+      });
     }
   }, [calendarState, navigation]);
 
@@ -412,21 +494,27 @@ const CalendarEventForm = ({route, navigation}) => {
             <Input
               placeholder="Title"
               onChangeText={(val) => handleEventInputChange('title', val)}
+              value={eventDetails.title}
             />
           </Item>
           <Label>Participants</Label>
           <List>
             <ListItem style={formBaseStyles.imagesListItem}>
               <Left>
-                {eventDetails.participants.map((member) => {
-                  return (
-                    <Thumbnail
-                      small
-                      source={{uri: member.photoUrl ? member.photoUrl : uri}}
-                      style={formBaseStyles.imagesThumbnail}
-                    />
-                  );
-                })}
+                {eventDetails.id !== null &&
+                eventDetails.participants === null ? (
+                  <LoadingSmall />
+                ) : eventDetails.participants !== null ? (
+                  eventDetails.participants.map((member) => {
+                    return (
+                      <Thumbnail
+                        small
+                        source={{uri: member.photoUrl ? member.photoUrl : uri}}
+                        style={formBaseStyles.imagesThumbnail}
+                      />
+                    );
+                  })
+                ) : null}
               </Left>
               <Right>
                 <TouchableOpacity
@@ -460,40 +548,12 @@ const CalendarEventForm = ({route, navigation}) => {
             <Input
               placeholder="Your Note"
               onChangeText={(val) => handleEventInputChange('note', val)}
+              value={eventDetails.note}
             />
           </Item>
-          <Label>Photo</Label>
-          <List>
-            <ListItem>
-              <Left>
-                {eventDetails.photos.map((photo, index) => {
-                  return (
-                    <TouchableOpacity onPress={() => removeImage(index)}>
-                      <Thumbnail
-                        small
-                        source={{uri: photo.uri}}
-                        style={formBaseStyles.imagesThumbnail}
-                      />
-                    </TouchableOpacity>
-                  );
-                })}
-              </Left>
-              <Right>
-                <TouchableOpacity
-                  onPress={getImage}
-                  style={formBaseStyles.imagesButton}>
-                  <Icon
-                    ios="ios-add"
-                    android="md-add"
-                    style={formBaseStyles.imagesButtonIcon}
-                  />
-                </TouchableOpacity>
-              </Right>
-            </ListItem>
-          </List>
         </Form>
         <Button full onPress={submitScreen}>
-          <Text>Create</Text>
+          <Text>{eventDetails.id !== null ? 'Save' : 'Create'}</Text>
         </Button>
       </Content>
       <FooterBase navigation={navigation} />
@@ -521,6 +581,7 @@ const CalendarEventForm = ({route, navigation}) => {
               let iconAdd = ['ios-add-circle', 'md-add-circle'];
               let iconColor = '#60E36F';
               if (
+                eventDetails.participants !== null &&
                 eventDetails.participants
                   .map((m) => m.id)
                   .indexOf(member.id) !== -1

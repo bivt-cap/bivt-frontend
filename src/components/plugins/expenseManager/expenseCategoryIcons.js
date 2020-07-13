@@ -7,4 +7,6 @@ const categoryIcons = {
   6: {id: 6, name: 'Other', icon: 'options', color: '#53d769'},
 };
 
+
+
 export default categoryIcons;

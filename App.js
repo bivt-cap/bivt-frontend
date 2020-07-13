@@ -35,6 +35,7 @@ import Chat from './src/components/plugins/chat/Chat';
 import TrackUser from './src/components/plugins/trackUser/TrackUser';
 import CalendarEvent from './src/components/plugins/calendarEvent/CalendarEvent';
 import CalendarEventForm from './src/components/plugins/calendarEvent/CalendarEventForm';
+import CalendarEventView from './src/components/plugins/calendarEvent/CalendarEventView';
 import GroceryList from './src/components/plugins/groceryList/GroceryList';
 import PollingList from './src/components/plugins/polling/PollingList';
 import AddPolling from './src/components/plugins/polling/AddPolling';
@@ -142,6 +143,13 @@ const App = () => {
                   title: 'Create an Event',
                 }}
                 component={CalendarEventForm}
+              />
+              <Stack.Screen
+                name="CalendarEventView"
+                options={{
+                  title: 'Event View',
+                }}
+                component={CalendarEventView}
               />
               <Stack.Screen
                 name="TodoList"

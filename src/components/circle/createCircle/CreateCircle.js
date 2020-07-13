@@ -113,8 +113,6 @@ const CreateCircle = ({navigation}) => {
     createCircleValidationErrors.then(async (errors) => {
       // Read the token from the Key Chain
       const token = await JwtKeyChain.read();
-
-      console.log('createCircleValidationErrors');
       // Show erros
       setCreateCircleError(errors);
       if (!errors.circleName.error && !errors.selectedCircleType.error) {

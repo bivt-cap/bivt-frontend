@@ -78,7 +78,6 @@ const DashBoard = ({route, navigation}) => {
   // Tracking user
   const trackLocationInBackGround = async () => {
     if (Platform.OS === 'android') {
-      console.log('sadasd');
       await Location.startLocationUpdatesAsync('watchLocation', {
         accuracy: Location.Accuracy.Balanced,
         timeInterval: 10000,
@@ -108,14 +107,10 @@ const DashBoard = ({route, navigation}) => {
 
   TaskManager.defineTask('watchLocation', ({data, error}) => {
     if (error) {
-      console.log('ERR');
       return;
     }
     if (data) {
-      console.log('RUNNED tasks in background');
-
       const {locations} = data;
-      console.log(data);
       postLocation(locations);
     }
   });
