@@ -269,7 +269,6 @@ export const updateEvent = (
         // Send the members
         if (membersId !== null && membersId.length > 0) {
           for (let i = 0; i < membersId.length; i++) {
-            console.log(membersId[i]);
             await bivtURL
               .post(
                 '/plugin/event/addMember',
@@ -396,7 +395,6 @@ export const loadEventMembers = (token, circleId, eventId) => {
           // http.ClientRequest in node.js
           dispatch(errorOccurred('An error occurred. Please try again later'));
         } else {
-          console.log(error.message);
           // Something happened in setting up the request that triggered an Error
           dispatch(errorOccurred(error.message));
         }

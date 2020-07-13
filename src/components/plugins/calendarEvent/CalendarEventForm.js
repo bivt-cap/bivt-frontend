@@ -374,7 +374,6 @@ const CalendarEventForm = ({route, navigation}) => {
         );
       } else {
         // Update
-        console.log('UPDATE');
         dispatch(
           updateEvent(
             token,
