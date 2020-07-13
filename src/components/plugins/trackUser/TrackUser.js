@@ -192,23 +192,23 @@ const TrackUser = () => {
           {usersLocation.fetchCoordLoading === false && showMarkeronMap()}
         </MapView>
       )}
-      <Content>
-        <Card style={styles.welcomeStyle}>
-          <CardItem>
-            <Left>
-              <Thumbnail
-                source={require('../../../assets/images/plugins/Family3.png')}
-              />
-              <Body>
-                <Text>
-                  See when your group members are at school,work or
-                  elsewhere🌍🌍🌍
-                </Text>
-              </Body>
-            </Left>
-          </CardItem>
-        </Card>
-      </Content>
+
+      <Card style={styles.welcomeStyle}>
+        <CardItem>
+          <Left>
+            <Thumbnail
+              source={require('../../../assets/images/plugins/Family3.png')}
+            />
+            <Body>
+              <Text>
+                See when your group members are at school,work or elsewhere!
+                🌍🌍🌍
+              </Text>
+            </Body>
+          </Left>
+        </CardItem>
+      </Card>
+
       <BottomSheet
         snapPoints={[350, 200, 100]}
         initialSnap={2}

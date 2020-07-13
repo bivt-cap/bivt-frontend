@@ -14,7 +14,7 @@ import {
   Bubble,
   Time,
 } from 'react-native-gifted-chat';
-import {Platform, Text} from 'react-native';
+import {Platform, SafeAreaView} from 'react-native';
 import {Spinner, Icon, Button, Container, View} from 'native-base';
 import {uploadImage} from './uploadImage';
 import Fire from './Fire';
@@ -132,10 +132,10 @@ const Chat = ({route}) => {
 
   const renderSend = (props) => {
     return (
-      <Send {...props}>
+      <Send {...props} textInputStyle={{fontSize: 5}}>
         <Icon
           name="md-send"
-          style={{color: 'purple', marginRight: 10, marginBottom: 20}}
+          style={{color: 'white', marginRight: 10, marginBottom: 5}}
         />
       </Send>
     );
@@ -146,8 +146,10 @@ const Chat = ({route}) => {
         {...props}
         // eslint-disable-next-line react-native/no-inline-styles
         containerStyle={{
-          borderRadius: 20,
+          backgroundColor: 'rgb(165,59,186)',
+          placeholderTextColor: '#fff',
         }}
+        textInputStyle={{color: '#fff'}}
       />
     );
   };
@@ -155,7 +157,7 @@ const Chat = ({route}) => {
   const renderCameraButton = () => {
     return (
       <Button transparent onPress={getImage}>
-        <Icon name="ios-camera" />
+        <Icon style={{color: 'white'}} name="ios-camera" />
       </Button>
     );
   };
@@ -194,19 +196,21 @@ const Chat = ({route}) => {
     );
   };
   return !message.isLoading && !message.isWelcomeMessage ? (
-    <Container>
-      <GiftedChat
-        messages={message.messages}
-        onSend={Fire.shared.sendMessages}
-        renderSend={renderSend}
-        renderTime={renderTime}
-        renderInputToolbar={renderInputToolbar}
-        renderActions={renderCameraButton}
-        renderUsernameOnMessage={true}
-        renderBubble={renderBubble}
-        user={user()}
-      />
-    </Container>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'rgb(165,59,186)'}}>
+      <Container>
+        <GiftedChat
+          messages={message.messages}
+          onSend={Fire.shared.sendMessages}
+          renderSend={renderSend}
+          renderTime={renderTime}
+          renderInputToolbar={renderInputToolbar}
+          renderActions={renderCameraButton}
+          renderUsernameOnMessage={true}
+          renderBubble={renderBubble}
+          user={user()}
+        />
+      </Container>
+    </SafeAreaView>
   ) : message.isWelcomeMessage ? (
     <Container>
       <GiftedChat
