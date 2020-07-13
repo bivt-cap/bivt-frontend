@@ -42,7 +42,6 @@ import HeaderWithLogo from '../../layout/headerWithLogo/HeaderWithLogo';
 
 const Login = ({navigation}) => {
   const userData = useSelector((state) => state.login);
-  // console.log('loginpage', userData);
   const dispatch = useDispatch();
 
   // ******************************************************//
@@ -121,7 +120,6 @@ const Login = ({navigation}) => {
   };
   const handleGoogleButtonClick = () => {
     dispatch(googleSignIn);
-    console.log(userData);
   };
   const handleForgotButtonClick = () => {
     navigation.navigate('ForgotPassword');
@@ -198,8 +196,7 @@ const Login = ({navigation}) => {
           </Button>
           <Button block onPress={handleLoginButtonClick}>
             {userData.loading === true ? (
-              (console.log(userData),
-              (<ActivityIndicator size="small" color="#00ff00" />))
+              <ActivityIndicator size="small" color="#00ff00" />
             ) : (
               <Text>Sign in</Text>
             )}

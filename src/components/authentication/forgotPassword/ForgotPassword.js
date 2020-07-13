@@ -23,7 +23,6 @@ import {forgotPasswordValidation} from './forgotPasswordValidation';
 
 const ForgotPassword = ({navigation}) => {
   const userData = useSelector((state) => state.forgotPassword);
-  console.log('forgotPassword', userData);
   const dispatch = useDispatch();
 
   // ******************************************************//
@@ -76,7 +75,6 @@ const ForgotPassword = ({navigation}) => {
             }
             userData.pwErrorStatus = 'False';
             userData.error = '';
-            console.log(userData);
           },
         },
       ],

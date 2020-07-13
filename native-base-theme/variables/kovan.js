@@ -126,7 +126,7 @@ export default {
   brandPrimary: '#CA60E3',
   brandInfo: '#6560E3',
   brandSuccess: '#60E36F',
-  brandDanger: '#E36060',
+  brandDanger: '#C83232',
   brandWarning: '#E3E360',
   brandDark: '#000',
   brandLight: '#848484',
