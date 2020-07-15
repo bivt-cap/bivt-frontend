@@ -13,7 +13,7 @@ import {Spinner} from 'native-base';
 
 // Component
 const LoadingSmall = (props) => {
-  return <Spinner color="blue" />;
+  return <Spinner />;
 };
 
 // Export

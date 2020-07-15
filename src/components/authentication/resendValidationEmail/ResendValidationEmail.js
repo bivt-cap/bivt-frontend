@@ -7,6 +7,9 @@
 // React and React Native
 import React, {useState, useEffect} from 'react';
 
+// React Native
+import {Image, StyleSheet} from 'react-native';
+
 // Native Base
 import {
   Container,
@@ -29,7 +32,29 @@ import {EMAIL_REGEX} from '../../../utils/regexUtil';
 import {bivtURL} from '../../../redux/apis/bivtApi';
 
 // Screen
+import LoadingBig from '../../layout/loadingBig/LoadingBig';
+import CheckYourEmail from '../checkYourEmail/CheckYourEmail';
+
+// Style
+const baseStyles = StyleSheet.create({
+  image: {
+    alignSelf: 'center',
+    marginBottom: 40,
+    marginTop: 20,
+  },
+  text: {
+    marginBottom: 40,
+  },
+  form: {
+    marginBottom: 40,
+  },
+});
+
+// Screen
 const ResendValidationEmail = ({navigation}) => {
+  // Default images
+  const imgBee = require('./img/ResendValidationEmail.png');
+
   // State
   const [isLoading, setIsLoading] = useState(false);
   const [screenController, setScreenController] = useState({
@@ -38,42 +63,34 @@ const ResendValidationEmail = ({navigation}) => {
     isSent: false,
   });
 
-  // Check if the state change and do a action
-  useEffect(() => {
-    // Async function to resend the validation email
-    const callResendValidationEmailAPI = async () => {
-      try {
-        await bivtURL.post('/user/resendValidationEmail', {
-          email: screenController.email,
-        });
-        setScreenController({
-          ...screenController,
-          isSent: true,
-        });
-      } catch (error) {
-        let errorMsg = 'An error occurred please try again later!';
-        if (error.response) {
-          errorMsg = Array.isArray(error.response.data.status.errors)
-            ? error.response.data.status.errors.join(', ')
-            : error.response.data.status.errors;
-        }
-        Toast.show({
-          text: errorMsg,
-          buttonText: 'OK',
-          buttonTextStyle: {color: '#008000'},
-          buttonStyle: {backgroundColor: '#5cb85c'},
-          duration: 8000,
-        });
-      } finally {
-        setIsLoading(false);
+  // Async function to resend the validation email
+  const callResendValidationEmailAPI = async () => {
+    try {
+      await bivtURL.post('/user/resendValidationEmail', {
+        email: screenController.email,
+      });
+      setScreenController({
+        ...screenController,
+        isSent: true,
+      });
+    } catch (error) {
+      let errorMsg = 'An error occurred please try again later!';
+      if (error.response) {
+        errorMsg = Array.isArray(error.response.data.status.errors)
+          ? error.response.data.status.errors.join(', ')
+          : error.response.data.status.errors;
       }
-    };
-
-    // Check if isLoading is true
-    if (isLoading) {
-      callResendValidationEmailAPI();
+      Toast.show({
+        text: errorMsg,
+        buttonText: 'OK',
+        buttonTextStyle: {color: '#008000'},
+        buttonStyle: {backgroundColor: '#5cb85c'},
+        duration: 8000,
+      });
+    } finally {
+      setIsLoading(false);
     }
-  }, [isLoading, screenController]);
+  };
 
   // On Email Change
   const onChangeEmail = (email) => {
@@ -88,6 +105,7 @@ const ResendValidationEmail = ({navigation}) => {
   const onSubmitBtnPress = () => {
     if (screenController.isAValidEmail && screenController.email !== '') {
       setIsLoading(true);
+      callResendValidationEmailAPI();
     } else {
       Toast.show({
         text: 'Not valid email!',
@@ -107,63 +125,45 @@ const ResendValidationEmail = ({navigation}) => {
   // Render
   if (screenController.isSent) {
     return (
-      <Container>
-        <Content padder>
-          <Icon
-            name="checkmark-circle"
-            style={{fontSize: 80, color: 'green'}}
-          />
-          <Text>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-            nisl nibh, suscipit eu nibh id, malesuada ullamcorper sapien.
-            Pellentesque imperdiet, velit in condimentum bibendum, massa urna
-            fringilla erat, ac posuere odio urna sed velit.
-          </Text>
-          <Button block onPress={() => onBackBtnPress()}>
-            <Text>Back</Text>
-          </Button>
-        </Content>
-      </Container>
+      <CheckYourEmail
+        handleBackBtn={onBackBtnPress}
+        textMsg={[
+          'We will send to you a email with a link to allow you to change you email.',
+        ]}
+      />
     );
   } else {
-    return (
+    return isLoading ? (
+      <LoadingBig isVisible={true} />
+    ) : (
       <Container>
         <Content padder>
-          <Text>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-            nisl nibh, suscipit eu nibh id, malesuada ullamcorper sapien.
-            Pellentesque imperdiet, velit in condimentum bibendum, massa urna
-            fringilla erat, ac posuere odio urna sed velit.
+          <Image source={imgBee} style={baseStyles.image} />
+          <Text style={baseStyles.text}>
+            We will resend an email to you so we can validate your email
+            account.
           </Text>
-          <Form>
+          <Form style={baseStyles.form}>
+            <Label>Email</Label>
             <Item
-              success={screenController.isAValidEmail}
+              regular
               error={!screenController.isAValidEmail}
               disabled={isLoading}
               last>
-              <Label>E-mail</Label>
               <Input
+                placeholder="Email"
+                autoCapitalize="none"
                 value={screenController.email}
                 disabled={isLoading}
                 onChangeText={(email) => {
                   onChangeEmail(email);
                 }}
               />
-              {isLoading ? (
-                <Icon name="information-circle" />
-              ) : screenController.isAValidEmail &&
-                screenController.email !== '' ? (
-                <Icon name="checkmark-circle" />
-              ) : !screenController.isAValidEmail &&
-                screenController.email !== '' ? (
-                <Icon name="close-circle" />
-              ) : null}
             </Item>
           </Form>
           <Button block disabled={isLoading} onPress={() => onSubmitBtnPress()}>
             <Text>Request</Text>
           </Button>
-          {isLoading ? <Spinner /> : null}
         </Content>
       </Container>
     );

@@ -22,8 +22,9 @@ const styles = StyleSheet.create({
   },
   GoogleSigninButton: {
     marginTop: 15,
-    width: Dimensions.get('window').width,
+    width: '100%', //Dimensions.get('window').width - 30,
     marginBottom: 15,
+    //borderWidth: 1,
   },
   forgotResendBtn: {
     marginBottom: 15,

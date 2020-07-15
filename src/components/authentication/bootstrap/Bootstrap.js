@@ -29,6 +29,9 @@ import {Col, Grid} from 'react-native-easy-grid';
 // Style
 import bootstrapStyles from './bootstrapStyles';
 
+// Layout
+import LoadingBig from '../../layout/loadingBig/LoadingBig';
+
 // Screen
 const Bootstrap = ({navigation}) => {
   // Dispatch - Redux hook
@@ -74,16 +77,7 @@ const Bootstrap = ({navigation}) => {
   }, [bootstrapState]);
 
   // Render
-  return (
-    <Container contentContainerStyle={bootstrapStyles.container}>
-      <Grid style={bootstrapStyles.centralize}>
-        <Col style={bootstrapStyles.centralize}>
-          <Image source={icon} />
-          <Spinner color="blue" />
-        </Col>
-      </Grid>
-    </Container>
-  );
+  return <LoadingBig isVisible={true} />;
 };
 
 // Export
