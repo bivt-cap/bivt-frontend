@@ -46,7 +46,7 @@ const FooterBase = (props) => {
 
   // Stored State - Redux hook
   const userData = useSelector((state) => state.login);
-
+  const bootstrapState = useSelector((state) => state.bootstrap);
   // Logout Handler
   const handleLogoutButtonClick = async () => {
     try {
@@ -101,8 +101,13 @@ const FooterBase = (props) => {
           </Button>
         ) : null}
         <Button
+          // onPress={() =>
+          //   props.handleSettings ? props.handleSettings() : null
+          // }
           onPress={() =>
-            props.handleSettings ? props.handleSettings() : null
+            props.navigation.navigate('Settings', {
+              userInfo: bootstrapState.user,
+            })
           }>
           <Icon ios="ios-cog" android="md-cog" style={getSettingsButnStyle()} />
         </Button>

@@ -91,7 +91,9 @@ const styles = StyleSheet.create({
   welcomeStyle: {
     borderWidth: 5,
     borderRadius: 100,
-    marginTop: 5,
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
   },
   groupPaper: {
     height: 80,

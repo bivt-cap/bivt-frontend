@@ -41,6 +41,7 @@ import PollingList from './src/components/plugins/polling/PollingList';
 import AddPolling from './src/components/plugins/polling/AddPolling';
 import PollingDetail from './src/components/plugins/polling/PollingDetail';
 import PollingGraph from './src/components/plugins/polling/PollingGraph';
+import Settings from './src/components/dashboard/Settings';
 
 // Navigator
 const Stack = createStackNavigator();
@@ -214,6 +215,13 @@ const App = () => {
                 options={{
                   title: 'Expenses',
                 }}
+              />
+              <Stack.Screen
+                name="Settings"
+                options={{
+                  title: 'Settings',
+                }}
+                component={Settings}
               />
             </>
           ) : (

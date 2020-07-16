@@ -148,6 +148,8 @@ const Chat = ({route}) => {
         containerStyle={{
           backgroundColor: 'rgb(165,59,186)',
           placeholderTextColor: '#fff',
+          borderTopEndRadius: 20,
+          borderTopStartRadius: 20,
         }}
         textInputStyle={{color: '#fff'}}
       />
