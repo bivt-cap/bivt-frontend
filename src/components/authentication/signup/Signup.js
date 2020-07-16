@@ -23,6 +23,10 @@ import {signupFormValidation} from './signupFormValidation';
 // Custom Layout
 import HeaderWithLogo from '../../layout/headerWithLogo/HeaderWithLogo';
 
+// Screen
+import LoadingSmall from '../../layout/loadingSmall/loadingSmall';
+import CheckYourEmail from '../checkYourEmail/CheckYourEmail';
+
 const Signup = ({navigation}) => {
   const dispatch = useDispatch();
   const signupStatus = useSelector((state) => state.signup);
@@ -95,17 +99,17 @@ const Signup = ({navigation}) => {
     });
   };
 
-  /**
-   * The following function redirect users to create circle page once the
-   * account has been succesfully created.
-   * Note: this is just for a testing purpose, in this project user will validate
-   * the email and then login again to go to create circle page.
-   */
-  useEffect(() => {
-    if (signupStatus.registrationDetails === 'account successfully created') {
-      navigation.navigate('SignupFeedback');
-    }
-  }, [signupStatus, navigation]);
+  ///**
+  // * The following function redirect users to create circle page once the
+  // * account has been succesfully created.
+  // * Note: this is just for a testing purpose, in this project user will validate
+  // * the email and then login again to go to create circle page.
+  // */
+  //useEffect(() => {
+  //  if (signupStatus.registrationDetails === 'account successfully created') {
+  //    navigation.navigate('SignupFeedback');
+  //  }
+  //}, [signupStatus, navigation]);
 
   if (
     signupError.eMail.error ||
@@ -128,65 +132,93 @@ const Signup = ({navigation}) => {
     });
   }
 
-  return (
-    <Container>
-      <HeaderWithLogo title="Register" />
-      <Content>
-        <Form>
-          <Label>Email</Label>
-          <Item regular error={signupError.eMail.error}>
-            <Input
-              autoCompleteType={'email'}
-              placeholder="Email"
-              onChangeText={(val) => handleSignupInputChange('eMail', val)}
-            />
-          </Item>
-          <Label>Password</Label>
-          <Item regular error={signupError.password.error}>
-            <Input
-              secureTextEntry={true}
-              autoCompleteType={'password'}
-              placeholder="Password"
-              onChangeText={(val) => handleSignupInputChange('password', val)}
-            />
-          </Item>
-          <Label>Confirm Password</Label>
-          <Item regular error={signupError.coPassword.error}>
-            <Input
-              secureTextEntry={true}
-              autoCompleteType={'password'}
-              placeholder="Password"
-              onChangeText={(val) => handleSignupInputChange('coPassword', val)}
-            />
-          </Item>
-          <Label>First Name</Label>
-          <Item regular error={signupError.firstName.error}>
-            <Input
-              placeholder="First Name"
-              onChangeText={(val) => handleSignupInputChange('firstName', val)}
-            />
-          </Item>
-          <Label>Last Name</Label>
-          <Item regular error={signupError.lastName.error} last>
-            <Input
-              placeholder="Last Name"
-              onChangeText={(val) => handleSignupInputChange('lastName', val)}
-            />
-          </Item>
-        </Form>
-        <Button full onPress={submitSignupForm}>
-          <Text>Submit</Text>
-        </Button>
-        {signupStatus.loading ? (
-          <Text>...loading</Text>
-        ) : signupStatus.error.length > 0 ? (
-          <Text>{signupStatus.error}</Text>
-        ) : (
-          <Text>{signupStatus.registrationDetails}</Text>
-        )}
-      </Content>
-    </Container>
-  );
+  // Return to Login
+  const onBackBtnPress = () => {
+    navigation.navigate('Login');
+  };
+
+  // Render
+  if (signupStatus.registrationDetails === 'account successfully created') {
+    return (
+      <>
+        <HeaderWithLogo title="Register" />
+        <CheckYourEmail
+          handleBackBtn={onBackBtnPress}
+          textMsg={[
+            'Check your email!',
+            'We sent to you a email so we can validate your email account.',
+          ]}
+        />
+      </>
+    );
+  } else {
+    return (
+      <Container>
+        <HeaderWithLogo title="Register" />
+        <Content>
+          <Form>
+            <Label>Email</Label>
+            <Item regular error={signupError.eMail.error}>
+              <Input
+                autoCapitalize="none"
+                autoCompleteType={'email'}
+                placeholder="Email"
+                onChangeText={(val) => handleSignupInputChange('eMail', val)}
+              />
+            </Item>
+            <Label>Password</Label>
+            <Item regular error={signupError.password.error}>
+              <Input
+                autoCapitalize="none"
+                secureTextEntry={true}
+                autoCompleteType={'password'}
+                placeholder="Password"
+                onChangeText={(val) => handleSignupInputChange('password', val)}
+              />
+            </Item>
+            <Label>Confirm Password</Label>
+            <Item regular error={signupError.coPassword.error}>
+              <Input
+                autoCapitalize="none"
+                secureTextEntry={true}
+                autoCompleteType={'password'}
+                placeholder="Password"
+                onChangeText={(val) =>
+                  handleSignupInputChange('coPassword', val)
+                }
+              />
+            </Item>
+            <Label>First Name</Label>
+            <Item regular error={signupError.firstName.error}>
+              <Input
+                placeholder="First Name"
+                onChangeText={(val) =>
+                  handleSignupInputChange('firstName', val)
+                }
+              />
+            </Item>
+            <Label>Last Name</Label>
+            <Item regular error={signupError.lastName.error} last>
+              <Input
+                placeholder="Last Name"
+                onChangeText={(val) => handleSignupInputChange('lastName', val)}
+              />
+            </Item>
+          </Form>
+          <Button block onPress={submitSignupForm}>
+            <Text>Submit</Text>
+          </Button>
+          {signupStatus.loading ? (
+            <LoadingSmall />
+          ) : signupStatus.error.length > 0 ? (
+            <Text>{signupStatus.error}</Text>
+          ) : (
+            <Text>{signupStatus.registrationDetails}</Text>
+          )}
+        </Content>
+      </Container>
+    );
+  }
 };
 
 export default Signup;
