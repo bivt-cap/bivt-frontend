@@ -96,8 +96,7 @@ const App = () => {
                 name="CreateCircle"
                 component={CreateCircle}
                 options={{
-                  title: 'Lets create a perfect circle for you',
-                  headerLeft: null,
+                  headerShown: false,
                 }}
               />
               <Stack.Screen

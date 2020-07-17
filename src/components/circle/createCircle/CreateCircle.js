@@ -2,19 +2,28 @@
 /**
  * This component handles the creation of new groups/circles.
  *
- * @version 0.0.1
+ * @version 0.0.2
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ * @updated: Eduardo Pereira do Carmo (https://github.com/eduardopcarmo)
  */
+
+// React
 import React, {useState, useEffect} from 'react';
+
+// React Native
+import {TouchableOpacity, StyleSheet} from 'react-native';
+
+// Redux
 import {useSelector, useDispatch} from 'react-redux';
 import {
   createCircle,
   getCircleTypesAndPluginsDetail,
   resetBootstrap,
 } from '../../../redux';
+
+// Native Base
 import {
   Container,
-  Header,
   Content,
   Form,
   Item,
@@ -22,25 +31,84 @@ import {
   Label,
   Button,
   Text,
-  Picker,
+  H1,
+  Card,
+  CardItem,
+  Body,
+  Thumbnail,
+  H2,
+  List,
+  ListItem,
+  Toast,
 } from 'native-base';
-import createCircleStyles from './createCircleStyles';
+
+// Custom Layout
+import HeaderWithLogo from '../../layout/headerWithLogo/HeaderWithLogo';
+import SmallLoading from '../../layout/loadingSmall/loadingSmall';
+
+// Validation
 import {createCircleValidation} from './createCircleValidation';
 
 // Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 
+// Style
+const createCircleStyles = StyleSheet.create({
+  gTypeH1: {
+    margin: 40,
+    marginBottom: 40,
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  gTypeBody: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  gTypeBodyThumbnail: {
+    borderWidth: 1,
+    borderColor: '#CA60E3',
+  },
+  gTypeBodyText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginLeft: 20,
+  },
+  nForm: {
+    marginTop: 20,
+  },
+  nH2: {
+    margin: 40,
+  },
+  nList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 20,
+  },
+  nListItem: {
+    borderBottomWidth: 0,
+  },
+  nImgSelected: {
+    borderWidth: 4,
+    borderColor: '#CA60E3',
+  },
+});
+
+// Image Map
+import {ImageDefaultGroup} from '../../../utils/ImageMap';
+
+// Screen
 const CreateCircle = ({navigation}) => {
+  // Hocks
   const dispatch = useDispatch();
   const createCircleStatus = useSelector((state) => state.createCircle);
-  // ****************************************************//
-  // ************ BEGINING OF STATES DECLARATIONS ******//
-  // **************************************************//
+
+  // States
   const [createCircleDetails, setCreateCircleDetails] = useState({
     circleName: '',
     selectedCircleType: 0,
+    selectedImage: '',
   });
-
   const [createCircleError, setCreateCircleError] = useState({
     circleName: {
       error: false,
@@ -49,11 +117,6 @@ const CreateCircle = ({navigation}) => {
       error: false,
     },
   });
-
-  const [userMessage, setUserMessage] = useState('');
-  // ****************************************************//
-  // ************ END OF STATES DECLARATIONS ***********//
-  // **************************************************//
 
   /**
    * This function fetch available circles and correponding plugins
@@ -68,39 +131,18 @@ const CreateCircle = ({navigation}) => {
     getTypes();
   }, []);
 
-  //useEffect(() => {
-  //  if (createCircleStatus.circleRegistrationDetails !== null) {
-  //    dispatch(resetBootstrap());
-  //    navigation.navigate('Bootstrap');
-  //  }
-  //}, [createCircleStatus]);
-
   /**
    * The following function redirect users to choose plugins page once the
    * circle has been succesfully created.
    */
   useEffect(() => {
-    setUserMessage('');
     if (createCircleStatus.circleRegistrationDetails !== null) {
-      setUserMessage('account created');
-      navigation.navigate('ChoosePlugins', {
-        createCircleStatus: createCircleStatus,
-        createCircleDetails: createCircleDetails,
-      });
+      dispatch(resetBootstrap());
+      navigation.navigate('Bootstrap');
     }
   }, [createCircleStatus.circleRegistrationDetails]);
 
-  //The state gets updated when ever a user types something in the input box
-  //Using the array deconstruction ES6 to updated a particular field's state
-  const handleCreateCircleInputChange = (key, value) => {
-    setCreateCircleDetails((prevState) => {
-      return {
-        ...prevState,
-        [key]: value,
-      };
-    });
-  };
-
+  //
   /**
    * Form validation:
    * On submission, this function sends the data to get validated
@@ -111,97 +153,145 @@ const CreateCircle = ({navigation}) => {
       createCircleDetails,
     );
     createCircleValidationErrors.then(async (errors) => {
-      // Read the token from the Key Chain
-      const token = await JwtKeyChain.read();
       // Show erros
       setCreateCircleError(errors);
       if (!errors.circleName.error && !errors.selectedCircleType.error) {
+        // Read the token from the Key Chain
+        const token = await JwtKeyChain.read();
         dispatch(createCircle(createCircleDetails, token));
+      } else {
+        Toast.show({
+          text: 'Group Name is required!',
+          buttonText: 'OK',
+          buttonTextStyle: {color: '#FFF'},
+          buttonStyle: {backgroundColor: '#CA60E3'},
+          duration: 8000,
+        });
       }
     });
   };
-  /**
-   * This function populate the circle type options in drop down/picker
-   */
-  const circleTypeOptions = () => {
-    return createCircleStatus.circleTypesAndPluginsDetails.circleType.map(
-      (circleType) => {
-        return (
-          <Picker.Item
-            label={circleType.name.toString()}
-            value={circleType.id}
-            key={circleType.id}
-          />
-        );
-      },
-    );
-  };
-  /**
-   * This function handle the change in value of the drop down/picker
-   */
-  const onPickerValueChange = (value) => {
+
+  // Handle group selection
+  const selectGroupType = (selectedCircleType) => {
     setCreateCircleDetails((prevState) => {
       return {
         ...prevState,
-        selectedCircleType: value,
+        selectedCircleType,
+        selectedImage:
+          selectedCircleType === 1
+            ? 'Family1.png'
+            : selectedCircleType === 2
+            ? 'Rommate1.png'
+            : 'SportTeam1.png',
       };
     });
   };
 
+  // Handle the form input change
+  const handleCreateCircleInputChange = (key, value) => {
+    setCreateCircleDetails((prevState) => {
+      return {
+        ...prevState,
+        [key]: value,
+      };
+    });
+  };
+
+  // Handle group selection
+  const selectImage = (selectedImage) => {
+    setCreateCircleDetails((prevState) => {
+      return {
+        ...prevState,
+        selectedImage,
+      };
+    });
+  };
+
+  // Screen
   return (
-    <Container style={createCircleStyles.createCircleContainer}>
-      <Header />
-      <Content>
-        <Form style={createCircleStyles.createCircleForm}>
-          <Item stackedLabel>
-            <Label>Circle Name*</Label>
-            {createCircleError.circleName.error && (
-              <Label style={createCircleStyles.textFieldError}>
-                {createCircleError.circleName.message}
-              </Label>
-            )}
-            <Input
-              onChangeText={(val) =>
-                handleCreateCircleInputChange('circleName', val)
-              }
-            />
-          </Item>
-          <Item
-            stackedLabel
-            style={createCircleStyles.createCircleDropDownItem}>
-            <Label>Select your circle type*</Label>
-            {createCircleError.selectedCircleType.error && (
-              <Label style={createCircleStyles.textFieldError}>
-                {createCircleError.selectedCircleType.message}
-              </Label>
-            )}
-            <Picker
-              note
-              mode="dropdown"
-              style={createCircleStyles.createCircleDropDown}
-              selectedValue={createCircleDetails.selectedCircleType}
-              onValueChange={onPickerValueChange.bind(this)}>
-              <Picker.Item label="choose one:" value={0} key={0} />
-              {createCircleStatus.circleTypesAndPluginsDetails === '' ? (
-                <Picker.Item label="loading" value={0} key={0} />
-              ) : (
-                circleTypeOptions()
-              )}
-            </Picker>
-          </Item>
-        </Form>
-        <Button
-          full
-          style={createCircleStyles.createCircleButton}
-          onPress={submitCreateCircleForm}>
-          <Text>Create Circle</Text>
-        </Button>
-        {createCircleStatus.loading ? (
-          <Text>...loading</Text>
-        ) : createCircleStatus.error.length > 0 ? (
-          <Text>{createCircleStatus.error}</Text>
-        ) : null}
-      </Content>
+    <Container>
+      <HeaderWithLogo title="Creating a Group" />
+      {createCircleDetails.selectedCircleType === 0 ? (
+        <Content>
+          <H1 style={createCircleStyles.gTypeH1}>
+            What Kind Of Group Management Can Help You With?
+          </H1>
+          {createCircleStatus.circleTypesAndPluginsDetails.circleType ? (
+            createCircleStatus.circleTypesAndPluginsDetails.circleType.map(
+              (circleType) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => selectGroupType(circleType.id)}>
+                    <Card>
+                      <CardItem>
+                        <Body style={createCircleStyles.gTypeBody}>
+                          <Thumbnail
+                            large
+                            style={createCircleStyles.gTypeBodyThumbnail}
+                            source={
+                              circleType.id === 1
+                                ? ImageDefaultGroup[0].source
+                                : circleType.id === 2
+                                ? ImageDefaultGroup[3].source
+                                : ImageDefaultGroup[6].source
+                            }
+                          />
+                          <Text style={createCircleStyles.gTypeBodyText}>
+                            {circleType.name}
+                          </Text>
+                        </Body>
+                      </CardItem>
+                    </Card>
+                  </TouchableOpacity>
+                );
+              },
+            )
+          ) : (
+            <SmallLoading />
+          )}
+        </Content>
+      ) : (
+        <Content>
+          <Form style={createCircleStyles.nForm}>
+            <Label>Group Name</Label>
+            <Item regular error={createCircleError.circleName.error}>
+              <Input
+                placeholder="Your Group Name"
+                onChangeText={(val) =>
+                  handleCreateCircleInputChange('circleName', val)
+                }
+              />
+            </Item>
+          </Form>
+          <H2 style={createCircleStyles.nH2}>
+            Personalize your group choosing a photo
+          </H2>
+          <List style={createCircleStyles.nList}>
+            {ImageDefaultGroup.map((img) => {
+              return (
+                <ListItem style={createCircleStyles.nListItem}>
+                  <TouchableOpacity onPress={() => selectImage(img.name)}>
+                    <Thumbnail
+                      style={
+                        createCircleDetails.selectedImage === img.name
+                          ? createCircleStyles.nImgSelected
+                          : createCircleStyles.gTypeBodyThumbnail
+                      }
+                      source={img.source}
+                    />
+                  </TouchableOpacity>
+                </ListItem>
+              );
+            })}
+          </List>
+          <Button
+            full
+            style={createCircleStyles.createCircleButton}
+            onPress={() => submitCreateCircleForm()}>
+            <Text>Create</Text>
+          </Button>
+        </Content>
+      )}
     </Container>
   );
 };

@@ -41,6 +41,7 @@ export const createCircleFailure = (error) => {
 export const createCircle = (createCircleDetails, token) => {
   const circleInfo = {
     name: createCircleDetails.circleName,
+    image: createCircleDetails.selectedImage,
   };
   const config = {
     headers: {Authorization: `Bearer ${token}`},
