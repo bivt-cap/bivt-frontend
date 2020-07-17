@@ -48,6 +48,9 @@ import GroupSetting from './src/components/dashboard/Settings/GroupSetting';
 // Navigator
 const Stack = createStackNavigator();
 
+// Disable
+console.disableYellowBox = true;
+
 // Main
 const App = () => {
   // Stored State - Redux hook
@@ -103,8 +106,7 @@ const App = () => {
                 name="ChoosePlugins"
                 component={ChoosePlugins}
                 options={{
-                  title: 'Select best plugins for you:',
-                  headerLeft: null,
+                  headerShown: false,
                 }}
               />
               <Stack.Screen

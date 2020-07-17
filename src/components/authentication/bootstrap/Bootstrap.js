@@ -40,9 +40,6 @@ const Bootstrap = ({navigation}) => {
   // Stored State - Redux hook
   const bootstrapState = useSelector((state) => state.bootstrap);
 
-  // Load the image source
-  const icon = require('./img/icon.png');
-
   // Effect Hook - Run only in the first-time
   useEffect(() => {
     async function getAthenticationCredential() {

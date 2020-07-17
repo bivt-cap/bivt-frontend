@@ -16,6 +16,7 @@ import {
   CIRCLES_JOINED,
   CIRCLES_NEED_CREATE,
   RESET,
+  CIRCLES_JOINED_NO_PLUGIN,
 } from './bootstrapTypes';
 
 // Actions
@@ -62,6 +63,14 @@ export const userBelongsToaCircle = (payload) => {
 export const userDontBelongsToaCircle = () => {
   return {
     type: CIRCLES_NEED_CREATE,
+  };
+};
+
+// The user belongs to a Circle
+export const userBelongsToaCircleButNotPlugins = (payload) => {
+  return {
+    type: CIRCLES_JOINED_NO_PLUGIN,
+    payload,
   };
 };
 
@@ -145,7 +154,12 @@ export const getCirclesUserIsPartOf = (token) => {
             // User belongs to a Circle?
             const inCircle = circles.find((circle) => circle.joinedAt !== null);
             if (inCircle !== null) {
-              dispatch(userBelongsToaCircle(circles));
+              // Circle has plugins
+              if (inCircle.plugins) {
+                dispatch(userBelongsToaCircle(circles));
+              } else {
+                dispatch(userBelongsToaCircleButNotPlugins(circles));
+              }
             } else {
               dispatch(userWasInvitedToJoinACircle(circles));
             }

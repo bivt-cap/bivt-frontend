@@ -12,7 +12,7 @@ import React from 'react';
 import {TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 
 // Natibe Base
-import {Card, CardItem, Text, Icon} from 'native-base';
+import {Card, CardItem, Text, Icon, Button} from 'native-base';
 
 // Style
 const pluginButtonStyles = StyleSheet.create({
@@ -50,6 +50,9 @@ const pluginButtonStyles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 10,
+  },
+  btnSelected: {
+    backgroundColor: '#B5B5B5',
   },
 });
 
@@ -140,6 +143,13 @@ const PluginButton = (props) => {
             />
           ) : null}
         </CardItem>
+        {props.showSelected ? (
+          <Button
+            block
+            style={props.isSelected ? pluginButtonStyles.btnSelected : null}>
+            <Text>{props.isSelected ? 'REMOVE' : 'ADD'}</Text>
+          </Button>
+        ) : null}
       </Card>
     </TouchableOpacity>
   );

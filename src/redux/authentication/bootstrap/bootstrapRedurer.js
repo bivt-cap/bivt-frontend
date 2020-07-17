@@ -13,6 +13,7 @@ import {
   CIRCLES_JOINED,
   CIRCLES_NEED_CREATE,
   RESET,
+  CIRCLES_JOINED_NO_PLUGIN,
 } from './bootstrapTypes';
 
 // Initial State
@@ -60,6 +61,13 @@ const bootstrapReducer = (state = bootstrapInitialState, action) => {
         isLoading: false,
         circles: action.payload,
         initialRouteName: 'DashBoard',
+      };
+    case CIRCLES_JOINED_NO_PLUGIN:
+      return {
+        ...state,
+        isLoading: false,
+        circles: action.payload,
+        initialRouteName: 'ChoosePlugins',
       };
     case CIRCLES_NEED_CREATE:
       return {

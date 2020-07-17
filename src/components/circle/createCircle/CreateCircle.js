@@ -218,10 +218,11 @@ const CreateCircle = ({navigation}) => {
           </H1>
           {createCircleStatus.circleTypesAndPluginsDetails.circleType ? (
             createCircleStatus.circleTypesAndPluginsDetails.circleType.map(
-              (circleType) => {
+              (circleType, index) => {
                 return (
                   <TouchableOpacity
-                    onPress={() => selectGroupType(circleType.id)}>
+                    onPress={() => selectGroupType(circleType.id)}
+                    key={index}>
                     <Card>
                       <CardItem>
                         <Body style={createCircleStyles.gTypeBody}>
@@ -267,9 +268,9 @@ const CreateCircle = ({navigation}) => {
             Personalize your group choosing a photo
           </H2>
           <List style={createCircleStyles.nList}>
-            {ImageDefaultGroup.map((img) => {
+            {ImageDefaultGroup.map((img, index) => {
               return (
-                <ListItem style={createCircleStyles.nListItem}>
+                <ListItem style={createCircleStyles.nListItem} key={index}>
                   <TouchableOpacity onPress={() => selectImage(img.name)}>
                     <Thumbnail
                       style={
