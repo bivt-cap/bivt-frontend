@@ -47,25 +47,25 @@ const FooterBase = (props) => {
   // Stored State - Redux hook
   const userData = useSelector((state) => state.login);
   const bootstrapState = useSelector((state) => state.bootstrap);
-  // Logout Handler
-  const handleLogoutButtonClick = async () => {
-    try {
-      //If user authenticate with google oAuth
-      if (userData.googleisLoggedin === 'True') {
-        await GoogleSignin.revokeAccess();
-        await GoogleSignin.signOut();
-        userData.googleisLoggedin = 'False';
-      } else if (userData.isLoggedin === 'True') {
-        userData.isLoggedin = 'False';
-        userData.loginDetails = '';
-      }
-      deleteJTWFromKeyChain();
-      dispatch(resetBootstrap());
-      props.navigation.navigate('Bootstrap');
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // // Logout Handler
+  // const handleLogoutButtonClick = async () => {
+  //   try {
+  //     //If user authenticate with google oAuth
+  //     if (userData.googleisLoggedin === 'True') {
+  //       await GoogleSignin.revokeAccess();
+  //       await GoogleSignin.signOut();
+  //       userData.googleisLoggedin = 'False';
+  //     } else if (userData.isLoggedin === 'True') {
+  //       userData.isLoggedin = 'False';
+  //       userData.loginDetails = '';
+  //     }
+  //     deleteJTWFromKeyChain();
+  //     dispatch(resetBootstrap());
+  //     props.navigation.navigate('Bootstrap');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const getSettingsButnStyle = () => {
     // Se tem uma acao para executar
@@ -111,11 +111,6 @@ const FooterBase = (props) => {
           }>
           <Icon ios="ios-cog" android="md-cog" style={getSettingsButnStyle()} />
         </Button>
-        {props.showExit ? (
-          <Button onPress={() => handleLogoutButtonClick()}>
-            <Icon ios="ios-exit" android="md-exit" />
-          </Button>
-        ) : null}
       </FooterTab>
     </Footer>
   );

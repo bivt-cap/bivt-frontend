@@ -41,7 +41,9 @@ import PollingList from './src/components/plugins/polling/PollingList';
 import AddPolling from './src/components/plugins/polling/AddPolling';
 import PollingDetail from './src/components/plugins/polling/PollingDetail';
 import PollingGraph from './src/components/plugins/polling/PollingGraph';
-import Settings from './src/components/dashboard/Settings';
+import Settings from './src/components/dashboard/Settings/Settings';
+import ProfileSetting from './src/components/dashboard/Settings/ProfileSetting';
+import GroupSetting from './src/components/dashboard/Settings/GroupSetting';
 
 // Navigator
 const Stack = createStackNavigator();
@@ -222,6 +224,20 @@ const App = () => {
                   title: 'Settings',
                 }}
                 component={Settings}
+              />
+              <Stack.Screen
+                name="ProfileSetting"
+                options={{
+                  title: 'Profile',
+                }}
+                component={ProfileSetting}
+              />
+              <Stack.Screen
+                name="GroupSetting"
+                component={GroupSetting}
+                options={{
+                  title: 'Group',
+                }}
               />
             </>
           ) : (
