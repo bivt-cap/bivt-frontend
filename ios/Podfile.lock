@@ -301,7 +301,11 @@ PODS:
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 3.5.0)
     - React
+  - react-native-image-base64 (0.1.4):
+    - React
   - react-native-image-picker (2.3.1):
+    - React
+  - react-native-image-resizer (1.2.3):
     - React
   - react-native-maps (0.27.1):
     - React
@@ -375,6 +379,8 @@ PODS:
   - RNCMaskedView (0.1.10):
     - React
   - RNCPicker (1.6.0):
+    - React
+  - RNDateTimePicker (2.5.0):
     - React
   - RNGestureHandler (1.6.1):
     - React
@@ -458,7 +464,9 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-google-maps (from `../node_modules/react-native-maps`)
+  - react-native-image-base64 (from `../node_modules/react-native-image-base64`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -477,6 +485,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-community/picker`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-community/google-signin`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -566,8 +575,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-image-base64:
+    :path: "../node_modules/react-native-image-base64"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
@@ -602,6 +615,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
     :path: "../node_modules/@react-native-community/picker"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
@@ -684,7 +699,9 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
+  react-native-image-base64: acfe962aa79535d826a2668e66474e85a9ee468d
   react-native-image-picker: 668e72d0277dc8c12ae90e835507c1eddd2e4f85
+  react-native-image-resizer: 3a0a2ab15953b2aec5dda20338e3c6bd6c26e528
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
@@ -702,6 +719,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 62559ca9a3e7790bac152a3e69bdd9ca349d37bd
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNCPicker: bab63e6fed69ac6122fcd9993209b6854de46d0b
+  RNDateTimePicker: 8d8eaff487659a32ad04f6690b33b3248ef9026d
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNGoogleSignin: 33ea396db82a4aab719ee435b2198c0f02f127c3
   RNKeychain: bf2d7e9a0ae7a073c07770dd2aa6d11c67581733

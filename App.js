@@ -41,6 +41,9 @@ import PollingList from './src/components/plugins/polling/PollingList';
 import AddPolling from './src/components/plugins/polling/AddPolling';
 import PollingDetail from './src/components/plugins/polling/PollingDetail';
 import PollingGraph from './src/components/plugins/polling/PollingGraph';
+import Settings from './src/components/dashboard/Settings/Settings';
+import ProfileSetting from './src/components/dashboard/Settings/ProfileSetting';
+import GroupSetting from './src/components/dashboard/Settings/GroupSetting';
 
 // Navigator
 const Stack = createStackNavigator();
@@ -70,7 +73,7 @@ const App = () => {
           dark: false,
           colors: {
             ...DefaultTheme.colors,
-            primary: 'rgb(165,59,186)',
+            primary: 'rgb(255,255,255)',
             background: 'rgb(165,59,186)',
             card: 'rgb(165,59,186)',
             text: 'rgb(255,255,255)',
@@ -213,6 +216,37 @@ const App = () => {
                 component={ExpenseManager}
                 options={{
                   title: 'Expenses',
+                }}
+              />
+              <Stack.Screen
+                name="Settings"
+                options={{
+                  title: 'Settings',
+                }}
+                component={Settings}
+              />
+              <Stack.Screen
+                name="ProfileSetting"
+                options={{
+                  title: 'Profile',
+                  headerRight: () => (
+                    <Button transparent>
+                      <Icon style={{color: '#fff'}} name="create" />
+                    </Button>
+                  ),
+                }}
+                component={ProfileSetting}
+              />
+              <Stack.Screen
+                name="GroupSetting"
+                component={GroupSetting}
+                options={{
+                  title: 'Group',
+                  headerRight: () => (
+                    <Button transparent>
+                      <Icon style={{color: '#fff'}} name="create" />
+                    </Button>
+                  ),
                 }}
               />
             </>

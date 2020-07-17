@@ -137,7 +137,7 @@ const DashBoard = ({route, navigation}) => {
           })}
         </Body>
       </Content>
-      <FooterBase navigation showExit />
+      <FooterBase navigation={navigation} showExit />
     </Container>
   );
 };

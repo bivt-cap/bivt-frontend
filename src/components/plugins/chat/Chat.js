@@ -7,9 +7,15 @@
 
 import React, {useEffect, useState, useCallback} from 'react';
 import {useSelector} from 'react-redux';
-import {GiftedChat, InputToolbar, Send} from 'react-native-gifted-chat';
-import {Platform, Text} from 'react-native';
-import {Spinner, Icon, Button, Container} from 'native-base';
+import {
+  GiftedChat,
+  InputToolbar,
+  Send,
+  Bubble,
+  Time,
+} from 'react-native-gifted-chat';
+import {Platform, SafeAreaView} from 'react-native';
+import {Spinner, Icon, Button, Container, View} from 'native-base';
 import {uploadImage} from './uploadImage';
 import Fire from './Fire';
 import ImagePicker from 'react-native-image-picker';
@@ -126,8 +132,11 @@ const Chat = ({route}) => {
 
   const renderSend = (props) => {
     return (
-      <Send {...props}>
-        <Icon name="md-send" style={{color: 'blue', marginRight: 10}} />
+      <Send {...props} textInputStyle={{fontSize: 5}}>
+        <Icon
+          name="md-send"
+          style={{color: 'white', marginRight: 10, marginBottom: 5}}
+        />
       </Send>
     );
   };
@@ -137,8 +146,12 @@ const Chat = ({route}) => {
         {...props}
         // eslint-disable-next-line react-native/no-inline-styles
         containerStyle={{
-          borderRadius: 20,
+          backgroundColor: 'rgb(165,59,186)',
+          placeholderTextColor: '#fff',
+          borderTopEndRadius: 20,
+          borderTopStartRadius: 20,
         }}
+        textInputStyle={{color: '#fff'}}
       />
     );
   };
@@ -146,28 +159,67 @@ const Chat = ({route}) => {
   const renderCameraButton = () => {
     return (
       <Button transparent onPress={getImage}>
-        <Icon name="ios-camera" />
+        <Icon style={{color: 'white'}} name="ios-camera" />
       </Button>
     );
   };
-  return !message.isLoading && !message.isWelcomeMessage ? (
-    <Container>
-      <GiftedChat
-        messages={message.messages}
-        onSend={Fire.shared.sendMessages}
-        renderSend={renderSend}
-        renderInputToolbar={renderInputToolbar}
-        renderActions={renderCameraButton}
-        renderUsernameOnMessage={true}
-        user={user()}
+  const renderBubble = (props) => {
+    return (
+      <View>
+        <Bubble
+          {...props}
+          textStyle={{
+            right: {
+              color: 'black',
+            },
+            left: {
+              color: 'black',
+            },
+          }}
+          wrapperStyle={{
+            right: {
+              backgroundColor: 'rgb(248,222, 255)',
+            },
+          }}
+        />
+      </View>
+    );
+  };
+  const renderTime = (props) => {
+    return (
+      <Time
+        {...props}
+        timeTextStyle={{
+          right: {
+            color: '#848484',
+          },
+        }}
       />
-    </Container>
+    );
+  };
+  return !message.isLoading && !message.isWelcomeMessage ? (
+    <SafeAreaView style={{flex: 1, backgroundColor: 'rgb(165,59,186)'}}>
+      <Container>
+        <GiftedChat
+          messages={message.messages}
+          onSend={Fire.shared.sendMessages}
+          renderSend={renderSend}
+          renderTime={renderTime}
+          renderInputToolbar={renderInputToolbar}
+          renderActions={renderCameraButton}
+          renderUsernameOnMessage={true}
+          renderBubble={renderBubble}
+          user={user()}
+        />
+      </Container>
+    </SafeAreaView>
   ) : message.isWelcomeMessage ? (
     <Container>
       <GiftedChat
         messages={message.messages}
         onSend={Fire.shared.sendMessages}
         renderSend={renderSend}
+        renderTime={renderTime}
         renderInputToolbar={renderInputToolbar}
         renderActions={renderCameraButton}
         renderUsernameOnMessage={true}

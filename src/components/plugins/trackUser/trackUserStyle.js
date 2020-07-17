@@ -1,5 +1,5 @@
 /**
- * Login Page Style
+ * Track Plugin Style
  *
  * @version 0.0.1
  * @author Yalcin Tatar (https://github.com/yalcinos)
@@ -87,6 +87,13 @@ const styles = StyleSheet.create({
   locationDateSize: {
     fontSize: 13,
     color: 'gray',
+  },
+  welcomeStyle: {
+    borderWidth: 5,
+    borderRadius: 100,
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
   },
   groupPaper: {
     height: 80,

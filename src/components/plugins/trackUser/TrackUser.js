@@ -1,6 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import BottomSheet from 'reanimated-bottom-sheet';
-import {Container, View, Text} from 'native-base';
+import {
+  Container,
+  View,
+  Text,
+  Content,
+  Card,
+  CardItem,
+  Body,
+  Left,
+  Thumbnail,
+} from 'native-base';
 import {useSelector, useDispatch} from 'react-redux';
 import {Alert, Image} from 'react-native';
 import styles from './trackUserStyle';
@@ -23,6 +33,7 @@ const TrackUser = () => {
   console.log(usersLocation);
   // console.log(bootstrapState);
   const [mapStyle, setMapStyle] = useState({paddingTop: 0});
+  const [buttonToogle, setbuttonToogle] = useState(false);
   const dispatch = useDispatch();
   /*
    * End of state declerations and fetch state from store
@@ -133,12 +144,26 @@ const TrackUser = () => {
   );
 
   const animateToMarker = (lat, long) => {
-    return this.map.animateCamera({
-      center: {
-        latitude: lat,
-        longitude: long,
-      },
-    });
+    console.log(buttonToogle);
+    if (buttonToogle === true) {
+      setbuttonToogle(false);
+      return this.map.animateCamera({
+        center: {
+          latitude: lat,
+          longitude: long,
+        },
+        zoom: 15,
+      });
+    } else {
+      setbuttonToogle(true);
+      return this.map.animateCamera({
+        center: {
+          latitude: lat,
+          longitude: long,
+        },
+        zoom: 10,
+      });
+    }
   };
   /*
    * End of functions declerations
@@ -147,7 +172,6 @@ const TrackUser = () => {
   return (
     <Container>
       {usersLocation.mapLoading === false && (
-        // <Text>{usersLocation.userCoordinates.longitude}</Text>
         <MapView
           style={[styles.map, {top: mapStyle.paddingTop}]}
           ref={(map) => {
@@ -156,8 +180,8 @@ const TrackUser = () => {
           initialRegion={{
             latitude: usersLocation.userCoordinates.latitude,
             longitude: usersLocation.userCoordinates.longitude,
-            latitudeDelta: 0.0052,
-            longitudeDelta: 0.021,
+            latitudeDelta: 0.0121,
+            longitudeDelta: 0.411,
           }}
           onMapReady={onMapReady}
           provider={PROVIDER_GOOGLE}
@@ -168,6 +192,22 @@ const TrackUser = () => {
           {usersLocation.fetchCoordLoading === false && showMarkeronMap()}
         </MapView>
       )}
+
+      <Card style={styles.welcomeStyle}>
+        <CardItem>
+          <Left>
+            <Thumbnail
+              source={require('../../../assets/images/plugins/Family3.png')}
+            />
+            <Body>
+              <Text>
+                See when your group members are at school,work or elsewhere!
+                🌍🌍🌍
+              </Text>
+            </Body>
+          </Left>
+        </CardItem>
+      </Card>
 
       <BottomSheet
         snapPoints={[350, 200, 100]}
