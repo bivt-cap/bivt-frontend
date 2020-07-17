@@ -1,10 +1,6 @@
 import React from 'react';
-import {StyleSheet, Image, Alert} from 'react-native';
+import {StyleSheet} from 'react-native';
 
-// Redux
-import {useSelector, useDispatch} from 'react-redux';
-import {deleteJTWFromKeyChain, resetBootstrap} from '../../../redux';
-import {GoogleSignin} from '@react-native-community/google-signin';
 import {
   View,
   Text,

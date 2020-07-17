@@ -229,6 +229,11 @@ const App = () => {
                 name="ProfileSetting"
                 options={{
                   title: 'Profile',
+                  headerRight: () => (
+                    <Button transparent>
+                      <Icon style={{color: '#fff'}} name="create" />
+                    </Button>
+                  ),
                 }}
                 component={ProfileSetting}
               />
@@ -237,6 +242,11 @@ const App = () => {
                 component={GroupSetting}
                 options={{
                   title: 'Group',
+                  headerRight: () => (
+                    <Button transparent>
+                      <Icon style={{color: '#fff'}} name="create" />
+                    </Button>
+                  ),
                 }}
               />
             </>

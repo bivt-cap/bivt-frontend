@@ -1,10 +1,5 @@
 import React from 'react';
-import {StyleSheet, Image, Alert} from 'react-native';
-
-// Redux
-import {useSelector, useDispatch} from 'react-redux';
-import {deleteJTWFromKeyChain, resetBootstrap} from '../../../redux';
-import {GoogleSignin} from '@react-native-community/google-signin';
+import {StyleSheet} from 'react-native';
 import {
   View,
   Text,
@@ -72,14 +67,16 @@ const GroupSetting = ({route, navigation}) => {
           </ListItem>
         </Card>
         <Card style={settingStyles.secondCard}>
-          <ListItem icon>
-            <Left>
-              <Button style={{backgroundColor: 'rgb(165,59,186)'}}>
-                <Icon active name="people" />
-              </Button>
-            </Left>
+          <ListItem Thumbnail>
+            <Button
+              style={{backgroundColor: 'rgb(165,59,186)', borderRadius: 10}}>
+              <Icon active name="people" />
+            </Button>
+
             <Body>
-              <Text>{circleInfo.name}</Text>
+              <Text style={{fontSize: 20, textAlign: 'left'}}>
+                {circleInfo.name}
+              </Text>
             </Body>
           </ListItem>
         </Card>
