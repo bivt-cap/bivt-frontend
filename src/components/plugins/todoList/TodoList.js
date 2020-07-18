@@ -29,7 +29,7 @@ const TodoList = () => {
   const bootstrapState = useSelector((state) => state.bootstrap);
   const todoListState = useSelector((state) => state.todoList);
 
-  const defaultTodo = [{id: 1, text: 'Demo ToDo'}];
+  const defaultTodo = [];
 
   const initialTodo = {id: null, text: ''};
 
@@ -180,20 +180,20 @@ const TodoList = () => {
   //action messages
   useEffect(() => {
     if (todoListState.addTodoResponse) {
-      Toast.show({
-        text: todoListState.addTodoResponse,
-        buttonText: 'Okay',
-      });
+      // Toast.show({
+      //   text: todoListState.addTodoResponse,
+      //   buttonText: 'Okay',
+      // });
     } else if (todoListState.delTodoResponse) {
       Toast.show({
         text: todoListState.delTodoResponse,
         buttonText: 'Okay',
       });
     } else if (todoListState.checkTodoResponse) {
-      Toast.show({
-        text: todoListState.checkTodoResponse,
-        buttonText: 'Okay',
-      });
+      // Toast.show({
+      //   text: todoListState.checkTodoResponse,
+      //   buttonText: 'Okay',
+      // });
     } else if (todoListState.editTodoResponse) {
       Toast.show({
         text: todoListState.editTodoResponse,
