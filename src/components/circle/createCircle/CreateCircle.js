@@ -4,7 +4,7 @@
  *
  * @version 0.0.2
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
- * @updated: Eduardo Pereira do Carmo (https://github.com/eduardopcarmo)
+ * @author: Eduardo Pereira do Carmo (https://github.com/eduardopcarmo)
  */
 
 // React

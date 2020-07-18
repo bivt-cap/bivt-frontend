@@ -2,8 +2,9 @@
 /**
  * This component let users choose the plugins
  *
- * @version 0.0.1
+ * @version 0.0.2
  * @author Arshdeep Singh (https://github.com/Singh-Arshdeep)
+ * @author: Eduardo Pereira do Carmo (https://github.com/eduardopcarmo)
  */
 
 // React

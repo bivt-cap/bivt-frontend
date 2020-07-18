@@ -14,6 +14,7 @@ import {
   CIRCLES_NEED_CREATE,
   RESET,
   CIRCLES_JOINED_NO_PLUGIN,
+  CIRCLES_JOINED_NO_MEMBERS,
 } from './bootstrapTypes';
 
 // Initial State
@@ -68,6 +69,13 @@ const bootstrapReducer = (state = bootstrapInitialState, action) => {
         isLoading: false,
         circles: action.payload,
         initialRouteName: 'ChoosePlugins',
+      };
+    case CIRCLES_JOINED_NO_MEMBERS:
+      return {
+        ...state,
+        isLoading: false,
+        circles: action.payload,
+        initialRouteName: 'InviteToCircle',
       };
     case CIRCLES_NEED_CREATE:
       return {

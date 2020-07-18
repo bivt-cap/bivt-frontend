@@ -113,8 +113,7 @@ const App = () => {
                 name="InviteToCircle"
                 component={InviteToCircle}
                 options={{
-                  title: 'Invite people to join your group',
-                  headerLeft: null,
+                  headerShown: false,
                 }}
               />
               <Stack.Screen name="ApproveCircle" component={ApproveCircle} />
