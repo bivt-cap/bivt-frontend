@@ -127,7 +127,7 @@ export default {
   brandPrimary: '#CA60E3',
   brandInfo: '#6560E3',
   brandSuccess: '#60E36F',
-  brandDanger: '#C83232',
+  brandDanger: '#E36060',
   brandWarning: '#E3E360',
   brandDark: '#000',
   brandLight: '#848484',
@@ -243,8 +243,8 @@ export default {
   segmentBorderColorMain: '#3F51B5',
 
   // Spinner
-  defaultSpinnerColor: '#45D56E',
-  inverseSpinnerColor: '#1A191B',
+  defaultSpinnerColor: '#CA60E3',
+  inverseSpinnerColor: '#E36060',
 
   // Tab
   tabDefaultBg: '#3F51B5',

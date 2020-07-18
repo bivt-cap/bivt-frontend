@@ -61,7 +61,7 @@ const pluginButtonStyles = StyleSheet.create({
     right: 10,
   },
   btnSelected: {
-    backgroundColor: '#B5B5B5',
+    backgroundColor: '#E36060',
   },
 });
 
