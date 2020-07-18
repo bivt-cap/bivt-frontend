@@ -14,6 +14,16 @@ import {TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 // Natibe Base
 import {Card, CardItem, Text, Icon, Button} from 'native-base';
 
+// SVG Icons
+import CalendarIcon from '../../../utils/svgIcon/plugin/CalendarIcon';
+import ExpensesIcon from '../../../utils/svgIcon/plugin/ExpensesIcon';
+import GroceryIcon from '../../../utils/svgIcon/plugin/GroceryIcon';
+import MessagesIcon from '../../../utils/svgIcon/plugin/MessagesIcon';
+import PollingIcon from '../../../utils/svgIcon/plugin/PollingIcon';
+import TodoIcon from '../../../utils/svgIcon/plugin/TodoIcon';
+import TrackingIcon from '../../../utils/svgIcon/plugin/TrackingIcon';
+import StartIcon from '../../../utils/svgIcon/StartIcon';
+
 // Style
 const pluginButtonStyles = StyleSheet.create({
   touchableOpacity: {
@@ -23,10 +33,13 @@ const pluginButtonStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     padding: 16,
+    paddingBottom: 40,
   },
   text: {
     textAlign: 'left',
     width: '100%',
+    marginTop: 15,
+    marginBottom: 30,
   },
   icon: {
     fontSize: 30,
@@ -41,14 +54,10 @@ const pluginButtonStyles = StyleSheet.create({
     marginBottom: 20,
   },
   iconNotFree: {
-    fontSize: 30,
-    width: 30,
-    height: 30,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    color: '#E3E360',
+    width: 10,
+    height: 10,
     position: 'absolute',
-    top: 0,
+    top: 10,
     right: 10,
   },
   btnSelected: {
@@ -58,70 +67,61 @@ const pluginButtonStyles = StyleSheet.create({
 
 // Component
 const PluginButton = (props) => {
-  let iconIOS = '';
-  let iconAndroid = '';
-  let name = '';
-  let notFree = false;
-  let color = 'red';
+  const getIcon = (pluginId) => {
+    switch (pluginId) {
+      case 1:
+        return <CalendarIcon />;
+      case 2:
+        return <TodoIcon />;
+      case 3:
+        return <GroceryIcon />;
+      case 4:
+        return <TrackingIcon />;
+      case 5:
+        return <PollingIcon />;
+      case 6:
+        return <MessagesIcon />;
+      case 7:
+        return <ExpensesIcon />;
+    }
+  };
 
-  //ios-star-outline
-  //md-star-outline
+  const getName = (pluginId) => {
+    let name = '';
+    switch (pluginId) {
+      case 1:
+        name = 'Calendar';
+        break;
+      case 2:
+        name = 'To-do List';
+        break;
+      case 3:
+        name = 'Grocery List';
+        break;
+      case 4:
+        name = 'Tracking';
+        break;
+      case 5:
+        name = 'Polling';
+        break;
+      case 6:
+        name = 'Messages';
+        break;
+      case 7:
+        name = 'Expenses';
+        break;
+      default:
+        name = 'Error';
+        break;
+    }
+    return name;
+  };
 
-  //Ionicons
-
-  switch (props.pluginId) {
-    case 1:
-      iconIOS = 'ios-calendar';
-      iconAndroid = 'md-calendar';
-      name = 'Calendar';
-      color = '#673BBA';
-      break;
-    case 2:
-      iconIOS = 'ios-list-box';
-      iconAndroid = 'md-list-box';
-      name = 'To-do List';
-      color = '#3BBAB5';
-      break;
-    case 3:
-      iconIOS = 'ios-basket';
-      iconAndroid = 'md-basket';
-      name = 'Grocery List';
-      color = '#ECF42D';
-      break;
-    case 4:
-      iconIOS = 'ios-pin';
-      iconAndroid = 'md-pin';
-      name = 'Tracking';
-      color = '#BA3B3B';
-      notFree = true;
-      break;
-    case 5:
-      iconIOS = 'ios-stats';
-      iconAndroid = 'md-stats';
-      name = 'Polling';
-      color = '#3BBAB5';
-      break;
-    case 6:
-      iconIOS = 'ios-chatboxes';
-      iconAndroid = 'md-chatboxes';
-      name = 'Messages';
-      color = '#3BBA53';
-      notFree = true;
-      break;
-    case 7:
-      iconIOS = 'ios-wallet';
-      iconAndroid = 'md-wallet';
-      name = 'Expenses';
-      color = '#BA3B89';
-      notFree = true;
-      break;
-    default:
-      iconIOS = 'ios-close-circle';
-      iconAndroid = 'md-close-circle';
-      name = 'Error';
-      color = 'red';
-      break;
-  }
+  const getIconFree = (pluginId) => {
+    if (pluginId === 4 || pluginId === 6 || pluginId === 7) {
+      return <StartIcon style={pluginButtonStyles.iconNotFree} />;
+    }
+  };
 
   return (
     <TouchableOpacity
@@ -129,19 +129,9 @@ const PluginButton = (props) => {
       style={pluginButtonStyles.touchableOpacity}>
       <Card pointerEvents="none">
         <CardItem cardBody style={pluginButtonStyles.cardItem}>
-          <Text style={pluginButtonStyles.text}>{name}</Text>
-          <Icon
-            ios={iconIOS}
-            android={iconAndroid}
-            style={{...pluginButtonStyles.icon, borderColor: color, color}}
-          />
-          {notFree ? (
-            <Icon
-              ios="ios-star-outline"
-              android="md-star-outline"
-              style={pluginButtonStyles.iconNotFree}
-            />
-          ) : null}
+          <Text style={pluginButtonStyles.text}>{getName(props.pluginId)}</Text>
+          {getIcon(props.pluginId)}
+          {getIconFree(props.pluginId)}
         </CardItem>
         {props.showSelected ? (
           <Button
@@ -154,6 +144,19 @@ const PluginButton = (props) => {
     </TouchableOpacity>
   );
 };
+
+/*
+<Icon
+          ios="ios-star-outline"
+          android="md-star-outline"
+          style={pluginButtonStyles.iconNotFree}
+        />
+<Icon
+            ios={iconIOS}
+            android={iconAndroid}
+            style={{...pluginButtonStyles.icon, borderColor: color, color}}
+          />
+*/
 
 // Export
 export default PluginButton;

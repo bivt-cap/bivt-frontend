@@ -40,6 +40,9 @@ import FooterBase from '../layout/footerBase/FooterBase';
 // Image Map
 import {ImageDefaultGroup} from '../../utils/ImageMap';
 
+// SVG Icons
+import AddIcon from '../../utils/svgIcon/plugin/AddIcon';
+
 // Style
 const dashboardStyles = StyleSheet.create({
   container: {backgroundColor: '#F7F7F7'},
@@ -62,26 +65,18 @@ const dashboardStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     padding: 16,
-    borderWidth: 1,
-    borderColor: '#CA60E3',
+    paddingBottom: 40,
   },
   addText: {
     textAlign: 'left',
     width: '100%',
-    color: '#fff',
+    marginTop: 15,
+    marginBottom: 30,
+    color: '#FFF',
   },
   addIcon: {
-    fontSize: 30,
-    width: 50,
-    height: 50,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    color: '#CA60E3',
-    borderWidth: 1,
-    borderRadius: 50,
-    borderColor: '#CA60E3',
-    marginTop: 20,
-    marginBottom: 20,
+    width: 64,
+    height: 64,
   },
 });
 
@@ -198,11 +193,7 @@ const DashBoard = ({route, navigation}) => {
               <Card pointerEvents="none">
                 <CardItem cardBody style={dashboardStyles.addCardItem}>
                   <Text style={dashboardStyles.addText}>Add</Text>
-                  <Icon
-                    ios="ios-add"
-                    android="md-add"
-                    style={dashboardStyles.addIcon}
-                  />
+                  <AddIcon style={dashboardStyles.addIcon} />
                 </CardItem>
               </Card>
             </TouchableOpacity>
