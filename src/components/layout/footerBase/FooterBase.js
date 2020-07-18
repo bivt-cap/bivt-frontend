@@ -17,7 +17,7 @@ import {deleteJTWFromKeyChain, resetBootstrap} from '../../../redux';
 import {GoogleSignin} from '@react-native-community/google-signin';
 
 // Natibe Base
-import {Footer, FooterTab, Button, Icon} from 'native-base';
+import {Footer, FooterTab, Button, Icon, Thumbnail} from 'native-base';
 
 // Style
 const footerBaseStyles = StyleSheet.create({
@@ -30,7 +30,7 @@ const footerBaseStyles = StyleSheet.create({
   },
   buttonAdd: {
     position: 'relative',
-    marginTop: -15,
+    marginTop: -20,
   },
   iconAdd: {
     padding: 28,
@@ -41,80 +41,59 @@ const footerBaseStyles = StyleSheet.create({
 
 // Component
 const FooterBase = (props) => {
-  // Dispatch - Redux hook
-  const dispatch = useDispatch();
-
   // Stored State - Redux hook
-  const userData = useSelector((state) => state.login);
   const bootstrapState = useSelector((state) => state.bootstrap);
-  // // Logout Handler
-  // const handleLogoutButtonClick = async () => {
-  //   try {
-  //     //If user authenticate with google oAuth
-  //     if (userData.googleisLoggedin === 'True') {
-  //       await GoogleSignin.revokeAccess();
-  //       await GoogleSignin.signOut();
-  //       userData.googleisLoggedin = 'False';
-  //     } else if (userData.isLoggedin === 'True') {
-  //       userData.isLoggedin = 'False';
-  //       userData.loginDetails = '';
-  //     }
-  //     deleteJTWFromKeyChain();
-  //     dispatch(resetBootstrap());
-  //     props.navigation.navigate('Bootstrap');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  const getSettingsButnStyle = () => {
-    // Se tem uma acao para executar
-    if (props.handleSettings) {
-      return {
-        ...footerBaseStyles.icon,
-      };
-    } else {
-      return {
-        ...footerBaseStyles.icon,
-        ...footerBaseStyles.iconDisabled,
-      };
-    }
-  };
 
   return (
     <Footer style={footerBaseStyles.footer}>
       <FooterTab>
-        <Button>
-          <Icon
-            ios="ios-apps"
-            android="md-apps"
-            style={footerBaseStyles.icon}
+        <Button onPress={() => props.navigation.navigate('DashBoard')}>
+          <Thumbnail
+            square
+            small
+            source={require('../../../assets/icons/dashboard.png')}
           />
         </Button>
         {props.handleAdd ? (
-          <Button onPress={() => props.handleAdd()}>
-            <Icon
-              ios="ios-add-circle"
-              android="md-add-circle"
-              style={footerBaseStyles.icon}
+          <Button
+            onPress={() => props.handleAdd()}
+            style={footerBaseStyles.buttonAdd}>
+            <Thumbnail
+              square
+              source={require('../../../assets/icons/add(nav).png')}
             />
           </Button>
         ) : null}
         <Button
-          // onPress={() =>
-          //   props.handleSettings ? props.handleSettings() : null
-          // }
           onPress={() =>
             props.navigation.navigate('Settings', {
               userInfo: bootstrapState.user,
             })
           }>
-          <Icon ios="ios-cog" android="md-cog" style={getSettingsButnStyle()} />
+          <Thumbnail
+            square
+            small
+            source={require('../../../assets/icons/settings.png')}
+          />
         </Button>
       </FooterTab>
     </Footer>
   );
 };
+
+/*
+<Icon
+  ios="ios-apps"
+  android="md-apps"
+  style={footerBaseStyles.icon}
+/>
+
+<Icon ios="ios-cog" android="md-cog" style={getSettingsButnStyle()} />
+
+onPress={() =>
+            props.handleSettings ? props.handleSettings() : null
+          }
+*/
 
 // Export
 export default FooterBase;
