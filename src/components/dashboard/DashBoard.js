@@ -1,11 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // React
-import React from 'react';
+import React, {useEffect} from 'react';
 
 // React Native
-import {StyleSheet, Image} from 'react-native';
+import {
+  StyleSheet,
+  Image,
+  Platform,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 
 // Native Base
-import {Container, Content, Body, Platform} from 'native-base';
+import {
+  Container,
+  Content,
+  Body,
+  Card,
+  CardItem,
+  Icon,
+  Text,
+} from 'native-base';
 
 // Redux
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,6 +37,9 @@ import JwtKeyChain from '../../utils/jwtKeyChain';
 import PluginButton from '../layout/pluginButton/PluginButton';
 import FooterBase from '../layout/footerBase/FooterBase';
 
+// Image Map
+import {ImageDefaultGroup} from '../../utils/ImageMap';
+
 // Style
 const dashboardStyles = StyleSheet.create({
   container: {backgroundColor: '#F7F7F7'},
@@ -37,6 +55,34 @@ const dashboardStyles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 20,
   },
+  addTouchableOpacity: {
+    width: Dimensions.get('window').width / 2 - 20,
+  },
+  addCardItem: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#CA60E3',
+  },
+  addText: {
+    textAlign: 'left',
+    width: '100%',
+    color: '#fff',
+  },
+  addIcon: {
+    fontSize: 30,
+    width: 50,
+    height: 50,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: '#CA60E3',
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: '#CA60E3',
+    marginTop: 20,
+    marginBottom: 20,
+  },
 });
 
 const DashBoard = ({route, navigation}) => {
@@ -45,6 +91,11 @@ const DashBoard = ({route, navigation}) => {
 
   // Stored State - Redux hook
   const bootstrapState = useSelector((state) => state.bootstrap);
+
+  useEffect(() => {
+    // Set the navigation title
+    navigation.setOptions({title: bootstrapState.circles[0].name});
+  }, []);
 
   // Handle PluginClick
   const handlePluginClick = async (pluginId) => {
@@ -115,14 +166,19 @@ const DashBoard = ({route, navigation}) => {
     }
   });
 
-  // Set the navigation title
-  navigation.setOptions({title: bootstrapState.circles[0].name});
+  const handleAddNewPlugin = () => {
+    navigation.navigate('AddRemovePlugin');
+  };
 
   // Render the screen
   return (
     <Container style={dashboardStyles.container}>
       <Image
-        source={require('../../assets/images/plugins/Rommate2.png')}
+        source={
+          ImageDefaultGroup.find(
+            (img) => img.name === bootstrapState.circles[0].image,
+          ).source
+        }
         style={dashboardStyles.image}
       />
       <Content>
@@ -135,73 +191,27 @@ const DashBoard = ({route, navigation}) => {
               />
             );
           })}
+          {bootstrapState.circles[0].plugins.length < 7 ? (
+            <TouchableOpacity
+              onPress={() => handleAddNewPlugin()}
+              style={dashboardStyles.addTouchableOpacity}>
+              <Card pointerEvents="none">
+                <CardItem cardBody style={dashboardStyles.addCardItem}>
+                  <Text style={dashboardStyles.addText}>Add</Text>
+                  <Icon
+                    ios="ios-add"
+                    android="md-add"
+                    style={dashboardStyles.addIcon}
+                  />
+                </CardItem>
+              </Card>
+            </TouchableOpacity>
+          ) : null}
         </Body>
       </Content>
       <FooterBase navigation={navigation} showExit />
     </Container>
   );
 };
-
-/*
-        <Card>
-          <CardItem header bordered>
-            <Text>User</Text>
-          </CardItem>
-          <CardItem bordered>
-            <Body>
-              <Text>Email: {bootstrapState.user.email}</Text>
-              <Text>First Name: {bootstrapState.user.firstName}</Text>
-              <Text>Last Name: {bootstrapState.user.lastName}</Text>
-              <Text>Photo URL: {bootstrapState.user.photoUrl}</Text>
-              <Text>Date of Birth: {bootstrapState.user.dateOfBirth}</Text>
-            </Body>
-          </CardItem>
-        </Card>
-        <Card>
-          <CardItem header bordered>
-            <Text>Circle</Text>
-          </CardItem>
-          <CardItem bordered>
-            <Body>
-              <Text>Id: {bootstrapState.circles[0].id}</Text>
-              <Text>Name: {bootstrapState.circles[0].name}</Text>
-              <Text>Is Admin: {bootstrapState.circles[0].isAdmin}</Text>
-              <Text>Is Owner: {bootstrapState.circles[0].isOwner}</Text>
-              <Text>Joined On: {bootstrapState.circles[0].joinedOn}</Text>
-              <Text>Members:</Text>
-              <List>
-                {bootstrapState.circles[0].members.map((member) => {
-                  return (
-                    <ListItem>
-                      <Text>{member.userFirstName}</Text>
-                    </ListItem>
-                  );
-                })}
-              </List>
-              <Text>Plugins:</Text>
-              <List>
-                {bootstrapState.circles[0].plugins.map((pluginId) => {
-                  return <PluginButton pluginId={pluginId} />;
-                })}
-              </List>
-            </Body>
-          </CardItem>
-        </Card>
-        <Button onPress={handleLogoutButtonClick}>
-          <Text> Logout </Text>
-        </Button>
-        <Button onPress={handleChatButtonClick}>
-          <Text> Chat </Text>
-        </Button>
-        <Button onPress={handleTodoListButtonClick}>
-          <Text> TodoList </Text>
-        </Button>
-        <Button onPress={handleTrackUserButton}>
-          <Text> Track User </Text>
-        </Button>
-        <Button onPress={handleExpensesButton}>
-          <Text> Expenses Plugin </Text>
-        </Button>
-*/
 
 export default DashBoard;

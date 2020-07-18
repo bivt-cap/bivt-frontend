@@ -44,6 +44,7 @@ import PollingGraph from './src/components/plugins/polling/PollingGraph';
 import Settings from './src/components/dashboard/Settings/Settings';
 import ProfileSetting from './src/components/dashboard/Settings/ProfileSetting';
 import GroupSetting from './src/components/dashboard/Settings/GroupSetting';
+import AddRemovePlugin from './src/components/managePlugin/addRemovePlugin/AddRemovePlugin';
 
 // Navigator
 const Stack = createStackNavigator();
@@ -107,6 +108,13 @@ const App = () => {
                 component={ChoosePlugins}
                 options={{
                   headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="AddRemovePlugin"
+                component={AddRemovePlugin}
+                options={{
+                  title: 'Choose Plugins',
                 }}
               />
               <Stack.Screen
