@@ -24,7 +24,10 @@ import {
 //Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 
-const TodoList = () => {
+// Layout
+import FooterBase from '../../layout/footerBase/FooterBase';
+
+const TodoList = ({route, navigation}) => {
   const dispatch = useDispatch();
   const bootstrapState = useSelector((state) => state.bootstrap);
   const todoListState = useSelector((state) => state.todoList);
@@ -274,6 +277,7 @@ const TodoList = () => {
           ))}
         </ScrollView>
       </Content>
+      <FooterBase navigation={navigation} />
     </Container>
   );
 };

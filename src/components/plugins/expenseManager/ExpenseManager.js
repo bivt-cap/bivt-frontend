@@ -50,6 +50,9 @@ import expenseCategoryIcons from './expenseCategoryIcons';
 // Token Key Chain
 import JwtKeyChain from '../../../utils/jwtKeyChain';
 
+// Layout
+import FooterBase from '../../layout/footerBase/FooterBase';
+
 const ExpenseManager = ({route, navigation}) => {
   const dispatch = useDispatch();
   const bootstrapState = useSelector((state) => state.bootstrap);
@@ -88,12 +91,11 @@ const ExpenseManager = ({route, navigation}) => {
 
   //loads bills on the screen
   const loadBills = (interval) => {
-    const now = moment.utc(new Date()).format('YYYY-MM-DD');
+    const now = moment(new Date()).format('YYYY-MM-DD');
     let sum = 0;
     return expenseManagerState.loadBillsResponseDetails.bills.map((bill) => {
       billAmountByDay[moment(bill.billDate)] = bill.billAmount;
-      let _billDate = moment.utc(bill.billDate).format('YYYY-MM-DD');
-
+      let _billDate = moment(bill.billDate).format('YYYY-MM-DD');
       if (moment(_billDate).isSame(now, interval)) {
         // eslint-disable-next-line radix
         sum = sum + parseFloat(bill.billAmount);
@@ -379,7 +381,7 @@ const ExpenseManager = ({route, navigation}) => {
   }, [expenseManagerState]);
 
   useEffect(() => {
-    console.log(budgetRemainingAmount);
+    //console.log(budgetRemainingAmount);
   }, [budgetRemainingAmount]);
 
   // ****************************************************//
@@ -387,7 +389,7 @@ const ExpenseManager = ({route, navigation}) => {
   // **************************************************//
 
   return (
-    <>
+    <Container>
       <Container style={expenseManagerStyles.container}>
         <Content style={expenseManagerStyles.content}>
           <Grid>
@@ -565,7 +567,17 @@ const ExpenseManager = ({route, navigation}) => {
           </Svg>
         </TouchableOpacity>
       </View>
-    </>
+      <FooterBase
+        navigation={navigation}
+        handleAdd={() => {
+          activeTab === 0
+            ? setSpendingsModalVisible(true)
+            : activeTab === 1
+            ? setBudgetModalVisible(true)
+            : '';
+        }}
+      />
+    </Container>
   );
 };
 

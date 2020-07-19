@@ -21,7 +21,6 @@ import {expenseManagerStyles, analyticStyles} from './ExpenseManagerStyles';
 const ExpenseManagerAnalytics = ({route, navigation}) => {
   const {total} = route.params;
   const {remaining} = route.params;
-  console.log(total, remaining);
   let val = (total - remaining) / total;
   let valPerc = ((total - (total - remaining)) / total) * 100;
   return (

@@ -13,7 +13,7 @@ const expenseManagerStyles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     left: 0,
-    bottom: 30,
+    bottom: 7,
     justifyContent: 'center',
     alignItems: 'center',
   },
