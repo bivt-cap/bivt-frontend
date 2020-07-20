@@ -13,16 +13,16 @@ const expenseManagerStyles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     left: 0,
-    bottom: 30,
+    bottom: 7,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   container: {
-    position:"relative",
+    position: 'relative',
     top: 0,
     left: 0,
-    padding:0,
-    margin:0,
+    padding: 0,
+    margin: 0,
     borderTopWidth: 1,
     borderTopColor: '#EBADEB',
   },
@@ -31,10 +31,10 @@ const expenseManagerStyles = StyleSheet.create({
     top: -15,
     left: -15,
     right: -15,
-    padding:0,
+    padding: 0,
   },
   addExpenseButton: {
-    textAlign:'center'
+    textAlign: 'center',
   },
   listTop: {
     paddingTop: 18,
@@ -42,23 +42,23 @@ const expenseManagerStyles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     marginBottom: 40,
-    borderBottomColor:'#E1E1E1',
+    borderBottomColor: '#E1E1E1',
     borderBottomWidth: 1,
     backgroundColor: '#FFFFFF',
   },
   listItem: {
-    borderBottomColor:'#E1E1E1',
+    borderBottomColor: '#E1E1E1',
     borderBottomWidth: 1,
     backgroundColor: '#FFFFFF',
   },
   tabStyle: {
     backgroundColor: '#FFFFFF',
-    borderBottomColor:'#A53BBA',
+    borderBottomColor: '#A53BBA',
     borderBottomWidth: 1,
     height: 55,
   },
   textStyle: {
-    fontWeight:'bold',
+    fontWeight: 'bold',
     color: '#666',
   },
   activeTabStyle: {
@@ -66,17 +66,17 @@ const expenseManagerStyles = StyleSheet.create({
     height: 55,
   },
   activeTextStyle: {
-    fontWeight:'bold',
-    color: '#FFF'
+    fontWeight: 'bold',
+    color: '#FFF',
   },
   tabBarUnderlineStyle: {
-    backgroundColor:'transparent'
+    backgroundColor: 'transparent',
   },
   tabStyle2: {
     backgroundColor: '#FFFFFF',
-    borderTopColor:'#F1B7FD',
+    borderTopColor: '#F1B7FD',
     borderTopWidth: 1,
-    borderBottomColor:'#F1B7FD',
+    borderBottomColor: '#F1B7FD',
     borderBottomWidth: 1,
   },
   textStyle2: {
@@ -87,14 +87,14 @@ const expenseManagerStyles = StyleSheet.create({
     borderTopColor: '#F1B7FD',
   },
   activeTextStyle2: {
-    color: '#333'
+    color: '#333',
   },
   cardStyle: {
     backgroundColor: '#FFF',
     borderWidth: 1,
     borderRadius: 10,
     borderColor: '#E9E9E9',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -105,7 +105,7 @@ const expenseManagerStyles = StyleSheet.create({
   },
   //Budget
   cardBody: {
-    position:'relative',
+    position: 'relative',
   },
   deleteIcon: {
     position: 'absolute',
@@ -117,7 +117,7 @@ const expenseManagerStyles = StyleSheet.create({
   budget: {
     paddingTop: 10,
     paddingBottom: 16,
-    borderBottomColor:'#EEE',
+    borderBottomColor: '#EEE',
     borderBottomWidth: 1,
   },
   name: {
@@ -127,7 +127,7 @@ const expenseManagerStyles = StyleSheet.create({
   amount: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: "#A53BBA",
+    color: '#A53BBA',
     paddingRight: 5,
   },
   remaining: {
@@ -138,10 +138,9 @@ const expenseManagerStyles = StyleSheet.create({
   },
   date: {
     color: '#555',
-    paddingLeft: 5
-  }
+    paddingLeft: 5,
+  },
 });
-
 
 //spendings modal styles
 const modalStyles = StyleSheet.create({
@@ -154,8 +153,9 @@ const modalStyles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 25,
-    width: '90%',
-    height: '90%',
+    paddingTop: 60,
+    width: '95%',
+    height: '95%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -190,17 +190,17 @@ const modalStyles = StyleSheet.create({
     marginTop: '5%',
   },
   addButton: {
-    marginTop: '2%',
+    marginTop: '10%',
     backgroundColor: '#A54BBA',
     borderColor: '#A54BBA',
     borderRadius: 3,
   },
   closeButton: {
-    marginTop: '2%',
+    marginTop: '5%',
     backgroundColor: '#B5B5B5',
     borderColor: '#B5B5B5',
     borderRadius: 3,
-  }, 
+  },
   textFieldError: {
     color: 'red',
     fontSize: 14,
@@ -215,4 +215,12 @@ const modalStyles = StyleSheet.create({
   datePickerplaceHolderTextStyle: {color: '#d3d3d3'},
 });
 
-export {expenseManagerStyles, modalStyles};
+//analytic styles
+const analyticStyles = StyleSheet.create({
+  progressCircle: {
+    height: 300,
+    marginTop: 50,
+  },
+});
+
+export {expenseManagerStyles, modalStyles, analyticStyles};

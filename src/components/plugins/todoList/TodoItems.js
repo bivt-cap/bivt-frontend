@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#848484',
     color: '#FFF',
-    height: 10,
+    height: '100%',
   },
   deleteBtn: {
     textAlign: 'center',
     backgroundColor: '#848484',
     borderRadius: 3,
-    height: 10,
+    height: '100%',
   },
   btnText: {
     color: '#FFF',

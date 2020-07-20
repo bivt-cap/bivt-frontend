@@ -45,6 +45,7 @@ import Settings from './src/components/dashboard/Settings/Settings';
 import ProfileSetting from './src/components/dashboard/Settings/ProfileSetting';
 import GroupSetting from './src/components/dashboard/Settings/GroupSetting';
 import AddRemovePlugin from './src/components/managePlugin/addRemovePlugin/AddRemovePlugin';
+import ExpenseManagerAnalytics from './src/components/plugins/expenseManager/ExpenseManagerAnalytics';
 
 // Navigator
 const Stack = createStackNavigator();
@@ -227,6 +228,13 @@ const App = () => {
                 }}
               />
               <Stack.Screen
+                name="Analytics"
+                component={ExpenseManagerAnalytics}
+                options={{
+                  title: 'Budget Analytics',
+                }}
+              />
+              <Stack.Screen
                 name="Settings"
                 options={{
                   title: 'Settings',
@@ -295,14 +303,6 @@ const App = () => {
                 options={{
                   title: 'Resend Validation Email',
                   animationEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name="ExpenseManager"
-                component={ExpenseManager}
-                options={{
-                  title: 'Manage your expenses',
-                  headerLeft: null,
                 }}
               />
             </>
