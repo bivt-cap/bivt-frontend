@@ -1,7 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import PollingStyle from './PollingStyle';
 import {TouchableOpacity} from 'react-native';
-import {Container, Content, Text, View, Button, Icon} from 'native-base';
+import {
+  Container,
+  Content,
+  Text,
+  View,
+  Button,
+  Icon,
+  List,
+  ListItem,
+} from 'native-base';
 
 const PollingDetail = ({route, navigation}) => {
   let {
@@ -17,7 +26,7 @@ const PollingDetail = ({route, navigation}) => {
     handleAddVote,
   } = route.params;
 
-  console.log(value1, value2, value3);
+  //console.log(value1, value2, value3);
   const [valueA, setValueA] = useState(value1);
   const [valueB, setValueB] = useState(value2);
   const [valueC, setValueC] = useState(value3);
@@ -27,7 +36,7 @@ const PollingDetail = ({route, navigation}) => {
     third: false,
   });
   const addVote = (qId, option) => {
-    console.log('calling handle vote');
+    //console.log('calling handle vote');
     setChecked({
       first: false,
       second: false,
@@ -115,7 +124,13 @@ const PollingDetail = ({route, navigation}) => {
                   }}>
                   <Text style={PollingStyle.btnText}>See Results</Text>
                 </Button>
-                <Text>Poll Completed</Text>
+                <Content>
+                  <List style={{alignItems: 'center', marginTop: 100}}>
+                    <ListItem itemDivider>
+                      <Text>Poll Completed!</Text>
+                    </ListItem>
+                  </List>
+                </Content>
               </>
             )}
           </View>

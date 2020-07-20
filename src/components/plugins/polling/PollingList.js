@@ -4,66 +4,57 @@ import PollingItems from './PollingItems';
 import PollingStyle from './PollingStyle';
 import {TouchableOpacity} from 'react-native';
 import {Container, Content, View} from 'native-base';
-import JwtKeyChain from '../../../utils/jwtKeyChain';
-import {getActivePollList} from '../../../redux';
-import HexagonBtn from '../../../utils/HexagonBtn';
 import AsyncStorage from '@react-native-community/async-storage';
 import pollData from './pollDb';
+// Layout
+import FooterBase from '../../layout/footerBase/FooterBase';
 
 const PollingList = ({navigation}) => {
   /*
    * Start of state declerations and fetch state from store
    */
-  const bootstrapState = useSelector((state) => state.bootstrap);
-  //const poolingList = useSelector((state) => state.pollInfo);
-  //console.log(poolingList);
-  //console.log(bootstrapState);
+
   const [pollings, setPollings] = useState(Object.values(pollData));
-  const dispatch = useDispatch();
-
-  const fetchActivePooling = async () => {
-    const token = await JwtKeyChain.read();
-    //console.log(token);
-    const circleId = bootstrapState.circles[0].id;
-
-    dispatch(getActivePollList(token, circleId));
-  };
 
   useEffect(() => {
-    console.log('All polls', pollings);
-
-    // const saveToAsync = async () => {
-    //   const jsonValue = JSON.stringify(pollings);
-    //   await AsyncStorage.setItem('storage_Key', jsonValue);
-    // };
-    // saveToAsync();
-    // //fetchActivePooling();
-
-    // const getData = async () => {
-    //   try {
-    //     const value = await AsyncStorage.getItem('storage_Key');
-    //     if (value !== null) {
-    //       var obj = JSON.parse(value);
-    //       console.log(obj);
-    //       // setPollings(obj);
-    //     }
-    //   } catch (e) {
-    //     // error reading value
-    //   }
-    // };
-    // getData();
+    console.log('All polls', pollings, pollings.length);
+    const saveToAsync = async () => {
+      const jsonValue = JSON.stringify(pollings);
+      await AsyncStorage.setItem('storage_Key', jsonValue);
+    };
+    if (pollings.length !== 2) {
+      saveToAsync();
+    }
   }, [pollings]);
 
+  useEffect(() => {
+    //AsyncStorage.clear();
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('storage_Key');
+        if (value !== null) {
+          var obj = JSON.parse(value);
+          console.log('loading poll', obj);
+          setPollings(obj);
+        }
+      } catch (e) {
+        // error reading value
+      }
+    };
+    getData();
+  }, []);
+
   const handleAddNewPoll = (poll) => {
-    //console.log('poll -->', poll);
     poll.id = pollings.length + 1;
-    console.log('newPoll', poll);
     setPollings([...pollings, poll]);
-    //console.log(pollings);
+    const saveToAsync = async () => {
+      const jsonValue = JSON.stringify(pollings);
+      await AsyncStorage.setItem('storage_Key', jsonValue);
+    };
+    saveToAsync();
   };
 
   const handleAddVote = (qId, option) => {
-    console.log(qId, option);
     let ansIndex = 0;
     if (option === 'first') {
       ansIndex = 0;
@@ -145,7 +136,7 @@ const PollingList = ({navigation}) => {
       </Content>
 
       <View style={PollingStyle.addBtnWrap}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={PollingStyle.addBtnPst}
           onPress={() => {
             navigation.navigate('AddPolling', {
@@ -153,8 +144,16 @@ const PollingList = ({navigation}) => {
             });
           }}>
           <HexagonBtn />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
+      <FooterBase
+        navigation={navigation}
+        handleAdd={() => {
+          navigation.navigate('AddPolling', {
+            handleAddNewPoll: handleAddNewPoll,
+          });
+        }}
+      />
     </Container>
   );
 };
