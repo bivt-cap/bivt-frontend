@@ -12,6 +12,10 @@ import {
   Icon,
   Body,
 } from 'native-base';
+// Redux
+import {useSelector} from 'react-redux';
+// Image Map
+import {ImageDefaultGroup} from '../../../utils/ImageMap';
 
 const settingStyles = StyleSheet.create({
   container: {
@@ -48,12 +52,15 @@ const GroupSetting = ({route, navigation}) => {
 
   const {circleInfo} = route.params;
 
+  // Stored State - Redux hook
+  const bootstrapState = useSelector((state) => state.bootstrap);
+  console.log(bootstrapState);
   // Default image
   const uri = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
   // Stored State - Redux hook
 
   // Logout Handler
-  console.log(circleInfo);
+  // console.log(circleInfo);
   return (
     <Container style={settingStyles.container}>
       <View style={{flex: 1}}>
@@ -62,14 +69,18 @@ const GroupSetting = ({route, navigation}) => {
             <Thumbnail
               circular
               style={settingStyles.profileImage}
-              source={require('../../../assets/images/plugins/Family3.png')}
+              source={
+                ImageDefaultGroup.find(
+                  (img) => img.name === bootstrapState.circles[0].image,
+                ).source
+              }
             />
           </ListItem>
         </Card>
         <Card style={settingStyles.secondCard}>
           <ListItem Thumbnail>
             <Button
-              style={{backgroundColor: 'rgb(165,59,186)', borderRadius: 10}}>
+              style={{backgroundColor: 'rgb(165,59,186)', borderRadius: 7}}>
               <Icon active name="people" />
             </Button>
 

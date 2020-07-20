@@ -43,7 +43,12 @@ const FooterBase = (props) => {
   return (
     <Footer style={footerBaseStyles.footer}>
       <FooterTab>
-        <Button onPress={() => props.navigation.navigate('DashBoard')}>
+        <Button
+          onPress={() => {
+            props.navigation.navigate('GroupSetting', {
+              circleInfo: bootstrapState.circles[0],
+            });
+          }}>
           <DashboardIcon disabled={props.isDashboard} />
         </Button>
         {props.handleAdd ? (
