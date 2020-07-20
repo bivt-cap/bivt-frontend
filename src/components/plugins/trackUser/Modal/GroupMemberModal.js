@@ -9,12 +9,6 @@ const GroupMemberModal = (props) => {
     <View style={styles.viewStyle}>
       <Card style={styles.cardStyle}>
         <CardItem button onPress={focusMarker} style={styles.groupPaper}>
-          {/* <Left>
-        <Thumbnail
-          style={styles.photo}
-          source={{uri: 'https://placeimg.com/140/140/any'}}
-        />
-      </Left> */}
           <Left>
             <Text style={styles.textContent}>
               {userFirstName} {userLastName}
