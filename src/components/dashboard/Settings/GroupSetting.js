@@ -80,8 +80,12 @@ const GroupSetting = ({route, navigation}) => {
         <Card style={settingStyles.secondCard}>
           <ListItem Thumbnail>
             <Button
-              style={{backgroundColor: 'rgb(165,59,186)', borderRadius: 7}}>
-              <Icon active name="people" />
+              small
+              style={{
+                backgroundColor: 'rgb(165,59,186)',
+                borderRadius: 10,
+              }}>
+              <Icon size={30} active name="people" />
             </Button>
 
             <Body>

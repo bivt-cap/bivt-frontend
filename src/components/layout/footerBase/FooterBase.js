@@ -49,7 +49,11 @@ const FooterBase = (props) => {
               circleInfo: bootstrapState.circles[0],
             });
           }}>
-          <DashboardIcon disabled={props.isDashboard} />
+          <DashboardIcon
+            disabled={
+              props.isDashboard ? false : props.handleSettingsBtn ? false : true
+            }
+          />
         </Button>
         {props.handleAdd ? (
           <Button

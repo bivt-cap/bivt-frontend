@@ -147,6 +147,7 @@ const PollingList = ({navigation}) => {
         </TouchableOpacity> */}
       </View>
       <FooterBase
+        isDashboard={true}
         navigation={navigation}
         handleAdd={() => {
           navigation.navigate('AddPolling', {

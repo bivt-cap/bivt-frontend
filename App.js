@@ -93,6 +93,7 @@ const App = () => {
               fontSize: 24,
               marginTop: 5,
             },
+            headerBackTitleVisible: false,
             headerTitleAlign: 'center',
           }}>
           {bootstrapState.isSignedIn ? (
