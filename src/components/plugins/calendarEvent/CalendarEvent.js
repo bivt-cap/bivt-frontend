@@ -221,7 +221,11 @@ const CalendarEvent = ({route, navigation}) => {
           handleShowEvent={handleShowEventButtonClick}
         />
       </Content>
-      <FooterBase navigation={navigation} handleAdd={handleAddButtonClick} />
+      <FooterBase
+        isDashboard={true}
+        navigation={navigation}
+        handleAdd={handleAddButtonClick}
+      />
     </Container>
   );
 };

@@ -71,7 +71,7 @@ const TrackUser = () => {
       return (
         <Marker coordinate={latlang} key={index} pinColor={'purple'}>
           <Image
-            source={require('../../../assets/bee-1.png')}
+            source={require('../../layout/loadingBig/img/avatar.png')}
             style={{height: 70, width: 50}}
           />
         </Marker>
@@ -201,8 +201,7 @@ const TrackUser = () => {
             />
             <Body>
               <Text>
-                See when your group members are at school,work or elsewhere!
-                🌍🌍🌍
+                See when your group members are at school,work or elsewhere! 🌍
               </Text>
             </Body>
           </Left>

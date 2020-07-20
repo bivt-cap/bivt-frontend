@@ -135,9 +135,9 @@ const AddPolling = ({route, navigation}) => {
                 }
               />
             </Item>
-            <Button style={PollingStyle.addOptionBtn}>
+            {/* <Button style={PollingStyle.addOptionBtn}>
               <Text style={PollingStyle.btnText}>Add option</Text>
-            </Button>
+            </Button> */}
             {showSpinner && <Spinner />}
           </Form>
         </Content>

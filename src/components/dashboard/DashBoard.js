@@ -12,15 +12,7 @@ import {
 } from 'react-native';
 
 // Native Base
-import {
-  Container,
-  Content,
-  Body,
-  Card,
-  CardItem,
-  Icon,
-  Text,
-} from 'native-base';
+import {Container, Content, Body, Card, CardItem, H3, Text} from 'native-base';
 
 // Redux
 import {useDispatch, useSelector} from 'react-redux';
@@ -77,6 +69,10 @@ const dashboardStyles = StyleSheet.create({
   addIcon: {
     width: 64,
     height: 64,
+  },
+  welcomeTextStyle: {
+    marginBottom: 10,
+    fontFamily: 'Arial',
   },
 });
 
@@ -177,6 +173,10 @@ const DashBoard = ({route, navigation}) => {
         style={dashboardStyles.image}
       />
       <Content>
+        <H3 style={dashboardStyles.welcomeTextStyle}>
+          Hello {bootstrapState.user.firstName} {bootstrapState.user.lastName}!
+        </H3>
+
         <Body style={dashboardStyles.body}>
           {bootstrapState.circles[0].plugins.map((pluginId) => {
             return (

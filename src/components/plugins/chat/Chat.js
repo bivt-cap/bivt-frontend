@@ -13,6 +13,7 @@ import {
   Send,
   Bubble,
   Time,
+  Composer,
 } from 'react-native-gifted-chat';
 import {Platform, SafeAreaView} from 'react-native';
 import {Spinner, Icon, Button, Container, View} from 'native-base';
@@ -132,11 +133,17 @@ const Chat = ({route}) => {
 
   const renderSend = (props) => {
     return (
-      <Send {...props} textInputStyle={{fontSize: 5}}>
-        <Icon
-          name="md-send"
-          style={{color: 'white', marginRight: 10, marginBottom: 5}}
-        />
+      <Send
+        {...props}
+        textInputStyle={{fontSize: 5}}
+        containerStyle={{
+          width: 55,
+          height: 44,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginHorizontal: 4,
+        }}>
+        <Icon name="md-send" style={{color: 'white'}} />
       </Send>
     );
   };
@@ -147,11 +154,10 @@ const Chat = ({route}) => {
         // eslint-disable-next-line react-native/no-inline-styles
         containerStyle={{
           backgroundColor: 'rgb(165,59,186)',
-          placeholderTextColor: '#fff',
           borderTopEndRadius: 20,
           borderTopStartRadius: 20,
         }}
-        textInputStyle={{color: '#fff'}}
+        textInputStyle={{color: '#fff', placeholderTextColor: '#fff'}}
       />
     );
   };
@@ -159,7 +165,7 @@ const Chat = ({route}) => {
   const renderCameraButton = () => {
     return (
       <Button transparent onPress={getImage}>
-        <Icon style={{color: 'white'}} name="ios-camera" />
+        <Icon style={{color: 'white', marginLeft: 20}} name="ios-camera" />
       </Button>
     );
   };
@@ -197,6 +203,19 @@ const Chat = ({route}) => {
       />
     );
   };
+
+  const renderComposer = (props) => (
+    <Composer
+      {...props}
+      textInputStyle={{
+        color: '#222B45',
+        backgroundColor: '#FFF',
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#E4E9F2',
+      }}
+    />
+  );
   return !message.isLoading && !message.isWelcomeMessage ? (
     <SafeAreaView style={{flex: 1, backgroundColor: 'rgb(165,59,186)'}}>
       <Container>
@@ -204,9 +223,11 @@ const Chat = ({route}) => {
           messages={message.messages}
           onSend={Fire.shared.sendMessages}
           renderSend={renderSend}
+          renderComposer={renderComposer}
           renderTime={renderTime}
           renderInputToolbar={renderInputToolbar}
           renderActions={renderCameraButton}
+          alwaysShowSend={true}
           renderUsernameOnMessage={true}
           renderBubble={renderBubble}
           user={user()}
@@ -218,8 +239,10 @@ const Chat = ({route}) => {
       <GiftedChat
         messages={message.messages}
         onSend={Fire.shared.sendMessages}
+        renderComposer={renderComposer}
         renderSend={renderSend}
         renderTime={renderTime}
+        alwaysShowSend={true}
         renderInputToolbar={renderInputToolbar}
         renderActions={renderCameraButton}
         renderUsernameOnMessage={true}
