@@ -74,11 +74,32 @@ const CalendarEventForm = ({route, navigation}) => {
   // Event
   const calendarState = useSelector((state) => state.calendarReducer);
 
+  const getStartHour = () => {
+    const currentHour = moment();
+    const hourNow = currentHour.format('HH');
+    let minuteNow = '00';
+    if (currentHour.minutes() < 10) {
+      minuteNow = '00';
+    } else if (currentHour.minutes() < 20) {
+      minuteNow = '10';
+    } else if (currentHour.minutes() < 30) {
+      minuteNow = '20';
+    } else if (currentHour.minutes() < 40) {
+      minuteNow = '30';
+    } else if (currentHour.minutes() < 50) {
+      minuteNow = '40';
+    } else {
+      minuteNow = '50';
+    }
+
+    return `${hourNow}:${minuteNow}`;
+  };
+
   // State
   const [eventDetails, setEventDetails] = useState({
     title: '',
     participants: null,
-    time: moment().format('HH:mm'),
+    time: getStartHour(),
     day: moment().format('dddd, DD MMMM, YYYY'),
     note: '',
     photos: [],
