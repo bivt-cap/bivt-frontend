@@ -2,7 +2,7 @@
 
 Manage, connect, take care, and be productive. Kovan is the one place app for all your group needs. Never miss an important date, always know what you and your group needs to do, be always connected with your beloved ones or be prepared and control all your group expenses, Kovan helps users to achieve your goals.
 Kovan is multiplatform hybrid application for all your group management needs.
-Learn more about the app at: [Kovan](kovanapp.com)
+Learn more about the app at: [Kovan](https://kovanapp.com/)
 
 ## Getting Started
 
