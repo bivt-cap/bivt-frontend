@@ -45,7 +45,7 @@ See also the list of [contributors](https://github.com/bivt-cap/bivt-backend/con
 
 ## License
 
-This project is licensed under the GNU GENERAL PUBLIC License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU GENERAL PUBLIC License - see the [LICENSE](LICENSE.md) file for details
 
 ## Acknowledgments
 
