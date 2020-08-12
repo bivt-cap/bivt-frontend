@@ -6,7 +6,9 @@ Learn more about the app at: [Kovan](https://kovanapp.com/)
 
 ## Getting Started
 
-One Paragraph of getting started goes here
+ + `yarn install`
+ + `npm install`
+ 
 
 ## Version Control
 
